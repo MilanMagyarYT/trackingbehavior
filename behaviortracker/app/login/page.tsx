@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
-import BTNavbar from "../components/BTNavbar";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,17 +19,24 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/profile");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (err) {
+      // Type-guard the error to check if it is an instance of Error
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   }
 
   return (
     <div className="min-h-screen bg-[#0d1623] flex flex-col items-center justify-center p-4">
-      <img
+      <Image
         src="/officiallogo.png"
         alt="Logo Here"
-        className="h-16 w-auto mb-6"
+        width={100} // Set an appropriate width value
+        height={50} // Set an appropriate height value
+        className="logo"
       />
       <div className="w-full max-w-md bg-[#1b2538] p-8 rounded shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6 text-[#f3ede0]">
