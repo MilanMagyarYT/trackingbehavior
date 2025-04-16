@@ -9,7 +9,7 @@ export default function BTNavbar() {
   const router = useRouter();
 
   function openProjectDetails() {
-    router.push("/");
+    router.push("/profile");
   }
 
   function openLogin() {
