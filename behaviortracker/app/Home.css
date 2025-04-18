@@ -1,0 +1,66 @@
+/* overall page */
+.home {
+    background-color: #0D1623;  /* deep navy */
+    color: #F3EDE0;             /* off‑white text */
+    min-height: 100vh;
+    padding: 1rem;
+    text-align: center;
+    font-family: sans-serif;
+  }
+  
+  /* Headline */
+  .home__title {
+    font-size: 2rem;   /* adjust to match your mockup size */
+    line-height: 1.2;
+    margin: 1rem 0 1rem;
+  }
+  
+  /* Hero image wrapper */
+  .home__hero img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+  
+  /* Call‑to‑action button */
+  .home__cta {
+    margin-bottom: 1rem;
+  }
+  
+  /* Login prompt */
+  .home__login {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  .home__login span {
+    color: #ffffff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  /* Divider */
+  .home__divider {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .home__divider svg {
+    font-size: 2rem;
+    color: #456484;  /* slightly lighter slate */
+  }
+  
+  /* Sub‑heading */
+  .home__subtitle {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Body text */
+  .home__text {
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  

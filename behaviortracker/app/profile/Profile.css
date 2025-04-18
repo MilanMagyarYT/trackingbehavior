@@ -1,0 +1,64 @@
+/* app/profile/Profile.css */
+.profile {
+    background-color: #0D1623; /* deep navy */
+    color: #F3EDE0;            /* off-white */
+    min-height: 100vh;
+    padding-top: 1rem;
+  }
+  
+  .profile__container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .profile__title {
+    font-size: 1.75rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .profile__card {
+    border: 1px solid #F3EDE0;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .profile__card-title {
+    font-size: 1.25rem;
+    margin: 0;
+  }
+  
+  .profile__card-subtitle {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  
+  .profile__progress-bar {
+    background-color: #456484;
+    border-radius: 4px;
+    height: 8px;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .profile__progress-bar__fill {
+    background-color: #F3EDE0;
+    height: 100%;
+    width: 0%; /* will be set inline based on progress */
+    transition: width 0.3s ease;
+  }
+  
+  /* Ensure BTButton inherits full width in cards */
+  /* correct: just target the .bt-button class under the card */
+    .profile__card .bt-button {
+    align-self: flex-start;
+  }
+  
+  
