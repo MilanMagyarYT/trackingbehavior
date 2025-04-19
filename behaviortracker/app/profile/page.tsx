@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebaseClient";
 import React from "react";
 import { useRouter } from "next/navigation";
 import BTNavbar from "../components/BTNavbar";
@@ -17,13 +20,27 @@ export default function ProfilePage() {
   const viewRecommendations = () => router.push("/view-recommendations");
 
   // Example values; replace with dynamic data as needed
-  const stepsCompleted = 1;
-  const totalSteps = 3;
+  const [setupComplete, setSetupComplete] = useState<boolean | null>(null);
+  const { uid } = useAppSelector((s) => s.auth); // needed for Firestore
   const sessionsToday = 0;
   const totalUsage = { hours: 0, minutes: 0 };
   const recommendationsCount = 0;
 
-  const progressPercent = (stepsCompleted / totalSteps) * 100;
+  useEffect(() => {
+    const checkSetup = async () => {
+      if (!uid) return;
+      const userRef = doc(db, "users", uid);
+      const userSnap = await getDoc(userRef);
+      console.log(userSnap);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        setSetupComplete(!!data.baselineCompletedAt);
+      }
+    };
+
+    checkSetup();
+  }, [uid]);
 
   if (status === "loading") return <p>Checking login…</p>;
 
@@ -41,20 +58,15 @@ export default function ProfilePage() {
             Wish you a great time tracking your behavior
           </h1>
 
-          <div className="profile__card">
-            <h2 className="profile__card-title">Set-Up Your Account</h2>
-            <p className="profile__card-subtitle">
-              Steps Remaining: {totalSteps - stepsCompleted}/{totalSteps}{" "}
-              Completed
-            </p>
-            <div className="profile__progress-bar">
-              <div
-                className="profile__progress-bar__fill"
-                style={{ width: `${progressPercent}%` }}
-              />
+          {!setupComplete && (
+            <div className="profile__card">
+              <h2 className="profile__card-title">Set-Up Your Account</h2>
+              <p className="profile__card-subtitle">
+                Step Remaining: Uncompleted
+              </p>
+              <BTButton text="Start Set-Up" onClick={startSetup} />
             </div>
-            <BTButton text="Start Set-Up" onClick={startSetup} />
-          </div>
+          )}
 
           <div className="profile__card">
             <h2 className="profile__card-title">Add a New Session</h2>

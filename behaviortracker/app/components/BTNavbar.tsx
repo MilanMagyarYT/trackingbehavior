@@ -18,7 +18,6 @@ export default function BTNavbar() {
   const toggleMenu = () => setMenuOpen((p) => !p);
   const closeMenu = () => setMenuOpen(false);
 
-  /* ---- handlers ---- */
   const handleLogin = () => {
     closeMenu();
     router.push("/login");
@@ -38,13 +37,12 @@ export default function BTNavbar() {
 
   const handleLogout = async () => {
     closeMenu();
-    await signOut(auth); // triggers onAuthStateChanged → Redux clearUser
-    router.push("/"); // optional: bounce to landing page
+    await signOut(auth);
+    router.push("/");
   };
 
   return (
     <nav className="navbar">
-      {/* ---------- logo ---------- */}
       <div className="navbar__logo" onClick={handleHome}>
         <Image
           src="/trackingbehaviorlogo.png"
@@ -54,9 +52,7 @@ export default function BTNavbar() {
         />
       </div>
 
-      {/* ---------- right‑side icons ---------- */}
       <div className="navbar__icons">
-        {/* account icon only when NOT logged in */}
         {status !== "authenticated" && (
           <GiCharacter
             className="navbar__icon"
@@ -65,7 +61,6 @@ export default function BTNavbar() {
           />
         )}
 
-        {/* hamburger / close */}
         <div className="navbar__menuWrapper">
           {menuOpen ? (
             <IoMdClose

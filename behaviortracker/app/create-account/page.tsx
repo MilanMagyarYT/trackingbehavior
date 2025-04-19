@@ -1,5 +1,6 @@
 "use client";
-
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebaseClient";
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -30,6 +31,14 @@ export default function CreateAccountPage() {
     }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(
+        doc(db, "users", auth.currentUser!.uid),
+        {
+          authEmail: email,
+          createdAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unexpected error");
     }
