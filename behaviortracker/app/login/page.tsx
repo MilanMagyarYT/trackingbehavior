@@ -7,6 +7,7 @@ import { auth } from "@/lib/firebaseClient";
 import Image from "next/image";
 import BTNavbar from "../components/BTNavbar";
 import { useAppSelector } from "@/app/store";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,7 +31,13 @@ export default function LoginPage() {
       setError(err instanceof Error ? err.message : "Unexpected error");
     }
   }
-  if (status === "loading") return null;
+  if (status === "loading")
+    return (
+      <div>
+        <BTNavbar />
+        <LoadingSpinner />
+      </div>
+    );
 
   return (
     <div>

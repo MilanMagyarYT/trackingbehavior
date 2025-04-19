@@ -7,6 +7,8 @@ import BTNavbar from "@/app/components/BTNavbar";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient"; // 👉 make sure you export your Firestore instance
 import { useAppSelector } from "@/app/store";
+import BTNavbar from "@/app/components/BTNavbar";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 /* ------------ helpers ------------ */
 const triggerList = [
@@ -70,7 +72,13 @@ export default function StartSetup() {
     () => Object.fromEntries(contentList.map((t) => [t, false])) as any
   );
 
-  if (status === "loading") return null;
+  if (status === "loading")
+    return (
+      <div>
+        <BTNavbar />
+        <LoadingSpinner />
+      </div>
+    );
   if (status === "unauthenticated") {
     router.replace("/login");
     return null;

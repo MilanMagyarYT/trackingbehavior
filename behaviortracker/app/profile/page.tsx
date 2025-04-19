@@ -9,8 +9,24 @@ import BTNavbar from "../components/BTNavbar";
 import BTButton from "../components/BTButton";
 import { useAppSelector } from "../store";
 import "./Profile.css";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  getDocs,
+  Timestamp,
+} from "firebase/firestore";
+import LoadingSpinner from "../components/LoadingSpinner";
+interface SessionStub {
+  id: string;
+  createdAt: Timestamp;
+  appId: string;
+  timeBucket: string;
+  durMin: number; // 👈 add this
+}
 
-export default function ProfilePage() {
+export default function Profile() {
   const router = useRouter();
   const { status } = useAppSelector((s) => s.auth);
   // Handlers
@@ -22,9 +38,13 @@ export default function ProfilePage() {
   // Example values; replace with dynamic data as needed
   const [setupComplete, setSetupComplete] = useState<boolean | null>(null);
   const { uid } = useAppSelector((s) => s.auth); // needed for Firestore
-  const sessionsToday = 0;
-  const totalUsage = { hours: 0, minutes: 0 };
+  const [totalMin, setTotalMin] = useState(0);
+  const hours = Math.floor(totalMin / 60);
+  const minutes = totalMin % 60;
+
   const recommendationsCount = 0;
+  const [sessions, setSessions] = useState<SessionStub[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkSetup = async () => {
@@ -39,10 +59,44 @@ export default function ProfilePage() {
       }
     };
 
+    const fetchToday = async () => {
+      if (!uid) return;
+
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+
+      const q = query(
+        collection(db, "users", uid, "sessions"),
+        where("createdAt", ">=", Timestamp.fromDate(today)),
+        orderBy("createdAt", "desc")
+      );
+
+      const snap = await getDocs(q);
+      const lst: SessionStub[] = [];
+      let sum = 0;
+
+      snap.forEach((d) => {
+        const item = { id: d.id, ...(d.data() as any) } as SessionStub;
+        lst.push(item);
+        sum += item.durMin; // 👈 accumulate minutes
+      });
+
+      setSessions(lst);
+      setTotalMin(sum); // 👈 save total
+      setLoading(false);
+    };
+
     checkSetup();
+    fetchToday();
   }, [uid]);
 
-  if (status === "loading") return <p>Checking login…</p>;
+  if (status === "loading" || loading)
+    return (
+      <div>
+        <BTNavbar />
+        <LoadingSpinner />
+      </div>
+    );
 
   if (status === "unauthenticated") {
     router.replace("/login");
@@ -71,7 +125,7 @@ export default function ProfilePage() {
           <div className="profile__card">
             <h2 className="profile__card-title">Add a New Session</h2>
             <p className="profile__card-subtitle">
-              Sessions Today: {sessionsToday}
+              Sessions Today: {sessions.length}
             </p>
             <BTButton text="New Session" onClick={addNewSession} />
           </div>
@@ -81,8 +135,7 @@ export default function ProfilePage() {
               View Today’s Tracked Sessions
             </h2>
             <p className="profile__card-subtitle">
-              Total Social Media Usage: {totalUsage.hours} hours{" "}
-              {totalUsage.minutes} minutes
+              Total Social Media Usage: {hours} h {minutes} m
             </p>
             <BTButton text="View Your Data" onClick={viewSessions} />
           </div>
