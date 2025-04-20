@@ -23,21 +23,19 @@ interface SessionStub {
   createdAt: Timestamp;
   appId: string;
   timeBucket: string;
-  durMin: number; // 👈 add this
+  durMin: number;
 }
 
 export default function Profile() {
   const router = useRouter();
   const { status } = useAppSelector((s) => s.auth);
-  // Handlers
   const startSetup = () => router.push("/start-setup");
   const addNewSession = () => router.push("/add-new-session");
   const viewSessions = () => router.push("/view-sessions");
   const viewRecommendations = () => router.push("/view-recommendations");
 
-  // Example values; replace with dynamic data as needed
   const [setupComplete, setSetupComplete] = useState<boolean | null>(null);
-  const { uid } = useAppSelector((s) => s.auth); // needed for Firestore
+  const { uid } = useAppSelector((s) => s.auth);
   const [totalMin, setTotalMin] = useState(0);
   const hours = Math.floor(totalMin / 60);
   const minutes = totalMin % 60;
@@ -78,11 +76,11 @@ export default function Profile() {
       snap.forEach((d) => {
         const item = { id: d.id, ...(d.data() as any) } as SessionStub;
         lst.push(item);
-        sum += item.durMin; // 👈 accumulate minutes
+        sum += item.durMin;
       });
 
       setSessions(lst);
-      setTotalMin(sum); // 👈 save total
+      setTotalMin(sum);
       setLoading(false);
     };
 

@@ -2,22 +2,20 @@
 
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'         // 👈 NEW
+import { getFirestore } from 'firebase/firestore'
 import { store } from '@/app/store'
 import { setUser, clearUser, setLoading } from '@/app/store/authSlice'
 
-/* ---------- config ---------- */
 const firebaseConfig = {
   apiKey: 'AIzaSyAzjguAJxLxrM9kzdncZwDQYWlC4u8VK28',
   authDomain: 'bachelorthesys.firebaseapp.com',
   projectId: 'bachelorthesys',
-  storageBucket: 'bachelorthesys.appspot.com',            // typo fixed
+  storageBucket: 'bachelorthesys.appspot.com',
   messagingSenderId: '461703288059',
   appId: '1:461703288059:web:0da3fe9eff6b11b5dc4c5e',
   measurementId: 'G-D2H06ESSG4',
 }
 
-/* ---------- init singleton ---------- */
 let firebaseApp: FirebaseApp
 if (!getApps().length) {
   firebaseApp = initializeApp(firebaseConfig)
@@ -25,12 +23,10 @@ if (!getApps().length) {
   firebaseApp = getApps()[0]
 }
 
-/* ---------- exports ---------- */
-export { firebaseApp }                       // optional
+export { firebaseApp }                      
 export const auth = getAuth(firebaseApp)
-export const db   = getFirestore(firebaseApp)   // 👈 NEW
+export const db   = getFirestore(firebaseApp)   
 
-/* ---------- Redux‑linked auth listener ---------- */
 export const listenToAuth = () => {
   store.dispatch(setLoading())
   onAuthStateChanged(auth, (user) => {

@@ -1,7 +1,6 @@
-/* app/profile/Profile.css */
 .profile {
-    background-color: #0D1623; /* deep navy */
-    color: #F3EDE0;            /* off-white */
+    background-color: #0D1623;
+    color: #F3EDE0;  
     min-height: 100vh;
     padding-top: 1rem;
   }
@@ -51,12 +50,10 @@
   .profile__progress-bar__fill {
     background-color: #F3EDE0;
     height: 100%;
-    width: 0%; /* will be set inline based on progress */
+    width: 0%;
     transition: width 0.3s ease;
   }
   
-  /* Ensure BTButton inherits full width in cards */
-  /* correct: just target the .bt-button class under the card */
     .profile__card .bt-button {
     align-self: flex-start;
   }

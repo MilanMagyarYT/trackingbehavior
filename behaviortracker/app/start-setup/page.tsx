@@ -5,12 +5,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import BTNavbar from "@/app/components/BTNavbar";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebaseClient"; // 👉 make sure you export your Firestore instance
+import { db } from "@/lib/firebaseClient";
 import { useAppSelector } from "@/app/store";
 import BTNavbar from "@/app/components/BTNavbar";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-/* ------------ helpers ------------ */
 const triggerList = [
   "boredom",
   "notification",
@@ -52,7 +51,6 @@ export default function StartSetup() {
   const router = useRouter();
   const { uid, status } = useAppSelector((s) => s.auth);
 
-  /* ---------- form state ---------- */
   const [step, setStep] = useState<Step>(1);
   const [avgLastWeek, setAvgLastWeek] = useState("");
   const [goalPhone, setGoalPhone] = useState("120");
@@ -84,7 +82,6 @@ export default function StartSetup() {
     return null;
   }
 
-  /* ---------- helpers ---------- */
   const toggle = <T extends string>(setter: any, key: T) =>
     setter((prev: Record<T, boolean>) => ({ ...prev, [key]: !prev[key] }));
 
@@ -93,7 +90,6 @@ export default function StartSetup() {
     return false;
   };
 
-  /* ---------- submit ---------- */
   const handleSubmit = async () => {
     if (!uid) return;
     const userRef = doc(db, "users", uid);
@@ -118,7 +114,6 @@ export default function StartSetup() {
     router.push("/profile");
   };
 
-  /* ---------- UI ---------- */
   return (
     <div>
       <BTNavbar />
@@ -130,7 +125,6 @@ export default function StartSetup() {
             productivity baselines.
           </p>
 
-          {/* progress bar */}
           <div className="w-full h-2 bg-[#112233] rounded mb-6 overflow-hidden">
             <div
               className="h-full bg-[#f3ede0] transition-all duration-300"
@@ -191,7 +185,6 @@ export default function StartSetup() {
                 Step 2: Behavioural Self‑Assessment
               </h3>
 
-              {/* triggers */}
               <p className="text-sm mb-1">
                 Productive reasons to open social media
               </p>
@@ -210,7 +203,6 @@ export default function StartSetup() {
               ))}
               <hr className="my-3 border-[#334455]" />
 
-              {/* goals */}
               <p className="text-sm mb-1">
                 Productive goals when opening the app
               </p>
@@ -229,7 +221,6 @@ export default function StartSetup() {
               ))}
               <hr className="my-3 border-[#334455]" />
 
-              {/* activities */}
               <p className="text-sm mb-1">Productive activities</p>
               {actList.map((a) => (
                 <label
@@ -246,7 +237,6 @@ export default function StartSetup() {
               ))}
               <hr className="my-3 border-[#334455]" />
 
-              {/* negative mood flag */}
               <p className="text-sm mb-1">
                 Should a negative mood drop mark the session unproductive?
               </p>
@@ -272,7 +262,6 @@ export default function StartSetup() {
               </label>
               <hr className="my-3 border-[#334455]" />
 
-              {/* content types */}
               <p className="text-sm mb-1">Productive content types</p>
               {contentList.map((c) => (
                 <label

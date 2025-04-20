@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-/* ---- Redux + Auth ---- */
-import { Providers } from "@/app/store/Providers"; // Redux Toolkit provider
-import AuthListener from "@/app/AuthListener"; // fires listenToAuth()
+import { Providers } from "@/app/store/Providers";
+import AuthListener from "@/app/AuthListener";
 
-/* ---- Fonts (unchanged) ---- */
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

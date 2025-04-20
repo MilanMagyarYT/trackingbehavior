@@ -15,7 +15,6 @@ import { db } from "@/lib/firebaseClient";
 import { useAppSelector } from "@/app/store";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-/* ------------------ constant lists ------------------ */
 const appList = [
   "Facebook",
   "Instagram",
@@ -98,24 +97,20 @@ export default function AddNewSessionPage() {
   const { uid, status } = useAppSelector((s) => s.auth);
   const [step, setStep] = useState<Step>(1);
 
-  /* ---------- page‑1 state ---------- */
   const [appUsed, setAppUsed] = useState<string>("");
   const [durationIdx, setDurationIdx] = useState<number | null>(null);
   const [timeBucket, setTimeBucket] = useState<TimeBucket | "">("");
 
-  /* ---------- page‑2 ---------- */
   const [triggers, setTriggers] = useState<TriggerCat[]>([]);
   const [goalPrimary, setGoalPrimary] = useState<GoalCat | "">("");
   const [engage, setEngage] = useState<Record<ActivityCat, boolean>>(
     () => Object.fromEntries(actList.map((a) => [a, false])) as any
   );
 
-  /* ---------- page‑3 ---------- */
   const [moodPre, setMoodPre] = useState<1 | 2 | 3 | 4 | 5 | "">("");
   const [moodPost, setMoodPost] = useState<1 | 2 | 3 | 4 | 5 | "">("");
   const [prodSelf, setProdSelf] = useState<1 | 2 | 3 | 4 | 5 | "">("");
 
-  /* ---------- page‑4 ---------- */
   const [contentMajor, setContentMajor] = useState<ContentCat[]>([]);
   const [loc, setLoc] = useState<
     "home" | "work" | "commute" | "outside" | "bed" | "other" | ""
@@ -124,7 +119,6 @@ export default function AddNewSessionPage() {
     "tv" | "eating" | "working" | "none" | "other" | ""
   >("");
 
-  /* ---------- baseline data (needed for helpers) ---------- */
   const [baseline, setBaseline] = useState<any>(null);
   useEffect(() => {
     const fetchBaseline = async () => {
@@ -147,7 +141,6 @@ export default function AddNewSessionPage() {
     return null;
   }
 
-  /* ---------- toggle helpers ---------- */
   const toggleArray = <T extends string>(
     arr: T[],
     val: T,
@@ -157,11 +150,9 @@ export default function AddNewSessionPage() {
   const toggleEngage = (key: ActivityCat) =>
     setEngage((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  /* ---------- submit ---------- */
   const handleSubmit = async () => {
     if (!uid || durationIdx === null) return;
 
-    /* 1. build raw doc */
     const durMin = durationBuckets[durationIdx].mid;
     const dataRaw = {
       createdAt: serverTimestamp(),
@@ -179,7 +170,6 @@ export default function AddNewSessionPage() {
       multitask,
     };
 
-    /* 2. derive helpers from baseline rules */
     const rules = baseline.prodRules;
     const moodDelta = (moodPost as number) - (moodPre as number);
 
@@ -192,7 +182,7 @@ export default function AddNewSessionPage() {
     const moodBad = baseline.negMoodIsUnprod && moodDelta < 0;
 
     const yResearch = goalProd && actProd && contentProd && !moodBad ? 1 : 0;
-    const prodNorm = ((prodSelf as number) - 1) / 4; // 0‑1
+    const prodNorm = ((prodSelf as number) - 1) / 4;
     const sessionScore = 0.6 * prodNorm + 0.4 * yResearch;
 
     const data = {
@@ -204,13 +194,11 @@ export default function AddNewSessionPage() {
       activeFlag: actProd,
     };
 
-    /* 3. write to Firestore */
     await addDoc(collection(doc(db, "users", uid), "sessions"), data);
 
     router.push("/profile");
   };
 
-  /* ---------- validation ---------- */
   const pageValid = () => {
     if (step === 1) return appUsed && durationIdx !== null && timeBucket;
     if (step === 2) return triggers.length && goalPrimary;
@@ -219,11 +207,9 @@ export default function AddNewSessionPage() {
     return false;
   };
 
-  /* ---------- UI helpers ---------- */
   const labelCls = "block text-sm mb-1 mt-4";
   const inputCls = "w-full p-2 rounded bg-transparent border border-[#f3ede0]";
 
-  /* ---------- render ---------- */
   return (
     <div>
       <BTNavbar />
@@ -242,7 +228,6 @@ export default function AddNewSessionPage() {
             can improve your behaviour insights.
           </p>
 
-          {/* progress */}
           <div className="w-full h-2 bg-[#112233] rounded mb-6 overflow-hidden">
             <div
               className="h-full bg-[#f3ede0] transition-all duration-300"
@@ -250,7 +235,6 @@ export default function AddNewSessionPage() {
             />
           </div>
 
-          {/* ---------- STEP 1 ---------- */}
           {step === 1 && (
             <>
               <h3 className="text-xl font-semibold mb-2">
@@ -309,7 +293,6 @@ export default function AddNewSessionPage() {
             </>
           )}
 
-          {/* ---------- STEP 2 ---------- */}
           {step === 2 && (
             <>
               <h3 className="text-xl font-semibold mb-2">
@@ -363,7 +346,6 @@ export default function AddNewSessionPage() {
             </>
           )}
 
-          {/* ---------- STEP 3 ---------- */}
           {step === 3 && (
             <>
               <h3 className="text-xl font-semibold mb-2">
@@ -419,7 +401,6 @@ export default function AddNewSessionPage() {
             </>
           )}
 
-          {/* ---------- STEP 4 ---------- */}
           {step === 4 && (
             <>
               <h3 className="text-xl font-semibold mb-2">
@@ -482,7 +463,6 @@ export default function AddNewSessionPage() {
             </>
           )}
 
-          {/* ---------- nav buttons ---------- */}
           <div className="flex gap-2 mt-6">
             {step > 1 && (
               <button

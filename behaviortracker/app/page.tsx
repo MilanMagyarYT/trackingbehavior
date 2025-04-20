@@ -14,12 +14,10 @@ export default function Home() {
     <div>
       <BTNavbar />
       <div className="home">
-        {/* 1. Headline */}
         <h1 className="home__title">
           Track your social media behavior to build better habits
         </h1>
 
-        {/* 2. Hero image */}
         <div className="home__hero">
           <Image
             src="/heroimage.png"
@@ -29,7 +27,6 @@ export default function Home() {
           />
         </div>
 
-        {/* 3. Create account button */}
         <div className="home__cta">
           <BTButton
             text="Create an account"
@@ -37,18 +34,15 @@ export default function Home() {
           />
         </div>
 
-        {/* 4. Login prompt */}
         <p className="home__login">
           Already have an account?{" "}
           <span onClick={() => router.push("/login")}>Login</span>
         </p>
 
-        {/* 5. Divider */}
         <div className="home__divider">
           <RxDividerHorizontal />
         </div>
 
-        {/* 6. Benefits section */}
         <h2 className="home__subtitle">
           Benefits of Context Aware Time Tracking
         </h2>
