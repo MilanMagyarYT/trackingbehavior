@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import BTNavbar from "@/app/components/BTNavbar";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient";
 import { useAppSelector } from "@/app/store";
-import BTNavbar from "@/app/components/BTNavbar";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const triggerList = [
@@ -47,47 +45,57 @@ type ContentCat = (typeof contentList)[number];
 
 type Step = 1 | 2;
 
+/**
+ * Helper to create a typed record from a key array
+ */
+const mkRecord = <K extends string, V>(
+  keys: readonly K[],
+  value: V
+): Record<K, V> =>
+  keys.reduce((acc, key) => ({ ...acc, [key]: value }), {} as Record<K, V>);
+
 export default function StartSetup() {
   const router = useRouter();
   const { uid, status } = useAppSelector((s) => s.auth);
 
   const [step, setStep] = useState<Step>(1);
-  const [avgLastWeek, setAvgLastWeek] = useState("");
-  const [goalPhone, setGoalPhone] = useState("120");
-  const [unprodPct, setUnprodPct] = useState("15");
+  const [avgLastWeek, setAvgLastWeek] = useState<string>("");
+  const [goalPhone, setGoalPhone] = useState<string>("120");
+  const [unprodPct, setUnprodPct] = useState<string>("15");
 
   const [prodTriggers, setProdTriggers] = useState<Record<TriggerCat, boolean>>(
-    () => Object.fromEntries(triggerList.map((t) => [t, false])) as any
+    () => mkRecord(triggerList, false)
   );
-  const [prodGoals, setProdGoals] = useState<Record<GoalCat, boolean>>(
-    () => Object.fromEntries(goalList.map((t) => [t, false])) as any
+  const [prodGoals, setProdGoals] = useState<Record<GoalCat, boolean>>(() =>
+    mkRecord(goalList, false)
   );
-  const [prodActs, setProdActs] = useState<Record<ActivityCat, boolean>>(
-    () => Object.fromEntries(actList.map((t) => [t, false])) as any
+  const [prodActs, setProdActs] = useState<Record<ActivityCat, boolean>>(() =>
+    mkRecord(actList, false)
   );
-  const [negMoodIsUnprod, setNegMoodIsUnprod] = useState("yes");
+  const [negMoodIsUnprod, setNegMoodIsUnprod] = useState<"yes" | "no">("yes");
   const [prodContent, setProdContent] = useState<Record<ContentCat, boolean>>(
-    () => Object.fromEntries(contentList.map((t) => [t, false])) as any
+    () => mkRecord(contentList, false)
   );
 
   if (status === "loading")
     return (
-      <div>
+      <>
         <BTNavbar />
         <LoadingSpinner />
-      </div>
+      </>
     );
   if (status === "unauthenticated") {
     router.replace("/login");
     return null;
   }
 
-  const toggle = <T extends string>(setter: any, key: T) =>
-    setter((prev: Record<T, boolean>) => ({ ...prev, [key]: !prev[key] }));
+  const toggle = <T extends string>(
+    setter: React.Dispatch<React.SetStateAction<Record<T, boolean>>>,
+    key: T
+  ) => setter((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const nextDisabled = () => {
-    if (step === 1) return !(avgLastWeek && goalPhone && unprodPct);
-    return false;
+  const nextDisabled = (): boolean => {
+    return step === 1 ? !(avgLastWeek && goalPhone && unprodPct) : false;
   };
 
   const handleSubmit = async () => {
@@ -246,7 +254,9 @@ export default function StartSetup() {
                   name="negMood"
                   value="yes"
                   checked={negMoodIsUnprod === "yes"}
-                  onChange={(e) => setNegMoodIsUnprod(e.target.value)}
+                  onChange={(e) =>
+                    setNegMoodIsUnprod(e.target.value as "yes" | "no")
+                  }
                 />
                 Yes
               </label>
@@ -256,7 +266,9 @@ export default function StartSetup() {
                   name="negMood"
                   value="no"
                   checked={negMoodIsUnprod === "no"}
-                  onChange={(e) => setNegMoodIsUnprod(e.target.value)}
+                  onChange={(e) =>
+                    setNegMoodIsUnprod(e.target.value as "yes" | "no")
+                  }
                 />
                 No
               </label>

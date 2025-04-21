@@ -173,7 +173,6 @@ export default function AddNewSessionPage() {
     const rules = baseline.prodRules;
     const moodDelta = (moodPost as number) - (moodPre as number);
 
-    const triggerProd = triggers.some((t) => rules.triggers[t]);
     const goalProd = rules.goals[goalPrimary];
     const actProd = Object.entries(engage).some(
       ([k, v]) => v && rules.acts[k as ActivityCat]
