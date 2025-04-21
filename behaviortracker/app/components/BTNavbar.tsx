@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { GiCharacter } from "react-icons/gi";
-import { IoMdMenu, IoMdClose } from "react-icons/io";
-import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebaseClient";
-import { useAppSelector } from "@/app/store";
+import { BsPersonAdd } from "react-icons/bs";
+import { MdLogin, MdClose, MdAccountCircle } from "react-icons/md";
+import { IoMdMenu } from "react-icons/io";
+import { FaHouse } from "react-icons/fa6";
+import { IoMdHelpCircleOutline } from "react-icons/io";
 import "./BTNavbar.css";
+import { useAppSelector } from "@/app/store";
 
 export default function BTNavbar() {
   const router = useRouter();
@@ -18,81 +19,92 @@ export default function BTNavbar() {
   const toggleMenu = () => setMenuOpen((p) => !p);
   const closeMenu = () => setMenuOpen(false);
 
-  const handleLogin = () => {
+  const navTo = (path: string) => {
     closeMenu();
-    router.push("/login");
-  };
-  const handleHome = () => {
-    closeMenu();
-    router.push("/");
-  };
-  const handleProfile = () => {
-    closeMenu();
-    router.push("/profile");
-  };
-  const handleSignUp = () => {
-    closeMenu();
-    router.push("/create-account");
-  };
-
-  const handleLogout = async () => {
-    closeMenu();
-    await signOut(auth);
-    router.push("/");
+    router.push(path);
   };
 
   return (
     <nav className="navbar">
-      <div className="navbar__logo" onClick={handleHome}>
+      {/* Logo */}
+      <div className="navbar__logo" onClick={() => navTo("/")}>
         <Image
-          src="/trackingbehaviorlogo.png"
-          alt="Tracking Behavior Logo"
-          width={200}
+          src="/trackingbehaviorlogo2.png"
+          alt="Tracking Behavior"
+          width={125}
           height={50}
         />
       </div>
 
+      {/* Hamburger */}
       <div className="navbar__icons">
         {status !== "authenticated" && (
-          <GiCharacter
+          <MdAccountCircle
             className="navbar__icon"
             title="Login"
-            onClick={handleLogin}
+            onClick={() => navTo("/login")}
           />
         )}
 
-        <div className="navbar__menuWrapper">
-          {menuOpen ? (
-            <IoMdClose
-              className="navbar__icon"
-              title="Close menu"
-              onClick={toggleMenu}
-            />
-          ) : (
-            <IoMdMenu
-              className="navbar__icon"
-              title="Open menu"
-              onClick={toggleMenu}
-            />
-          )}
+        <IoMdMenu
+          className="navbar__icon"
+          title="Open menu"
+          onClick={toggleMenu}
+        />
+      </div>
 
-          {menuOpen && (
-            <div className="navbar__dropdown">
-              <ul>
-                <li onClick={handleHome}>Home</li>
-                {status === "authenticated" && (
-                  <li onClick={handleProfile}>Profile</li>
-                )}
-                {status !== "authenticated" && (
-                  <li onClick={handleSignUp}>Sign Up</li>
-                )}
-                {status === "authenticated" && (
-                  <li onClick={handleLogout}>Log out</li>
-                )}
-              </ul>
-            </div>
-          )}
+      {/* Dark overlay */}
+      <div
+        className={`navbar__overlay ${menuOpen ? "open" : ""}`}
+        onClick={closeMenu}
+      />
+
+      {/* Slide‑in panel */}
+      <div className={`navbar__mobileMenu ${menuOpen ? "open" : ""}`}>
+        {/* Header */}
+        <div className="mobileMenu__header">
+          <Image
+            src="/trackingbehaviorlogo2.png"
+            alt="Tracking Behavior"
+            width={125}
+            height={50}
+            onClick={() => navTo("/")}
+          />
+          <MdClose
+            className="navbar__icon mobileMenu__close"
+            title="Close menu"
+            onClick={closeMenu}
+          />
         </div>
+
+        <div className="mobileMenu__actions">
+          <button
+            className="mobileMenu__button"
+            onClick={() => navTo("/create-account")}
+          >
+            <BsPersonAdd className="mobileMenu__icon" />
+            Sign up
+          </button>
+          <button
+            className="mobileMenu__button"
+            onClick={() => navTo("/login")}
+          >
+            <MdLogin className="mobileMenu__icon" />
+            Log in
+          </button>
+        </div>
+
+        {/* Menu links */}
+        <ul className="mobileMenu__list">
+          <li onClick={() => navTo("/how-it-works")}>
+            <FaHouse className="mobileMenu__icon" />
+            How it works
+          </li>
+          <li onClick={() => navTo("/help")}>
+            <IoMdHelpCircleOutline className="mobileMenu__icon" />
+            Help
+          </li>
+        </ul>
       </div>
     </nav>
   );
