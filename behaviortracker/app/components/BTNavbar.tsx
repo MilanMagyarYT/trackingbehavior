@@ -10,10 +10,19 @@ import { FaHouse } from "react-icons/fa6";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import "./BTNavbar.css";
 import { useAppSelector } from "@/app/store";
+import { MdLogout } from "react-icons/md";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebaseClient";
+
+function getInitials(name: string | null | undefined) {
+  if (!name) return "";
+  const [first = "", last = ""] = name.trim().split(/\s+/);
+  return (first[0] || "").toUpperCase() + (last[0] || "").toUpperCase();
+}
 
 export default function BTNavbar() {
   const router = useRouter();
-  const { status } = useAppSelector((s) => s.auth);
+  const { status, displayName } = useAppSelector((s) => s.auth);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((p) => !p);
@@ -23,6 +32,14 @@ export default function BTNavbar() {
     closeMenu();
     router.push(path);
   };
+
+  const handleLogout = async () => {
+    closeMenu();
+    await signOut(auth);
+    router.push("/");
+  };
+
+  const initials = getInitials(displayName);
 
   return (
     <nav className="navbar">
@@ -45,12 +62,22 @@ export default function BTNavbar() {
             onClick={() => navTo("/login")}
           />
         )}
-
-        <IoMdMenu
-          className="navbar__icon"
-          title="Open menu"
-          onClick={toggleMenu}
-        />
+        {status === "unauthenticated" && (
+          <IoMdMenu
+            className="navbar__icon"
+            title="Open menu"
+            onClick={toggleMenu}
+          />
+        )}
+        {status === "authenticated" && (
+          <button
+            className="navbar__avatar"
+            title="Open menu"
+            onClick={toggleMenu}
+          >
+            {initials}
+          </button>
+        )}
       </div>
 
       {/* Dark overlay */}
@@ -104,6 +131,11 @@ export default function BTNavbar() {
             <IoMdHelpCircleOutline className="mobileMenu__icon" />
             Help
           </li>
+          {status === "authenticated" && (
+            <li onClick={handleLogout}>
+              <MdLogout className="mobileMenu__icon" /> Log out
+            </li>
+          )}
         </ul>
       </div>
     </nav>

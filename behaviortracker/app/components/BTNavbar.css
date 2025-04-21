@@ -125,3 +125,21 @@
 .mobileMenu__list li:hover {
   background: rgba(255,255,255,0.05);
 }
+.navbar__avatar {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;          /* initials font size */
+  line-height: 2rem;        /* vertically center */
+  text-align: center;
+  border-radius: 50%;
+  background-color: #52607f; /* choose a nice background */
+  color: #F3EDE0;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* if you want hover effect */
+.navbar__avatar:hover {
+  background-color: #39485e;
+}

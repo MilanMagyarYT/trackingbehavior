@@ -1,7 +1,9 @@
 'use client'
 
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth } from 'firebase/auth'
+import { onIdTokenChanged }   from "firebase/auth";
+
 import { getFirestore } from 'firebase/firestore'
 import { store } from '@/app/store'
 import { setUser, clearUser, setLoading } from '@/app/store/authSlice'
@@ -29,11 +31,15 @@ export const db   = getFirestore(firebaseApp)
 
 export const listenToAuth = () => {
   store.dispatch(setLoading())
-  onAuthStateChanged(auth, (user) => {
+  onIdTokenChanged(auth, (user) => {
     if (user) {
-      store.dispatch(setUser({ uid: user.uid, email: user.email ?? '' }))
+      store.dispatch(setUser({
+        uid:         user.uid,
+        email:       user.email ?? "",
+        displayName: user.displayName // now will be up‑to‑date
+      }));
     } else {
-      store.dispatch(clearUser())
+      store.dispatch(clearUser());
     }
-  })
+  });
 }
