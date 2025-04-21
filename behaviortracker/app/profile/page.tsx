@@ -90,8 +90,7 @@ export default function Profile() {
 
   if (status === "loading" || loading)
     return (
-      <div>
-        <BTNavbar />
+      <div className="h-screen bg-[#0d1623] flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );

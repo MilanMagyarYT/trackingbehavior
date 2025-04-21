@@ -106,7 +106,7 @@
 
 /* Menu list */
 .mobileMenu__list {
-  margin-top: 1rem;
+  margin-top: 0rem;
   list-style: none;
   padding: 0;
 }
@@ -142,4 +142,54 @@
 /* if you want hover effect */
 .navbar__avatar:hover {
   background-color: #39485e;
+}
+
+.mobileMenu__user {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobileMenu__avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #334a6a;  /* adjust to your theme */
+  color: #f3ede0;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.mobileMenu__userInfo {
+  overflow: hidden;
+}
+
+.mobileMenu__userName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f3ede0;
+  line-height: 1.2;
+}
+
+.mobileMenu__userEmail {
+  font-size: 0.875rem;
+  color: #cfd8e3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  margin-top: 0.25rem;
+}
+
+.mobileMenu__sectionDivider {
+  width: 100%;
+  height: 5px;
+  margin: 0rem 0;                     /* adjust spacing */
+  background-color: rgba(224, 216, 216, 0.1);  /* light line */
 }

@@ -131,8 +131,7 @@ export default function AddNewSessionPage() {
 
   if (status === "loading" || baseline === null)
     return (
-      <div>
-        <BTNavbar />
+      <div className="h-screen bg-[#0d1623] flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );

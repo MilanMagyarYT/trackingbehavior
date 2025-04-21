@@ -79,10 +79,9 @@ export default function StartSetup() {
 
   if (status === "loading")
     return (
-      <>
-        <BTNavbar />
+      <div className="h-screen bg-[#0d1623] flex items-center justify-center">
         <LoadingSpinner />
-      </>
+      </div>
     );
   if (status === "unauthenticated") {
     router.replace("/login");

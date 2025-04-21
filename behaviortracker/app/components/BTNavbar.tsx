@@ -13,6 +13,10 @@ import { useAppSelector } from "@/app/store";
 import { MdLogout } from "react-icons/md";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
+import { MdOutlineManageAccounts } from "react-icons/md";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoCalendar } from "react-icons/io5";
+import { IoNotifications } from "react-icons/io5";
 
 function getInitials(name: string | null | undefined) {
   if (!name) return "";
@@ -22,7 +26,7 @@ function getInitials(name: string | null | undefined) {
 
 export default function BTNavbar() {
   const router = useRouter();
-  const { status, displayName } = useAppSelector((s) => s.auth);
+  const { status, displayName, email } = useAppSelector((s) => s.auth);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((p) => !p);
@@ -104,39 +108,84 @@ export default function BTNavbar() {
           />
         </div>
 
-        <div className="mobileMenu__actions">
-          <button
-            className="mobileMenu__button"
-            onClick={() => navTo("/create-account")}
-          >
-            <BsPersonAdd className="mobileMenu__icon" />
-            Sign up
-          </button>
-          <button
-            className="mobileMenu__button"
-            onClick={() => navTo("/login")}
-          >
-            <MdLogin className="mobileMenu__icon" />
-            Log in
-          </button>
-        </div>
+        {status === "authenticated" ? (
+          <div className="mobileMenu__user">
+            <div className="mobileMenu__avatar">{initials}</div>
+            <div className="mobileMenu__userInfo">
+              <div className="mobileMenu__userName">{displayName}</div>
+              <div className="mobileMenu__userEmail">{email}</div>
+            </div>
+          </div>
+        ) : (
+          <div className="mobileMenu__actions">
+            <button
+              className="mobileMenu__button"
+              onClick={() => navTo("/create-account")}
+            >
+              <BsPersonAdd className="mobileMenu__icon" />
+              Sign up
+            </button>
+            <button
+              className="mobileMenu__button"
+              onClick={() => navTo("/login")}
+            >
+              <MdLogin className="mobileMenu__icon" />
+              Log in
+            </button>
+          </div>
+        )}
 
-        {/* Menu links */}
-        <ul className="mobileMenu__list">
-          <li onClick={() => navTo("/how-it-works")}>
-            <FaHouse className="mobileMenu__icon" />
-            How it works
-          </li>
-          <li onClick={() => navTo("/help")}>
-            <IoMdHelpCircleOutline className="mobileMenu__icon" />
-            Help
-          </li>
-          {status === "authenticated" && (
-            <li onClick={handleLogout}>
-              <MdLogout className="mobileMenu__icon" /> Log out
+        {status === "authenticated" ? (
+          <div>
+            <ul className="mobileMenu__list">
+              <li onClick={() => navTo("/start-setup")}>
+                <MdOutlineManageAccounts className="mobileMenu__icon" />
+                Set‑Up Account
+              </li>
+              <li onClick={() => navTo("/add-new-session")}>
+                <IoMdAddCircleOutline className="mobileMenu__icon" />
+                Add New Session
+              </li>
+              <li onClick={() => navTo("/view-sessions")}>
+                <IoCalendar className="mobileMenu__icon" />
+                Today&apos;s Sessions
+              </li>
+              <li onClick={() => navTo("/view-recommendations")}>
+                <IoNotifications className="mobileMenu__icon" />
+                Recommendations
+              </li>
+            </ul>
+
+            {/* big separator between sections */}
+            <div className="mobileMenu__sectionDivider" />
+
+            <ul className="mobileMenu__list">
+              <li onClick={() => navTo("/how-it-works")}>
+                <FaHouse className="mobileMenu__icon" />
+                How it works
+              </li>
+              <li onClick={() => navTo("/help")}>
+                <IoMdHelpCircleOutline className="mobileMenu__icon" />
+                Help
+              </li>
+              <li onClick={handleLogout}>
+                <MdLogout className="mobileMenu__icon" />
+                Log out
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <ul className="mobileMenu__list">
+            <li onClick={() => navTo("/how-it-works")}>
+              <FaHouse className="mobileMenu__icon" />
+              How it works
             </li>
-          )}
-        </ul>
+            <li onClick={() => navTo("/help")}>
+              <IoMdHelpCircleOutline className="mobileMenu__icon" />
+              Help
+            </li>
+          </ul>
+        )}
       </div>
     </nav>
   );
