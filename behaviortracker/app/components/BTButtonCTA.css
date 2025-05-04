@@ -1,0 +1,21 @@
+.bt-buttoncta-text {
+    display: inline-block;          /* shrink‐wrap to the text */
+    padding: 0.5rem 0.75rem;       /* top‑bottom | left‑right */
+    border-radius: 10px;          /* huge radius → perfect pill */
+    background: #FA4617; /* faint fill (optional) */
+    color: #F3EDE0;                 /* white text */
+    font-weight: 600;               /* a bit bolder */
+    line-height: 1;                 /* keeps height tight */
+    user-select: none;              /* text not selectable */
+    font-size: 18px;
+    letter-spacing: -0.04em;
+    text-align: center;
+  }
+
+  .bt-buttoncta {
+    display: flex;           /* create a flex row */
+    justify-content: center; /* center its children horizontally */
+    padding-top: 0.5rem;
+    padding-bottom: 2.5rem;
+  }
+  

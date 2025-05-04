@@ -1,0 +1,22 @@
+.bt-bubble {
+    display: inline-block;          /* shrink‐wrap to the text */
+    padding: 0.5rem 0.75rem;       /* top‑bottom | left‑right */
+    border: 1.5px solid #1B2538;      /* subtle outline (dark navy)  */
+    border-radius: 20px;          /* huge radius → perfect pill */
+    background: #0D1623; /* faint fill (optional) */
+    color: #C4C2BC;                 /* white text */
+    font-weight: 600;               /* a bit bolder */
+    line-height: 1;                 /* keeps height tight */
+    white-space: nowrap;            /* prevents wrapping */
+    user-select: none;              /* text not selectable */
+    font-size: 14px;
+    letter-spacing: -0.04em;
+  }
+
+  .bt-bubble-center {
+    display: flex;           /* create a flex row */
+    justify-content: center; /* center its children horizontally */
+    padding-top: 1rem;
+    padding-bottom: 0.75rem;
+  }
+  

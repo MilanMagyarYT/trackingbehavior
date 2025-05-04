@@ -1,0 +1,19 @@
+.bt-textt2-text {
+    display: inline-block;          /* shrink‐wrap to the text */
+    background: #0D1623; /* faint fill (optional) */
+    color: #C4C2BC;                 /* white text */
+    font-weight: 500;               /* a bit bolder */
+    line-height: 1.2;                 /* keeps height tight */
+    user-select: none;              /* text not selectable */
+    font-size: 12px;
+    letter-spacing: -0.04em;
+    text-align: center;
+  }
+
+  .bt-textt2 {
+    display: flex;           /* create a flex row */
+    justify-content: center; /* center its children horizontally */
+    padding-bottom: 5rem;
+    padding-top: 1rem;
+  }
+  

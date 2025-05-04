@@ -1,0 +1,16 @@
+.bt-image-pair-box {
+    /* visual shell */
+    background: #2A3D60;         /* steel‑blue fill */
+    border-radius: 20px;         /* large rounded corners */
+    padding: 1.75rem;            /* room around the pictures */
+    display: flex;
+    justify-content: center;     /* centre the whole row */
+    align-items: center;         /* vertical alignment if heights differ */
+    gap: 2rem;                   /* space between the two images */
+    margin: 0 2rem;
+    margin-top: 1rem;
+    margin-bottom: 5rem;
+    width: 360px;              /* centres the box in its parent */
+    box-sizing: border-box;      /* include padding inside the max‑width */
+  }
+  

@@ -1,0 +1,49 @@
+.bt-footer {
+    border-top: 1px solid #23304a;   /* thin divider line             */
+    background: #0d1623;            /* deep navy fill                */
+    padding: 2.5rem 0 3rem;
+    color: #F3EDE0;
+  }
+  
+  .bt-footer-inner {
+    max-width: 960px;               /* adjust to your site’s grid    */
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  
+  .bt-footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  
+  .bt-footer-title span {
+    font-weight: 700;               /* ‘behavior’ bold               */
+  }
+  
+  .bt-footer-heading {
+    margin: 0 0 1rem 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #f3ede0;
+  }
+  
+  .bt-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 2.5rem;                    /* space between the 3 links     */
+  }
+  
+  .bt-footer-links a {
+    font-size: 14px;
+    color: #c4c2bc;
+    text-decoration: none;
+  }
+  
+  .bt-footer-links a:hover {
+    color: #ffffff;
+  }
+  

@@ -1,0 +1,32 @@
+.bt-testimonial {
+    margin: 0 auto; 
+    text-align: center;
+    color: #F3EDE0;
+    margin-top: 6rem;
+    margin-bottom: 4rem;
+  }
+
+  .bt-stars {
+    display: inline-flex;  
+    align-items: center; 
+    gap: 0.25rem; 
+    font-size: 20px; 
+    color: #F3EDE0;   
+  }
+  
+  .bt-quote {
+    margin: 0 2.5rem;
+    font-size: 40px;   
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.04em;
+  }
+  
+  .bt-caption {
+    margin-top: 1rem;
+    font-size: 14px;
+    color: #c4c2bc;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+  

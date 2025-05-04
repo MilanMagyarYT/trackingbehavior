@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { Roboto_Flex } from "next/font/google";
 import { Providers } from "@/app/store/Providers";
 import AuthListener from "@/app/AuthListener";
 

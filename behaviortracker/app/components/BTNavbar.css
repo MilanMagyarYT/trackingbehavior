@@ -3,8 +3,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #1B2538;
-  padding: 0.5rem 1rem;
+  background-color: #0D1623;
+  padding: 0.75rem 1.25rem;
   position: relative;
   z-index: 10;
 }

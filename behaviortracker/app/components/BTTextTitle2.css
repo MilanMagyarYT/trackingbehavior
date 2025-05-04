@@ -1,0 +1,18 @@
+.bt-title2-text {
+    display: inline-block;          /* shrink‐wrap to the text */
+    background: #0D1623;
+    color: #F3EDE0;            
+    font-weight: 600;
+    line-height: 1.2;                 /* keeps height tight */
+    user-select: none;              /* text not selectable */
+    font-size: 44px;
+    letter-spacing: -0.04em;
+    text-align: center;
+  }
+
+  .bt-title2 {
+    display: flex;           /* create a flex row */
+    justify-content: center; /* center its children horizontally */
+    padding-bottom: 0.75rem;
+  }
+  

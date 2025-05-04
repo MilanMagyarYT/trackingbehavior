@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { BsPersonAdd } from "react-icons/bs";
-import { MdLogin, MdClose, MdAccountCircle } from "react-icons/md";
+import { MdLogin, MdClose } from "react-icons/md";
 import { IoMdMenu } from "react-icons/io";
 import { FaHouse } from "react-icons/fa6";
 import { IoMdHelpCircleOutline } from "react-icons/io";
@@ -47,7 +47,6 @@ export default function BTNavbar() {
 
   return (
     <nav className="navbar">
-      {/* Logo */}
       <div className="navbar__logo" onClick={() => navTo("/")}>
         <Image
           src="/trackingbehaviorlogo2.png"
@@ -57,15 +56,7 @@ export default function BTNavbar() {
         />
       </div>
 
-      {/* Hamburger */}
       <div className="navbar__icons">
-        {status !== "authenticated" && (
-          <MdAccountCircle
-            className="navbar__icon"
-            title="Login"
-            onClick={() => navTo("/login")}
-          />
-        )}
         {status === "unauthenticated" && (
           <IoMdMenu
             className="navbar__icon"
