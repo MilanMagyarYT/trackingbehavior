@@ -19,17 +19,17 @@ export default function BTFooter() {
 
         {/* navigation */}
         <nav className="bt-footer-nav">
-          <h4 className="bt-footer-heading">Sections</h4>
+          <h4 className="bt-footer-heading">sections</h4>
 
           <ul className="bt-footer-links">
             <li>
-              <Link href="#how-it-works">How&nbsp;It&nbsp;Works</Link>
+              <Link href="#how-it-works">how&nbsp;it&nbsp;works</Link>
             </li>
             <li>
-              <Link href="#features">Features</Link>
+              <Link href="#features">features</Link>
             </li>
             <li>
-              <Link href="#contact">Contact</Link>
+              <Link href="#contact">start-behavior-tracking</Link>
             </li>
           </ul>
         </nav>

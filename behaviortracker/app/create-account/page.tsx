@@ -18,6 +18,7 @@ import { store } from "@/app/store";
 import { setUser } from "@/app/store/authSlice";
 import { FaGoogle } from "react-icons/fa";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import "@/app/components/CreateAccountPage.css";
 
 export default function CreateAccountPage() {
   const router = useRouter();
@@ -126,139 +127,100 @@ export default function CreateAccountPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1623] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md bg-[#1b2538] px-6 py-8 rounded-lg shadow-xl">
-        {/* Logo */}
-        <div
-          className="mb-6 cursor-pointer"
-          onClick={() => router.replace("/")}
-        >
-          <Image
-            src="/trackingbehaviorlogo2.png"
-            alt="Tracking Behavior"
-            width={140}
-            height={50}
-          />
-        </div>
-
-        {/* Header */}
-        <h1 className="text-2xl font-bold text-[#f3ede0] mb-1">
-          Create an account
-        </h1>
-        <p className="text-[#cfd8e3] mb-6">
-          Every month, 100+ users start tracking their behavior. Join them!
-        </p>
-
-        {/* Error */}
-        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
-
-        {/* Email/password form */}
-        <form onSubmit={handleEmailSignUp} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-[#f3ede0] mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="w-full p-3 rounded border border-[#3a4a6a] bg-[#0d1623] text-[#f3ede0]
-                         focus:outline-none focus:ring-2 focus:ring-[#3a4a6a]"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-[#f3ede0] mb-1">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 8 characters"
-              className="w-full p-3 rounded border border-[#3a4a6a] bg-[#0d1623] text-[#f3ede0]
-                         focus:outline-none focus:ring-2 focus:ring-[#3a4a6a]"
-            />
-          </div>
-
-          {/* First + Last name side‑by‑side */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="block text-[#f3ede0] mb-1">
-                First name
-              </label>
-              <input
-                id="firstName"
-                type="text"
-                required
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full p-3 rounded border border-[#3a4a6a] bg-[#0d1623] text-[#f3ede0]
-                           focus:outline-none focus:ring-2 focus:ring-[#3a4a6a]"
-              />
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-[#f3ede0] mb-1">
-                Last name
-              </label>
-              <input
-                id="lastName"
-                type="text"
-                required
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full p-3 rounded border border-[#3a4a6a] bg-[#0d1623] text-[#f3ede0]
-                           focus:outline-none focus:ring-2 focus:ring-[#3a4a6a]"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-[#3a4a6a] text-[#f3ede0]
-                       font-semibold rounded hover:bg-[#52607f] transition"
+    <div className="cap-bg">
+      {!statusKnown ? (
+        <LoadingSpinner />
+      ) : currentUser ? null : (
+        <section className="cap-wrapper">
+          <header
+            className="cap-hero"
+            onClick={() => router.replace("/")}
+            role="button"
           >
-            SIGN UP
-          </button>
-        </form>
+            <Image
+              src="/trackingbehaviorlogo2.png"
+              alt="Tracking Behavior"
+              width={140}
+              height={50}
+            />
 
-        {/* OR divider */}
-        <div className="my-6 flex items-center text-[#cfd8e3]">
-          <hr className="flex-grow border-[#3a4a6a]" />
-          <span className="px-3">OR</span>
-          <hr className="flex-grow border-[#3a4a6a]" />
-        </div>
+            <h1 className="cap-hero-title">create an account</h1>
+            <p className="cap-hero-sub">good to see you joining.</p>
+          </header>
 
-        {/* Google */}
-        <button
-          onClick={handleGoogle}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 py-2 mb-3
-                     border border-[#3a4a6a] rounded hover:bg-[#162137] transition"
-        >
-          <FaGoogle className="text-xl text-[#f3ede0]" />
-          <span className="text-[#f3ede0] font-medium">
-            Continue with Google
-          </span>
-        </button>
+          <div className="cap-card">
+            {error && <p className="cap-error">{error}</p>}
 
-        {/* Already have account */}
-        <p className="mt-6 text-center text-[#cfd8e3]">
-          Already have an account?{" "}
-          <button
-            onClick={() => router.push("/login")}
-            className="underline text-[#f3ede0] hover:opacity-80"
-          >
-            Log in
-          </button>
-        </p>
-      </div>
+            <form onSubmit={handleEmailSignUp} className="cap-form">
+              <label>
+                <span>email</span>
+                <input
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+
+              <label>
+                <span>password</span>
+                <input
+                  type="password"
+                  required
+                  placeholder="***********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+
+              <div className="cap-name-row">
+                <label>
+                  <span>first name</span>
+                  <input
+                    type="text"
+                    required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </label>
+
+                <label>
+                  <span>last name</span>
+                  <input
+                    type="text"
+                    required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              <button type="submit" disabled={loading} className="cap-btn-main">
+                sign&nbsp;up
+              </button>
+            </form>
+
+            <div className="cap-divider">
+              <span>or</span>
+            </div>
+
+            <button
+              onClick={handleGoogle}
+              disabled={loading}
+              className="cap-btn-google"
+            >
+              <FaGoogle />
+              continue with google
+            </button>
+
+            <p className="cap-login">
+              already have an account?{" "}
+              <button onClick={() => router.push("/login")}>log&nbsp;in</button>
+            </p>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -57,13 +57,6 @@ export default function BTNavbar() {
       </div>
 
       <div className="navbar__icons">
-        {status === "unauthenticated" && (
-          <IoMdMenu
-            className="navbar__icon"
-            title="Open menu"
-            onClick={toggleMenu}
-          />
-        )}
         {status === "authenticated" && (
           <button
             className="navbar__avatar"

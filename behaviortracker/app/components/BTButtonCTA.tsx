@@ -1,8 +1,17 @@
+import React from "react";
 import "./BTButtonCTA.css";
-export default function BTButtonCTA({ text }: { text: string }) {
+
+interface BTButtonCTAProps {
+  text: string;
+  onChange: () => void;
+}
+
+export default function BTButtonCTA({ text, onChange }: BTButtonCTAProps) {
   return (
-    <div className="bt-buttoncta">
-      <span className="bt-buttoncta-text">{text}</span>
+    <div className="bt-buttoncta-wrapper">
+      <button type="button" className="bt-buttoncta" onClick={onChange}>
+        {text}
+      </button>
     </div>
   );
 }
