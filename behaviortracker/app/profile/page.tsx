@@ -1,93 +1,101 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebaseClient";
-import React from "react";
+import { PiHandPalmDuotone } from "react-icons/pi"; // looks like an open hand
+import { GiBrain } from "react-icons/gi";
 import { useRouter } from "next/navigation";
-import BTNavbar from "../components/BTNavbar";
-import BTButton from "../components/BTButton";
-import { useAppSelector } from "../store";
-import "./Profile.css";
 import {
   collection,
   query,
   where,
   orderBy,
-  getDocs,
   Timestamp,
+  onSnapshot,
+  doc,
+  getDoc,
 } from "firebase/firestore";
-import LoadingSpinner from "../components/LoadingSpinner";
-interface SessionStub {
-  id: string;
-  createdAt: Timestamp;
-  appId: string;
-  timeBucket: string;
+import { db } from "@/lib/firebaseClient";
+import { useAppSelector } from "@/app/store";
+
+import BTNavbar from "@/app/components/BTNavbar";
+import BTBottomNav from "@/app/components/BTBottomNav";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
+
+import { clamp, lerpColor } from "@/lib/utils";
+import "./Profile.css";
+import BTSetupBanner from "../components/BTSetupBanner";
+
+interface SessionDoc {
   durMin: number;
+  sessionScore: number; // 0‑1
 }
 
-export default function Profile() {
+export default function ProfilePage() {
+  const { uid, status } = useAppSelector((s) => s.auth);
   const router = useRouter();
-  const { status } = useAppSelector((s) => s.auth);
-  const startSetup = () => router.push("/start-setup");
-  const addNewSession = () => router.push("/add-new-session");
-  const viewSessions = () => router.push("/view-sessions");
-  const viewRecommendations = () => router.push("/view-recommendations");
 
-  const [setupComplete, setSetupComplete] = useState<boolean | null>(null);
-  const { uid } = useAppSelector((s) => s.auth);
+  /* today running totals */
   const [totalMin, setTotalMin] = useState(0);
-  const hours = Math.floor(totalMin / 60);
-  const minutes = totalMin % 60;
+  const [prodWeighted, setProdWt] = useState(0); // Σ(dur * score)
+  const [prodPossible, setProdPos] = useState(0); // Σ(dur * 1)
 
-  const recommendationsCount = 0;
-  const [sessions, setSessions] = useState<SessionStub[]>([]);
+  /* derived */
+  const [goalMin, setGoalMin] = useState<number | null>(null);
+
+  const usageScore = goalMin ? clamp(1 / (totalMin / goalMin), 0, 1) : null;
+  const prodScore = prodPossible ? prodWeighted / prodPossible : null;
+  const dayScore =
+    100 -
+    (usageScore !== null && prodScore !== null
+      ? ((usageScore + prodScore) / 2) * 100
+      : 0);
+
+  /* loading gates */
   const [loading, setLoading] = useState(true);
 
+  const [baselineDone, setBaselineDone] = useState<boolean | null>(null);
+
   useEffect(() => {
-    const checkSetup = async () => {
-      if (!uid) return;
-      const userRef = doc(db, "users", uid);
-      const userSnap = await getDoc(userRef);
-      console.log(userSnap);
-
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        setSetupComplete(!!data.baselineCompletedAt);
-      }
-    };
-
-    const fetchToday = async () => {
-      if (!uid) return;
-
-      const today = new Date();
-      today.setUTCHours(0, 0, 0, 0);
-
-      const q = query(
-        collection(db, "users", uid, "sessions"),
-        where("createdAt", ">=", Timestamp.fromDate(today)),
-        orderBy("createdAt", "desc")
-      );
-
-      const snap = await getDocs(q);
-      const lst: SessionStub[] = [];
-      let sum = 0;
-
-      snap.forEach((d) => {
-        const item = { id: d.id, ...(d.data() as any) } as SessionStub;
-        lst.push(item);
-        sum += item.durMin;
-      });
-
-      setSessions(lst);
-      setTotalMin(sum);
-      setLoading(false);
-    };
-
-    checkSetup();
-    fetchToday();
+    if (!uid) return;
+    getDoc(doc(db, "users", uid)).then((s) => {
+      if (!s.exists()) return;
+      const data = s.data();
+      setGoalMin(data.goalPhoneMin ?? null);
+      setBaselineDone(!!data.baselineCompletedAt);
+    });
   }, [uid]);
 
+  /* subscribe to today’s sessions */
+  useEffect(() => {
+    if (!uid) return;
+
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    const q = query(
+      collection(db, "users", uid, "sessions"),
+      where("createdAt", ">=", Timestamp.fromDate(today)),
+      orderBy("createdAt", "asc")
+    );
+
+    const unsub = onSnapshot(q, (snap) => {
+      let min = 0,
+        wt = 0;
+      snap.forEach((doc) => {
+        const d = doc.data() as SessionDoc;
+        min += d.durMin;
+        wt += d.durMin * d.sessionScore;
+      });
+      setTotalMin(min);
+      setProdWt(wt);
+      setProdPos(min);
+      setLoading(false);
+    });
+
+    return () => unsub();
+  }, [uid]);
+
+  /* guards */
   if (status === "loading" || loading)
     return (
       <div className="h-screen bg-[#0d1623] flex items-center justify-center">
@@ -100,57 +108,107 @@ export default function Profile() {
     return null;
   }
 
+  /* SVG ring geometry */
+  const R = 140; // radius
+  const C = 2 * Math.PI * R; // circumference
+  const pct = dayScore ?? 0;
+
   return (
-    <div>
+    <div className="has-footer">
       <BTNavbar />
-      <div className="profile">
-        <main className="profile__container">
-          <h1 className="profile__title">
-            Wish you a great time tracking your behavior
-          </h1>
+      {/* show banner if baseline is incomplete */}
+      {baselineDone === false && (
+        <div className="notification">
+          <BTSetupBanner onClick={() => router.push("/start-setup")} />
+        </div>
+      )}
 
-          {!setupComplete && (
-            <div className="profile__card">
-              <h2 className="profile__card-title">Set-Up Your Account</h2>
-              <p className="profile__card-subtitle">
-                Step Remaining: Uncompleted
-              </p>
-              <BTButton text="Start Set-Up" onClick={startSetup} />
-            </div>
-          )}
+      <main className="profile-ct">
+        {/* headline */}
+        <h1 className="profile-h1">today’s score</h1>
+        <p className="profile-date">
+          {new Date().toLocaleDateString(undefined, {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}
+        </p>
 
-          <div className="profile__card">
-            <h2 className="profile__card-title">Add a New Session</h2>
-            <p className="profile__card-subtitle">
-              Sessions Today: {sessions.length}
-            </p>
-            <BTButton text="New Session" onClick={addNewSession} />
-          </div>
-
-          <div className="profile__card">
-            <h2 className="profile__card-title">
-              View Today’s Tracked Sessions
-            </h2>
-            <p className="profile__card-subtitle">
-              Total Social Media Usage: {hours} h {minutes} m
-            </p>
-            <BTButton text="View Your Data" onClick={viewSessions} />
-          </div>
-
-          <div className="profile__card">
-            <h2 className="profile__card-title">
-              View Yesterday’s Usage Recommendations
-            </h2>
-            <p className="profile__card-subtitle">
-              Number of Recommendations: {recommendationsCount}
-            </p>
-            <BTButton
-              text="View Recommendations"
-              onClick={viewRecommendations}
+        {/* donut */}
+        <div className="donut-wrap">
+          <svg width="320" height="320" viewBox="0 0 320 320">
+            {/* background ring */}
+            <circle
+              cx="160"
+              cy="160"
+              r={R}
+              stroke="#132032"
+              strokeWidth="24"
+              fill="#1B2538"
             />
+
+            {/* progress ring (rotated so 0 % starts at 12 o clock) */}
+            <circle
+              cx="160"
+              cy="160"
+              r={R}
+              stroke={lerpColor("#ffae66", "#fa4617", pct / 100)}
+              strokeWidth="24"
+              strokeLinecap="round"
+              fill="none"
+              strokeDasharray={C}
+              strokeDashoffset={C * (1 - pct / 100)}
+              transform="rotate(-90 160 160)"
+              style={{ transition: "stroke-dashoffset .6s ease" }}
+            />
+          </svg>
+
+          {/* overlayed centre text – absolutely centred */}
+          <div className="donut-centre">
+            <span className="donut-label">productivity</span>
+            <span className="donut-num">
+              {dayScore !== null ? Math.round(dayScore) : "0"}
+              <span className="donut-pct">%</span>
+            </span>
           </div>
-        </main>
-      </div>
+        </div>
+
+        {/* explanation card */}
+        <section className="profile-info">
+          <h3>USAGE + BEHAVIOR % BASELINE</h3>
+          <p>
+            tracking behavior calculates how productive your social‑media usage
+            is by assessing your daily recorded sessions by comparing it to your
+            baseline metrics and behavior.
+          </p>
+        </section>
+        {/* statistics header */}
+        <div className="stat-head">
+          <span>productivity statistics</span>
+          <span>vs. previous 30 days</span>
+        </div>
+
+        {/* two pills */}
+        <button
+          className="stat-pill"
+          onClick={() => router.push("/stats/usage")}
+        >
+          <PiHandPalmDuotone className="stat-icon" />
+          USAGE
+        </button>
+
+        <button
+          className="stat-pill"
+          onClick={() => router.push("/stats/behaviour")}
+        >
+          <GiBrain className="stat-icon" />
+          BEHAVIOR
+        </button>
+        {/* spacer for footer */}
+        <div style={{ height: "2rem" }} />
+      </main>
+
+      <BTBottomNav />
     </div>
   );
 }

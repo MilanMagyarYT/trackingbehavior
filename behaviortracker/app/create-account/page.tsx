@@ -1,4 +1,3 @@
-// app/create-account/page.tsx
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
@@ -23,7 +22,6 @@ import "@/app/components/CreateAccountPage.css";
 export default function CreateAccountPage() {
   const router = useRouter();
 
-  // local state
   const [statusKnown, setStatusKnown] = useState(false);
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(
     auth.currentUser
@@ -48,7 +46,7 @@ export default function CreateAccountPage() {
   // wait until we know whether they're logged in or not
   if (!statusKnown) {
     return (
-      <div className="h-screen bg-[#0d1623] flex items-center justify-center">
+      <div className="">
         <LoadingSpinner />
       </div>
     );
@@ -115,9 +113,6 @@ export default function CreateAccountPage() {
           displayName: u.displayName,
         })
       );
-
-      // optionally write your Firestore doc here if you need more fields
-      // ...
 
       router.replace("/profile");
     } catch (err) {

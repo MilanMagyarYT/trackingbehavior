@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { BsPersonAdd } from "react-icons/bs";
 import { MdLogin, MdClose } from "react-icons/md";
-import { IoMdMenu } from "react-icons/io";
 import { FaHouse } from "react-icons/fa6";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import "./BTNavbar.css";

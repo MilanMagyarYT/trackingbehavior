@@ -1,0 +1,30 @@
+.su-select {
+    position: relative;
+  }
+  .su-select-display {
+    cursor: pointer;
+    user-select: none;
+  }
+  .su-select-list {
+    position: absolute;
+    z-index: 20;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #0d1623;
+    border: 1.5px solid #2a3d60;
+    border-radius: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+    margin-top: 0.3rem;
+  }
+  .su-select-item {
+    padding: 0.65rem 1rem;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .su-select-item:hover,
+  .su-select-item.is-active {
+    background: #112233;
+  }
+  

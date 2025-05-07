@@ -1,61 +1,132 @@
-.profile {
-    background-color: #0D1623;
-    color: #F3EDE0;  
-    min-height: 100vh;
-    padding-top: 1rem;
-  }
-  
-  .profile__container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .profile__title {
-    font-size: 1.75rem;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .profile__card {
-    border: 1px solid #F3EDE0;
-    border-radius: 8px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .profile__card-title {
-    font-size: 1.25rem;
-    margin: 0;
-  }
-  
-  .profile__card-subtitle {
-    font-size: 0.9rem;
-    margin: 0;
-  }
-  
-  .profile__progress-bar {
-    background-color: #456484;
-    border-radius: 4px;
-    height: 8px;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .profile__progress-bar__fill {
-    background-color: #F3EDE0;
-    height: 100%;
-    width: 0%;
-    transition: width 0.3s ease;
-  }
-  
-    .profile__card .bt-button {
-    align-self: flex-start;
-  }
-  
-  
+/* container */
+.profile-ct {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 0;            
+  color: #f3ede0;
+  background: #0D1623;
+}
+
+/* headline */
+.profile-h1 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.04em;
+  color: #f3ede0;
+}
+.profile-date {
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 1rem;
+  color: #c4c2bc;
+}
+
+/* donut wrapper */
+.donut-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* info card */
+.profile-info {
+  background: #1B2538;
+  border: 1.5px solid #2A3D60;
+  border-radius: 20px;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.75rem;
+}
+.profile-info h3 {
+  margin: 0 0 0.5rem;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.profile-info p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #c4c2bc;
+  letter-spacing: 0.04em;
+}
+
+  /* header row above pills */
+.stat-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: #c4c2bc;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.04em;
+}
+
+/* pills */
+.stat-pill {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #2A3D60;
+  color: #f3ede0;
+  font-weight: 600;
+  border: none;
+  border-radius: 20px;
+  padding: 0.9rem 1.25rem;
+  font-size: 18px;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: background 0.25s;
+  letter-spacing: -0.04em;
+}
+.stat-pill:hover {
+  background: #243b6e;
+}
+.stat-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* donut inner overlay */
+.donut-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.donut-centre {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;       /* SVG clicks still work */
+}
+.donut-label {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: #c4c2bc;
+  margin-bottom: 4px;
+}
+.donut-num {
+  font-size: 96px;
+  font-weight: 600;
+  color: #f3ede0;
+  line-height: 1;
+}
+.donut-pct {
+  font-size: 32px;
+  margin-left: 4px;
+}
+
+.has-footer {
+  padding-top: 72px;
+  padding-bottom: 60px;
+  background: #0D1623;
+}
+
+.notification {
+  padding: 1rem 1rem 0rem;
+}
