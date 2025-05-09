@@ -1,4 +1,3 @@
-// app/(auth)/insights/page.tsx
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -30,7 +29,7 @@ import "../components/DailyInsights.css";
 
 interface Session {
   durMin: number;
-  sessionScore: number; // 0–1
+  sessionScore: number;
   createdAt: Timestamp;
   appId: string;
 }
@@ -39,12 +38,10 @@ export default function InsightsPage() {
   const router = useRouter();
   const { uid, status } = useAppSelector((s) => s.auth);
 
-  // ───── UI state ─────
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [dayOffset, setDayOffset] = useState(0);
 
-  // ───── Subscribe to “that day” ─────
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
@@ -79,12 +76,10 @@ export default function InsightsPage() {
     return () => unsub();
   }, [uid, dayOffset]);
 
-  // ───── Redirect if not authed ─────
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
 
-  // ───── Derived / memoized data ─────
   const totalMin = sessions.reduce((sum, s) => sum + s.durMin, 0);
   const weightedSum = sessions.reduce(
     (sum, s) => sum + s.durMin * s.sessionScore,
@@ -127,7 +122,6 @@ export default function InsightsPage() {
     }
   );
 
-  // ───── Now we can safely do our early returns ─────
   if (status === "loading" || loading) {
     return (
       <div className="insights-loader">
@@ -139,12 +133,10 @@ export default function InsightsPage() {
     return null;
   }
 
-  // ───── Finally: the UI ─────
   return (
     <div className="insights-page">
       <BTNavbar />
 
-      {/* Date nav */}
       <div className="insights-date-nav">
         <button onClick={() => setDayOffset((d) => d + 1)}>‹</button>
         <span>{dateLabel}</span>
@@ -153,7 +145,6 @@ export default function InsightsPage() {
         </button>
       </div>
 
-      {/* Summary */}
       <div className="insights-summary">
         <div className="summary-block">
           <div className="label">total time spent:</div>
@@ -168,7 +159,6 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      {/* Bar chart */}
       <h3 className="insights-section-title">usage chart</h3>
       <div className="insights-chart">
         <ResponsiveContainer width="100%" height={200}>
@@ -176,10 +166,8 @@ export default function InsightsPage() {
             data={chartData}
             margin={{ top: 8, right: 0, left: 0, bottom: 8 }}
           >
-            {/* soft horizontal grid lines only */}
             <CartesianGrid stroke="#2A3D60" vertical={false} />
 
-            {/* hide the Y‐axis labels, just keep domain lines */}
             <YAxis
               hide={false}
               axisLine={false}
@@ -190,7 +178,6 @@ export default function InsightsPage() {
               interval="preserveStartEnd"
             />
 
-            {/* hour labels */}
             <XAxis
               dataKey="hour"
               axisLine={false}
@@ -209,7 +196,6 @@ export default function InsightsPage() {
               itemStyle={{ color: "#FA4617" }}
             />
 
-            {/* thick rounded orange bars */}
             <Bar
               dataKey="usage"
               fill="#FA4617"
@@ -220,7 +206,6 @@ export default function InsightsPage() {
         </ResponsiveContainer>
       </div>
 
-      {/* App list */}
       <h3 className="insights-section-title">applications used today</h3>
       <ul className="insights-app-list">
         {apps.length ? (

@@ -18,14 +18,16 @@ import { MultiSelect } from "primereact/multiselect";
 import { useAppSelector } from "@/app/store";
 import "../components/AddNewSession.css";
 import "../components/StartSetup.css";
+import type { Option } from "@/app/components/SimpleSelect";
 
 type TimeBucket = "morning" | "afternoon" | "evening" | "night";
-const timeOptions = [
-  { label: "Morning (6‑11)", value: "morning" },
-  { label: "Afternoon (11‑17)", value: "afternoon" },
-  { label: "Evening (17‑22)", value: "evening" },
-  { label: "Late‑Night (22‑6)", value: "night" },
-] as const;
+
+const timeOptions: Option[] = [
+  { label: "Morning (6-11)", value: "morning" },
+  { label: "Afternoon (11-17)", value: "afternoon" },
+  { label: "Evening (17-22)", value: "evening" },
+  { label: "Late-Night (22-6)", value: "night" },
+];
 
 const appList = [
   "Facebook",

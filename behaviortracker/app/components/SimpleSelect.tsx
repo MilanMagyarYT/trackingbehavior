@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./SimpleSelect.css";
 
-interface Option {
+export interface Option {
   label: string;
   value: string;
 }
