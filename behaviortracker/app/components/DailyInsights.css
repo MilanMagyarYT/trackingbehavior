@@ -1,0 +1,113 @@
+.insights-page {
+    padding-top: 72px;
+    padding-bottom: 60px;
+    background: #0d1623;
+    color: #f3ede0;
+    min-height: 100vh;
+  }
+  .insights-loader {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Date nav */
+  .insights-date-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .insights-date-nav button {
+    background: transparent;
+    border: 1px solid #f3ede0;
+    border-radius: 8px;
+    color: #f3ede0;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+  }
+  .insights-date-nav span {
+    font-size: 1rem;
+  }
+  
+  /* Summary */
+  .insights-summary {
+    display: flex;
+    max-width: 440px;
+    margin: 0 auto 1rem;
+    background: #b34d2f;
+    border: 1.5px solid #fa4617;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 0rem 1rem;
+  }
+  .summary-block {
+    flex: 1;
+    padding: 1rem 1.5rem;
+  }
+  .summary-block .label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+  .summary-block .value {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+  .divider {
+    width: 1px;
+    background: #fa4617;
+  }
+  
+  /* Chart */
+  .insights-chart {
+    max-width: 440px;
+    background: #1b2538;
+    border: 1.5px solid #2a3d60;
+    border-radius: 20px;
+    padding-right: 2rem;
+    padding-top: 1.5rem;
+    margin: 0rem 1rem;
+  }
+  
+  /* App list */
+  .insights-section-title {
+    max-width: 440px;
+    letter-spacing: -0.04em;
+    margin: 0rem 1rem;
+    margin-top: 2rem;
+    margin-bottom: 0.4rem;  
+  }
+  .insights-app-list {
+    max-width: 440px;
+    margin: 0 auto 2rem;
+    list-style: none;
+    padding: 0;
+    margin: 0rem 1rem;
+  }
+  .insights-app-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: #1b2538;
+    border: 1.5px solid #2a3d60;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+  }
+  .app-name {
+    font-weight: 500;
+  }
+  .app-duration,
+  .app-pct {
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+  .none {
+    text-align: center;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  

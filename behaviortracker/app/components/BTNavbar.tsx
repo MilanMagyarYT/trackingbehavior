@@ -67,15 +67,12 @@ export default function BTNavbar() {
         )}
       </div>
 
-      {/* Dark overlay */}
       <div
         className={`navbar__overlay ${menuOpen ? "open" : ""}`}
         onClick={closeMenu}
       />
 
-      {/* Slide‑in panel */}
       <div className={`navbar__mobileMenu ${menuOpen ? "open" : ""}`}>
-        {/* Header */}
         <div className="mobileMenu__header">
           <Image
             src="/trackingbehaviorlogo2.png"
@@ -139,7 +136,6 @@ export default function BTNavbar() {
               </li>
             </ul>
 
-            {/* big separator between sections */}
             <div className="mobileMenu__sectionDivider" />
 
             <ul className="mobileMenu__list">

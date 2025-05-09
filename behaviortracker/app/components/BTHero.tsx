@@ -5,7 +5,6 @@ import Image from "next/image";
 export default function BTHero() {
   return (
     <header className="relative flex flex-col items-center px-6 pt-6 pb-12 text-center">
-      {/* logo + burger */}
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <Image src="/logo.svg" alt="logo" width={28} height={28} />
@@ -22,7 +21,6 @@ export default function BTHero() {
         </button>
       </div>
 
-      {/* badge */}
       <span className="mt-8 inline-block rounded-full border border-textSecondary px-4 py-1 text-xs uppercase text-textSecondary">
         best for people who desire change
       </span>

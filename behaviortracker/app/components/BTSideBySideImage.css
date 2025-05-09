@@ -1,8 +1,8 @@
 .logos {
-    display: flex;          /* put children in one horizontal line */
-    gap: 7rem;              /* space between the two logos */
-    align-items: center;    /* vertical‑align them if heights differ */
-    justify-content: center;/* optional: center the whole row */
+    display: flex;         
+    gap: 7rem;           
+    align-items: center;    
+    justify-content: center;
     padding-bottom: 1.5rem;
   }
   

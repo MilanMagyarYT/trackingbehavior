@@ -1,12 +1,12 @@
 .bt-footer {
-    border-top: 1px solid #23304a;   /* thin divider line             */
-    background: #0d1623;            /* deep navy fill                */
+    border-top: 1px solid #23304a;  
+    background: #0d1623;           
     padding: 2.5rem 0 3rem;
     color: #F3EDE0;
   }
   
   .bt-footer-inner {
-    max-width: 960px;               /* adjust to your site’s grid    */
+    max-width: 960px;              
     margin: 0 auto;
     padding: 0 1.5rem;
   }
@@ -19,7 +19,7 @@
   }
   
   .bt-footer-title span {
-    font-weight: 700;               /* ‘behavior’ bold               */
+    font-weight: 700;           
   }
   
   .bt-footer-heading {
@@ -34,7 +34,7 @@
     padding: 0;
     margin: 0;
     display: flex;
-    gap: 2.5rem;                    /* space between the 3 links     */
+    gap: 2.5rem;                   
   }
   
   .bt-footer-links a {

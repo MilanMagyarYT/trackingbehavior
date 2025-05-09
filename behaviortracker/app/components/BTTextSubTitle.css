@@ -1,18 +1,18 @@
 .bt-subtitle-text {
-    display: inline-block;          /* shrink‐wrap to the text */
-    background: #0D1623; /* faint fill (optional) */
-    color: #C4C2BC;                 /* white text */
-    font-weight: 400;               /* a bit bolder */
-    line-height: 1.2;                 /* keeps height tight */
-    user-select: none;              /* text not selectable */
+    display: inline-block;         
+    background: #0D1623;
+    color: #C4C2BC;             
+    font-weight: 400;            
+    line-height: 1.2;                
+    user-select: none;           
     font-size: 18px;
     letter-spacing: -0.04em;
     text-align: center;
   }
 
   .bt-subtitle {
-    display: flex;           /* create a flex row */
-    justify-content: center; /* center its children horizontally */
+    display: flex;          
+    justify-content: center; 
     padding-bottom: 0.75rem;
   }
   

@@ -1,10 +1,8 @@
-/* already pushed nav + footer gap via .navbarwith -------- */
-.navbarwith{
-  padding-top:72px;          /* nav height */
-  padding-bottom:60px;       /* footer height */
+.navbarwithmilan{
+  padding-top:72px;        
+  padding-bottom:60px;     
 }
 
-/* page wrapper ------------------------------------------ */
 .sn-bg{
   min-height:100dvh;
   background:#0d1623;
@@ -16,26 +14,87 @@
   color:#f3ede0;
 }
 
-/* header card ------------------------------------------- */
 .sn-session{
   width:100%; max-width:440px;
-  margin-bottom:1.5rem;
+  margin-bottom:1rem;
   background:#1b2538;
   border:1.5px solid #2a3d60;
   border-radius:20px;
   padding:1.25rem 1rem;
   text-align:center;
 }
-.sn-session h3{margin:0;font-size:28px;font-weight:600;letter-spacing:-.03em}
-.sn-session span{font-size:15px;color:#c4c2bc}
+.sn-session h3{margin:0;font-size:36px;font-weight:600;letter-spacing:-.04em}
+.sn-session span{font-size:18px;color:#c4c2bc;letter-spacing:-.04em}
 
-/* wizard‑specific tweaks on top of the shared su‑ styles -- */
-.sn-title{font-size:32px}            /* a bit smaller than setup page */
-.sn-progress{margin-bottom:1.5rem}   /* extra space */
+.sn-title {
+  margin: 0 0 0.6rem;
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -0.04em;
+}
 
-/* buttons row override */
+.sn-progress {
+  height: 6px;
+  background: #0d1623;
+  border-radius: 25px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+} 
+
+.sn-progress-bar {
+  height: 100%;
+  background: #f3ede0;
+  transition: width 0.3s ease;
+}
+
 .sn-btn-row{display:flex;gap:1rem;margin-top:1.75rem}
 .sn-btn-row>button{flex:1 1 0}
 
-/* loader in centre */
 .sn-loader{height:100dvh;background:#0d1623;display:flex;align-items:center;justify-content:center}
+/* form labels / inputs */
+.sn-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #f3ede0;
+  letter-spacing: -0.04em;
+}
+
+/* badge is pinned to the top‑centre */
+.sn-done-icon {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #12da61;
+  color: #0d1623;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.sn-title2 {
+  margin-top: 3.5rem;
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -0.04em;
+}
+
+.sn-sub2 {
+  margin-bottom: 2rem;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: -0.04em;
+  color: #c4c2bc;
+}

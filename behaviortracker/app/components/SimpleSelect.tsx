@@ -21,7 +21,6 @@ export default function SimpleSelect({
   const [active, setActive] = useState<number>(0);
   const ref = useRef<HTMLDivElement>(null);
 
-  /* close on click‑outside */
   useEffect(() => {
     const h = (e: MouseEvent) =>
       !ref.current?.contains(e.target as Node) && setOpen(false);
@@ -29,7 +28,6 @@ export default function SimpleSelect({
     return () => document.removeEventListener("mousedown", h);
   }, [open]);
 
-  /* keyboard nav */
   function handleKey(e: React.KeyboardEvent) {
     if (!open && (e.key === "ArrowDown" || e.key === "Enter")) {
       setOpen(true);

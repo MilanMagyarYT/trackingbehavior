@@ -148,19 +148,16 @@ export default function StartSetup() {
 
       <div className="su-bg">
         <section className="su-card">
-          {/* step badge */}
           {step <= 3 && (
             <span className="su-step-badge">step {step <= 3 ? step : "✓"}</span>
           )}
 
-          {/* dynamic heading */}
           <h2 className="su-title">
             {step === 1 && "usage metrics"}
             {step === 2 && "usage behavior"}
             {step === 3 && "review answers"}
           </h2>
 
-          {/* subtitle */}
           {step < 3 && (
             <p className="su-sub">
               {step === 1
@@ -175,7 +172,6 @@ export default function StartSetup() {
             </p>
           )}
 
-          {/* progress (hide on final screen) */}
           {step <= 3 && (
             <div className="su-progress">
               <div
@@ -185,7 +181,6 @@ export default function StartSetup() {
             </div>
           )}
 
-          {/* ─────────────────── STEP 1 ─────────────────── */}
           {step === 1 && (
             <>
               <label className="su-label">
@@ -242,10 +237,8 @@ export default function StartSetup() {
             </>
           )}
 
-          {/* ─────────── step 2 ─────────── */}
           {step === 2 && (
             <>
-              {/* ───────── triggers ───────── */}
               <label className="su-label">
                 which reasons do you consider productive behavior?
               </label>
@@ -265,7 +258,6 @@ export default function StartSetup() {
                 className="su-multi"
               />
 
-              {/* ───────── goals ───────── */}
               <label className="su-label">
                 which goals do you consider productive behavior?
               </label>
@@ -280,7 +272,6 @@ export default function StartSetup() {
                 className="su-multi"
               />
 
-              {/* ───────── activities ───────── */}
               <label className="su-label">
                 which activities do you consider productive behavior?
               </label>
@@ -297,7 +288,6 @@ export default function StartSetup() {
                 className="su-multi"
               />
 
-              {/* ───────── combobox yes / no ───────── */}
               <label className="su-label">
                 do you consider a negative mood drop unproductive?
               </label>
@@ -313,7 +303,6 @@ export default function StartSetup() {
                 }}
               />
 
-              {/* ───────── content types ───────── */}
               <label className="su-label">
                 which content type do you consider productive?
               </label>
@@ -333,7 +322,6 @@ export default function StartSetup() {
                 className="su-multi"
               />
 
-              {/* -------- nav buttons -------- */}
               <div className="su-btn-row">
                 <button className="su-btn-outline" onClick={() => setStep(1)}>
                   back
@@ -349,7 +337,6 @@ export default function StartSetup() {
             </>
           )}
 
-          {/* ─────────────────── STEP 3 (review) ─────────────────── */}
           {step === 3 && (
             <>
               <div className="su-btn-row">
@@ -404,13 +391,10 @@ export default function StartSetup() {
             </>
           )}
 
-          {/* ─────────────────── STEP 4 (done) ─────────────────── */}
           {step === 4 && (
             <>
-              {/* 1️⃣  badge first */}
               <span className="su-done-icon">✓</span>
 
-              {/* 2️⃣  dynamic heading that’s already there */}
               <h2 className="su-title2">answers submitted</h2>
 
               <p className="su-sub2">
@@ -432,12 +416,10 @@ export default function StartSetup() {
   );
 }
 
-/* small helper to list selected keys */
 function listFromRecord<T extends string>(rec: Record<T, boolean>): T[] {
   return Object.keys(rec).filter((k) => rec[k as T]) as T[];
 }
 
-/* quick sub‑component for review rows */
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
     <>

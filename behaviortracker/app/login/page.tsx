@@ -65,7 +65,6 @@ export default function LoginPage() {
   return (
     <div className="log-bg">
       <section className="log-wrapper">
-        {/* ── hero card ── */}
         <header
           className="log-hero"
           onClick={() => router.replace("/")}
@@ -81,7 +80,6 @@ export default function LoginPage() {
           <p className="log-hero-sub">good to see you again.</p>
         </header>
 
-        {/* ── form card ── */}
         <div className="log-card">
           {error && <p className="log-error">{error}</p>}
 

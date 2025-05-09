@@ -68,7 +68,7 @@
 }
 .su-progress-bar {
   height: 100%;
-  background: #ffffff;
+  background: #f3ede0;
   transition: width 0.3s ease;
 }
 

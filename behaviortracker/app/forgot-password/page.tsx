@@ -38,7 +38,6 @@ export default function ForgotPasswordPage() {
   return (
     <div className="fp-bg">
       <section className="fp-wrapper">
-        {/* ─── hero card ─── */}
         {step === "form" && (
           <header
             className="fp-hero"
@@ -59,7 +58,6 @@ export default function ForgotPasswordPage() {
             </p>
           </header>
         )}
-        {/* ─── main card ─── */}
         <div className="fp-card">
           {step === "form" ? (
             <>
@@ -101,7 +99,6 @@ export default function ForgotPasswordPage() {
                 width={140}
                 height={50}
               />
-              {/* green circle + checkmark */}
               <span className="fp-check">
                 <svg viewBox="0 0 24 24" stroke="currentColor">
                   <path

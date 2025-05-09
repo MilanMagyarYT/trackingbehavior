@@ -27,19 +27,17 @@ import BTSetupBanner from "../components/BTSetupBanner";
 
 interface SessionDoc {
   durMin: number;
-  sessionScore: number; // 0‑1
+  sessionScore: number;
 }
 
 export default function ProfilePage() {
   const { uid, status } = useAppSelector((s) => s.auth);
   const router = useRouter();
 
-  /* today running totals */
   const [totalMin, setTotalMin] = useState(0);
-  const [prodWeighted, setProdWt] = useState(0); // Σ(dur * score)
-  const [prodPossible, setProdPos] = useState(0); // Σ(dur * 1)
+  const [prodWeighted, setProdWt] = useState(0);
+  const [prodPossible, setProdPos] = useState(0);
 
-  /* derived */
   const [goalMin, setGoalMin] = useState<number | null>(null);
 
   const usageScore = goalMin ? clamp(1 / (totalMin / goalMin), 0, 1) : null;
@@ -50,7 +48,6 @@ export default function ProfilePage() {
       ? ((usageScore + prodScore) / 2) * 100
       : 0);
 
-  /* loading gates */
   const [loading, setLoading] = useState(true);
 
   const [baselineDone, setBaselineDone] = useState<boolean | null>(null);
@@ -65,7 +62,6 @@ export default function ProfilePage() {
     });
   }, [uid]);
 
-  /* subscribe to today’s sessions */
   useEffect(() => {
     if (!uid) return;
 
@@ -95,7 +91,6 @@ export default function ProfilePage() {
     return () => unsub();
   }, [uid]);
 
-  /* guards */
   if (status === "loading" || loading)
     return (
       <div className="h-screen bg-[#0d1623] flex items-center justify-center">
@@ -108,15 +103,13 @@ export default function ProfilePage() {
     return null;
   }
 
-  /* SVG ring geometry */
-  const R = 140; // radius
-  const C = 2 * Math.PI * R; // circumference
+  const R = 140;
+  const C = 2 * Math.PI * R;
   const pct = dayScore ?? 0;
 
   return (
     <div className="has-footer">
       <BTNavbar />
-      {/* show banner if baseline is incomplete */}
       {baselineDone === false && (
         <div className="notification">
           <BTSetupBanner onClick={() => router.push("/start-setup")} />
@@ -124,7 +117,6 @@ export default function ProfilePage() {
       )}
 
       <main className="profile-ct">
-        {/* headline */}
         <h1 className="profile-h1">today’s score</h1>
         <p className="profile-date">
           {new Date().toLocaleDateString(undefined, {
@@ -134,10 +126,8 @@ export default function ProfilePage() {
           })}
         </p>
 
-        {/* donut */}
         <div className="donut-wrap">
           <svg width="320" height="320" viewBox="0 0 320 320">
-            {/* background ring */}
             <circle
               cx="160"
               cy="160"
@@ -147,7 +137,6 @@ export default function ProfilePage() {
               fill="#1B2538"
             />
 
-            {/* progress ring (rotated so 0 % starts at 12 o clock) */}
             <circle
               cx="160"
               cy="160"
@@ -163,7 +152,6 @@ export default function ProfilePage() {
             />
           </svg>
 
-          {/* overlayed centre text – absolutely centred */}
           <div className="donut-centre">
             <span className="donut-label">productivity</span>
             <span className="donut-num">
@@ -173,7 +161,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* explanation card */}
         <section className="profile-info">
           <h3>USAGE + BEHAVIOR % BASELINE</h3>
           <p>
@@ -182,13 +169,11 @@ export default function ProfilePage() {
             baseline metrics and behavior.
           </p>
         </section>
-        {/* statistics header */}
         <div className="stat-head">
           <span>productivity statistics</span>
           <span>vs. previous 30 days</span>
         </div>
 
-        {/* two pills */}
         <button
           className="stat-pill"
           onClick={() => router.push("/stats/usage")}
@@ -204,7 +189,6 @@ export default function ProfilePage() {
           <GiBrain className="stat-icon" />
           BEHAVIOR
         </button>
-        {/* spacer for footer */}
         <div style={{ height: "2rem" }} />
       </main>
 

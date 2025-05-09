@@ -1,12 +1,10 @@
 
-  /* ------------ pill‑shaped CTA button ------------ */
 .bt-buttoncta2 {
-  /* visual look */
   background: #fa4617;
   color: #f3ede0;
-  border: none;                 /* real button, but no native border */
+  border: none;                
   border-radius: 10px;
-  padding: 0.5rem 0.75rem;      /* top‑bottom | left‑right */
+  padding: 0.5rem 0.75rem;      
   font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.04em;
@@ -14,21 +12,18 @@
   cursor: pointer;
   user-select: none;
 
-  /* shrink‑wrap to its text and keep it centred */
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-/* optional: a lightweight hover / focus state */
 .bt-buttoncta2:hover,
 .bt-buttoncta2:focus-visible {
-  background: #ff5b25;          /* slightly lighter orange */
+  background: #ff5b25;          
 }
 
-/* ------------ wrapper that centres the button in a row ------------ */
 .bt-buttoncta2-wrapper {
   display: flex;
-  justify-content: center;      /* horizontal centring */
+  justify-content: center;    
   padding-top: 1rem;
 }

@@ -16,8 +16,12 @@ export default function BTBottomNav() {
   const tabs = [
     { href: "/profile", label: "home", Icon: AiOutlineHome },
     { href: "/add-new-session", label: "session", Icon: AiOutlinePlusCircle },
-    { href: "/view-sessions", label: "advice", Icon: HiOutlineLightBulb },
-    { href: "/view-recommendations", label: "insights", Icon: FiBarChart2 },
+    { href: "/view-sessions", label: "insights", Icon: FiBarChart2 },
+    {
+      href: "/view-recommendations",
+      label: "advice",
+      Icon: HiOutlineLightBulb,
+    },
   ];
 
   return (

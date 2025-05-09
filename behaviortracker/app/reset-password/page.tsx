@@ -56,7 +56,6 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-[#0d1623] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md bg-[#1b2538] px-6 py-8 rounded-lg shadow-xl">
-        {/* logo */}
         <div
           className="mb-6 cursor-pointer"
           onClick={() => router.replace("/")}

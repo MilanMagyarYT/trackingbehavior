@@ -6,7 +6,6 @@ export default function BTFooter() {
   return (
     <footer className="bt-footer">
       <div className="bt-footer-inner">
-        {/* logo + logotype */}
         <div className="bt-footer-brand">
           <Image
             src="/trackingbehaviorlogo2.png"
@@ -17,7 +16,6 @@ export default function BTFooter() {
           />
         </div>
 
-        {/* navigation */}
         <nav className="bt-footer-nav">
           <h4 className="bt-footer-heading">sections</h4>
 

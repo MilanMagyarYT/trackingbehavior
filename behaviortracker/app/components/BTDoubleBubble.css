@@ -1,22 +1,21 @@
 
 .double-bubble {
     display: flex;
-    justify-content: center;  /* center the pair in its row (optional) */
+    justify-content: center;  
     gap: 30px;
   }
   
-  /* shared look for both bubbles */
   .bubble1 {
-    background: #2A3D60;      /* deep navy */
-    color: #c4c2bc;           /* light gray copy */
+    background: #2A3D60;      
+    color: #c4c2bc;           
     width: 150px;
     padding: 1rem;
     border-radius: 20px;
   }
 
   .bubble2 {
-    background: #2A3D60;      /* deep navy */
-    color: #c4c2bc;           /* light gray copy */
+    background: #2A3D60; 
+    color: #c4c2bc;  
     width: 200px;
     padding: 0.5rem;
     border-radius: 20px;
@@ -57,7 +56,7 @@
   }
   
   .blurb strong {
-    color: #ffffff;           /* highlight text */
+    color: #ffffff;        
     font-weight: 700;
   }
   

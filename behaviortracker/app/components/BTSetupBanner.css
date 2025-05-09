@@ -3,9 +3,9 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    background: #973D25;           /* orange‑red fill */
+    background: #973D25;     
     color: #F3EDE0;
-    border: 1.5px solid #fa4617;     /* lighter outline */
+    border: 1.5px solid #fa4617;   
     border-radius: 20px;
     padding: 0.5rem 1.75rem;
     cursor: pointer;

@@ -1,7 +1,7 @@
 .bt-step-card {
     position: relative;
-    width: 360px;               /* card width (adjust as needed) */
-    padding: 2rem 1.75rem 2.5rem; /* extra bottom room for text */
+    width: 360px;    
+    padding: 2rem 1.75rem 2.5rem; 
     border: 1.5px solid #2A3D60;
     border-radius: 20px;
     background: #1B2538;
@@ -10,8 +10,8 @@
   
   .cards-wrapper {
     display: flex;
-    justify-content: center;   /* horizontal centering */
-    padding-top: 2rem;         /* replaces margin‑top on card if you like */
+    justify-content: center; 
+    padding-top: 2rem;    
   }
   .bt-step-badge {
     position: absolute;
@@ -32,7 +32,6 @@
     letter-spacing: -0.04em;
   }
   
-  /* ───── icon area ───── */
   .bt-step-img {
     display: flex;
     justify-content: center;
@@ -40,7 +39,6 @@
     margin-top: 2rem;
   }
   
-  /* ───── heading & copy ───── */
   .bt-step-title {
     margin: 0 0 1.2rem;
     font-size: 18px;
