@@ -1,6 +1,7 @@
+// app/view-sessions/page.tsx
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
@@ -16,16 +17,11 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient";
 import { useAppSelector } from "@/app/store";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
 import "../components/DailyInsights.css";
+import {
+  IoChevronBackCircleOutline,
+  IoChevronForwardCircleOutline,
+} from "react-icons/io5";
 
 interface Session {
   durMin: number;
@@ -33,6 +29,15 @@ interface Session {
   createdAt: Timestamp;
   appId: string;
 }
+
+type PeriodKey = "morning" | "afternoon" | "evening" | "night";
+
+const periodRanges: Record<PeriodKey, { label: string; hours: number[] }> = {
+  morning: { label: "morning (6–11)", hours: [6, 7, 8, 9, 10] },
+  afternoon: { label: "afternoon (11–17)", hours: [11, 12, 13, 14, 15, 16] },
+  evening: { label: "evening (17–22)", hours: [17, 18, 19, 20, 21] },
+  night: { label: "late-night (22–6)", hours: [22, 23, 0, 1, 2, 3, 4, 5] },
+};
 
 export default function InsightsPage() {
   const router = useRouter();
@@ -42,6 +47,7 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(true);
   const [dayOffset, setDayOffset] = useState(0);
 
+  // fetch sessions for the selected day
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
@@ -76,10 +82,12 @@ export default function InsightsPage() {
     return () => unsub();
   }, [uid, dayOffset]);
 
+  // redirect if unauthenticated
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
 
+  // total and overall productivity
   const totalMin = sessions.reduce((sum, s) => sum + s.durMin, 0);
   const weightedSum = sessions.reduce(
     (sum, s) => sum + s.durMin * s.sessionScore,
@@ -87,39 +95,42 @@ export default function InsightsPage() {
   );
   const prodPct = totalMin ? Math.round((weightedSum / totalMin) * 100) : 0;
 
-  const chartData = useMemo(() => {
-    const buckets = Array.from({ length: 24 }, (_, i) => ({
-      hour: `${i}`,
-      usage: 0,
-    }));
-    sessions.forEach((s) => {
-      const h = new Date(s.createdAt.toDate()).getHours();
-      buckets[h].usage += s.durMin;
-    });
-    return buckets;
-  }, [sessions]);
+  // bucket into 4 periods
+  const periodData = useMemo(() => {
+    const buckets: Record<
+      PeriodKey,
+      { totalMin: number; weightedSum: number }
+    > = {
+      morning: { totalMin: 0, weightedSum: 0 },
+      afternoon: { totalMin: 0, weightedSum: 0 },
+      evening: { totalMin: 0, weightedSum: 0 },
+      night: { totalMin: 0, weightedSum: 0 },
+    };
 
-  const apps = useMemo(() => {
-    const byApp: Record<string, { dur: number; scoreSum: number }> = {};
     sessions.forEach((s) => {
-      if (!byApp[s.appId]) byApp[s.appId] = { dur: 0, scoreSum: 0 };
-      byApp[s.appId].dur += s.durMin;
-      byApp[s.appId].scoreSum += s.durMin * s.sessionScore;
+      const hour = new Date(s.createdAt.toDate()).getHours();
+      (Object.keys(periodRanges) as PeriodKey[]).forEach((key) => {
+        if (periodRanges[key].hours.includes(hour)) {
+          buckets[key].totalMin += s.durMin;
+          buckets[key].weightedSum += s.durMin * s.sessionScore;
+        }
+      });
     });
-    return Object.entries(byApp).map(([appId, { dur, scoreSum }]) => ({
-      appId,
-      dur,
-      pct: dur ? Math.round((scoreSum / dur) * 100) : 0,
-    }));
+
+    return (Object.keys(buckets) as PeriodKey[]).map((key) => {
+      const { totalMin, weightedSum } = buckets[key];
+      return {
+        key,
+        label: periodRanges[key].label,
+        totalMin,
+        pct: totalMin ? Math.round((weightedSum / totalMin) * 100) : 0,
+      };
+    });
   }, [sessions]);
 
   const dateLabel = new Date(Date.now() - dayOffset * 864e5).toLocaleDateString(
     undefined,
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }
+    { day: "numeric", month: "long", year: "numeric" }
   );
 
   if (status === "loading" || loading) {
@@ -138,10 +149,20 @@ export default function InsightsPage() {
       <BTNavbar />
 
       <div className="insights-date-nav">
-        <button onClick={() => setDayOffset((d) => d + 1)}>‹</button>
-        <span>{dateLabel}</span>
-        <button onClick={() => setDayOffset((d) => Math.max(0, d - 1))}>
-          ›
+        <button
+          type="button"
+          className="insights-nav-btn"
+          onClick={() => setDayOffset((d) => d + 1)}
+        >
+          <IoChevronBackCircleOutline />
+        </button>
+        <span className="insights-date-label">{dateLabel}</span>
+        <button
+          type="button"
+          className="insights-nav-btn"
+          onClick={() => setDayOffset((d) => Math.max(0, d - 1))}
+        >
+          <IoChevronForwardCircleOutline />
         </button>
       </div>
 
@@ -159,63 +180,34 @@ export default function InsightsPage() {
         </div>
       </div>
 
-      <h3 className="insights-section-title">usage chart</h3>
-      <div className="insights-chart">
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart
-            data={chartData}
-            margin={{ top: 8, right: 0, left: 0, bottom: 8 }}
-          >
-            <CartesianGrid stroke="#2A3D60" vertical={false} />
-
-            <YAxis
-              hide={false}
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#6F7A8A", fontSize: 12 }}
-              stroke="#6F7A8A"
-              domain={[0, 60]}
-              interval="preserveStartEnd"
-            />
-
-            <XAxis
-              dataKey="hour"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#6F7A8A", fontSize: 12 }}
-              interval={Math.floor(chartData.length / 7)}
-            />
-
-            <Tooltip
-              contentStyle={{
-                background: "#1B2538",
-                border: "none",
-                borderRadius: 8,
-              }}
-              labelStyle={{ color: "#F3EDE0" }}
-              itemStyle={{ color: "#FA4617" }}
-            />
-
-            <Bar
-              dataKey="usage"
-              fill="#FA4617"
-              barSize={16}
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+      <h3 className="insights-section-title">usage by time of day</h3>
+      <div className="insights-period-grid">
+        {periodData.map(({ key, label, totalMin, pct }) => (
+          <div key={key} className="period-card">
+            <div className="period-label">{label}</div>
+            <div className="period-stats">
+              <span className="period-time">
+                {Math.floor(totalMin / 60)}h {totalMin % 60}m
+              </span>
+              <span className="period-pct">{pct}%</span>
+            </div>
+          </div>
+        ))}
       </div>
 
       <h3 className="insights-section-title">applications used today</h3>
       <ul className="insights-app-list">
-        {apps.length ? (
-          apps.map((a) => (
-            <li key={a.appId} className="insights-app-item">
-              <span className="app-name">{a.appId}</span>
+        {sessions.length ? (
+          sessions.map((s) => (
+            <li key={s.createdAt.toMillis()} className="insights-app-item">
+              {/* adapt this if you want per-app instead */}
+              <span className="app-name">{s.appId}</span>
               <span className="app-duration">
-                {Math.floor(a.dur / 60)}h {a.dur % 60}m
+                {Math.floor(s.durMin / 60)}h {s.durMin % 60}m
               </span>
-              <span className="app-pct">{a.pct}%</span>
+              <span className="app-pct">
+                {Math.round(s.sessionScore * 100)}%
+              </span>
             </li>
           ))
         ) : (

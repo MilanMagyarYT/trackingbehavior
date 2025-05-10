@@ -12,56 +12,79 @@
     justify-content: center;
   }
 
-  /* Date nav */
   .insights-date-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin: 1rem 0;
-  }
-  .insights-date-nav button {
-    background: transparent;
-    border: 1px solid #f3ede0;
-    border-radius: 8px;
+    display: flex;                    /* block-level box */
+    width: fit-content;               /* shrink to fit children */
+    margin: 1.5rem auto 1rem;            /* auto left/right = center */
+    padding: 0.25rem 0.4rem;
+    border: 1.5px solid #2A3D60;
+    border-radius: 20px;
+    background: #1B2538;
     color: #f3ede0;
-    padding: 0.25rem 0.75rem;
-    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    justify-content: center;          /* center arrows + label */
+    align-items: center;
   }
-  .insights-date-nav span {
-    font-size: 1rem;
+  
+  /* the arrow buttons */
+  .insights-date-nav .insights-nav-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* makes the icon big enough */
+    font-size: 2rem;
+  }
+  
+  .insights-date-nav .insights-nav-btn:focus {
+    outline: none;
+  }
+  
+  /* center label between arrows */
+  .insights-date-nav .insights-date-label {
+    margin: 0 2rem;
+    /* keep it lowercase like your screenshot */
+    text-transform: lowercase;
   }
   
   /* Summary */
   .insights-summary {
     display: flex;
     max-width: 440px;
-    margin: 0 auto 1rem;
+    margin: 0 1rem 1rem;
     background: #b34d2f;
     border: 1.5px solid #fa4617;
     border-radius: 20px;
     overflow: hidden;
-    margin: 0rem 1rem;
   }
   .summary-block {
     flex: 1;
-    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
   }
   .summary-block .label {
-    font-size: 0.875rem;
-    opacity: 0.8;
+    font-size: 14px;
   }
   .summary-block .value {
-    font-size: 1.75rem;
+    font-size: 36px;
     font-weight: 600;
-    margin-top: 0.25rem;
   }
   .divider {
     width: 1px;
     background: #fa4617;
+    margin: 0.5rem 0.5;
   }
   
-  /* Chart */
   .insights-chart {
     max-width: 440px;
     background: #1b2538;
@@ -99,15 +122,57 @@
   }
   .app-name {
     font-weight: 500;
+    text-transform: lowercase;
   }
   .app-duration,
   .app-pct {
-    font-size: 0.875rem;
-    opacity: 0.8;
+    font-size: 16px;
   }
   .none {
     text-align: center;
-    opacity: 0.6;
-    font-style: italic;
   }
   
+.insights-period-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 0rem 1rem 2rem;
+}
+
+/* === each card === */
+.period-card {
+  background: #1B2538;
+  border: 1px solid #2A3D60;
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #F3EDE0;
+}
+
+/* the header label */
+.period-label {
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.04em;
+}
+
+/* stats row */
+.period-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+/* time spent */
+.period-time {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* productivity % */
+.period-pct {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #FA4617;
+}
