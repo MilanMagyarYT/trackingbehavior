@@ -1,18 +1,15 @@
-/* ---------- page wrapper ---------- */
 .advice-page {
   padding-top: 72px;
-  padding-bottom: 60px;   /* space for bottom nav */
+  padding-bottom: 60px;   
   background: #0d1623;
   color: #f3ede0;
   min-height: 100vh;
 }
 
-/* ---------- content ---------- */
 .advice-ct {
   padding: 0 1.5rem 5rem;
 }
 
-/* ---------- advice cards ---------- */
 .advice-card {
   background: #1b2538;
   border: 1px solid #2a3d60;
@@ -27,7 +24,6 @@
   background: #233048;
 }
 
-/* ---------- date navigator ---------- */
 .advice-date-nav {
   display: flex;
   width: fit-content;
@@ -64,7 +60,6 @@
   text-transform: lowercase;
 }
 
-/* ---------- loader (reuse your global design) ---------- */
 .acc-loader {
   display: flex;
   align-items: center;

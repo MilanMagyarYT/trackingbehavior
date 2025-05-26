@@ -12,7 +12,6 @@
     justify-content: center;
   }
 
-  /* loader while fetching */
   .acc-loader {
     display: flex;
     align-items: center;
@@ -21,7 +20,6 @@
     background: #0D1623;
   }
   
-  /* you can replace .acc-spinner with your own spinner */
   .acc-spinner {
     width: 40px;
     height: 40px;
@@ -35,9 +33,9 @@
   }
   
   .insights-date-nav {
-    display: flex;                    /* block-level box */
-    width: fit-content;               /* shrink to fit children */
-    margin: 1.5rem auto 1rem;            /* auto left/right = center */
+    display: flex;  
+    width: fit-content;    
+    margin: 1.5rem auto 1rem; 
     padding: 0.25rem 0.4rem;
     border: 1.5px solid #2A3D60;
     border-radius: 20px;
@@ -46,11 +44,10 @@
     font-size: 14px;
     font-weight: 500;
     letter-spacing: -0.04em;
-    justify-content: center;          /* center arrows + label */
+    justify-content: center;
     align-items: center;
   }
   
-  /* the arrow buttons */
   .insights-date-nav .insights-nav-btn {
     background: transparent;
     border: none;
@@ -72,7 +69,6 @@
     text-transform: lowercase;
   }
   
-  /* Summary */
   .insights-summary {
     display: flex;
     max-width: 440px;
@@ -114,7 +110,6 @@
     margin: 0rem 1rem;
   }
   
-  /* App list */
   .insights-section-title {
     max-width: 440px;
     letter-spacing: -0.04em;
@@ -158,7 +153,6 @@
   margin: 0rem 1rem 2rem;
 }
 
-/* === each card === */
 .period-card {
   background: #1B2538;
   border: 1px solid #2A3D60;
@@ -170,26 +164,22 @@
   color: #F3EDE0;
 }
 
-/* the header label */
 .period-label {
   margin-bottom: 0.5rem;
   letter-spacing: -0.04em;
 }
 
-/* stats row */
 .period-stats {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
 
-/* time spent */
 .period-time {
   font-size: 1.25rem;
   font-weight: 600;
 }
 
-/* productivity % */
 .period-pct {
   font-size: 1.25rem;
   font-weight: 600;

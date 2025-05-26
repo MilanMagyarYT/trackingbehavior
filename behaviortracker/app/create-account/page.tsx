@@ -33,7 +33,6 @@ export default function CreateAccountPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  // track auth → redirect if already signed in
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((u) => {
       setCurrentUser(u);
@@ -43,7 +42,6 @@ export default function CreateAccountPage() {
     return () => unsub();
   }, [router]);
 
-  // wait until we know whether they're logged in or not
   if (!statusKnown) {
     return (
       <div className="">
@@ -51,12 +49,10 @@ export default function CreateAccountPage() {
       </div>
     );
   }
-  // already signed in → nothing to render, redirect is in effect
   if (currentUser) {
     return null;
   }
 
-  // email/password sign‑up
   const handleEmailSignUp = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -64,12 +60,10 @@ export default function CreateAccountPage() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-      // set displayName on the Firebase user
       await updateProfile(auth.currentUser!, {
         displayName: `${firstName} ${lastName}`,
       });
 
-      // immediately reflect in Redux
       store.dispatch(
         setUser({
           uid: cred.user.uid,
@@ -78,7 +72,6 @@ export default function CreateAccountPage() {
         })
       );
 
-      // persist baseline info in Firestore
       await setDoc(
         doc(db, "users", cred.user.uid),
         {
@@ -97,7 +90,6 @@ export default function CreateAccountPage() {
     }
   };
 
-  // Google sign‑up
   const handleGoogle = async () => {
     setError(null);
     setLoading(true);
@@ -105,7 +97,6 @@ export default function CreateAccountPage() {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       const u = result.user;
 
-      // dispatch to Redux
       store.dispatch(
         setUser({
           uid: u.uid,

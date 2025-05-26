@@ -1,4 +1,3 @@
-// BTSideBySideImage.tsx
 import Image from "next/image";
 import "./BTSideBySideImage.css";
 

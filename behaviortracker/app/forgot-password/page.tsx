@@ -1,5 +1,6 @@
 "use client";
 
+import { FirebaseError } from "firebase/app";
 import { useState, FormEvent } from "react";
 import { sendPasswordResetEmail, type ActionCodeSettings } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
@@ -28,8 +29,12 @@ export default function ForgotPasswordPage() {
     try {
       await sendPasswordResetEmail(auth, email, actionCodeSettings);
       setStep("sent");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

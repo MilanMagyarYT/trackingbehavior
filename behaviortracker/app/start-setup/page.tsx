@@ -48,9 +48,6 @@ type ContentCat = (typeof contentList)[number];
 
 type Step = 1 | 2 | 3 | 4;
 
-/**
- * Helper to create a typed record from a key array
- */
 function mkRecord<K extends string>(
   keys: readonly K[],
   defaultVal: boolean,

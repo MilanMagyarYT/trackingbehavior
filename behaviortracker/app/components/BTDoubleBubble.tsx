@@ -7,12 +7,12 @@ export default function BTDoubleBubble() {
       <div className="bubble1">
         <div className="bubble profile">
           <Image
-            src="/Milan.jpeg" // → public/images/milan.jpg
+            src="/Milan.jpeg"
             alt="Milan Magyar"
             width={120}
             height={120}
             className="avatar"
-            priority // eager‑load because it’s above the fold
+            priority
           />
 
           <h3 className="name">milan magyar</h3>

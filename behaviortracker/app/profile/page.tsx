@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PiHandPalmDuotone } from "react-icons/pi"; // looks like an open hand
+import { PiHandPalmDuotone } from "react-icons/pi";
 import { GiBrain } from "react-icons/gi";
 import { useRouter } from "next/navigation";
 import {
@@ -50,11 +50,9 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   const [baselineDone, setBaselineDone] = useState<boolean | null>(null);
-  /* top of component, after your other useState calls */
   const [showUsageCard, setShowUsageCard] = useState(false);
   const [showBehCard, setShowBehCard] = useState(false);
 
-  /* holds the 30-day aggregates */
   const [stats30, setStats30] = useState<{
     usagePct: number;
     behPct: number;
@@ -99,7 +97,6 @@ export default function ProfilePage() {
     return () => unsub();
   }, [uid]);
 
-  /* fetch last 30 days once on mount */
   useEffect(() => {
     if (!uid) return;
 
@@ -121,12 +118,11 @@ export default function ProfilePage() {
         wt += s.durMin * s.sessionScore;
       });
 
-      /* reuse goalMin for usage pct; behaviour uses productivity score */
       const usage30 = goalMin ? clamp(1 / (min / goalMin), 0, 1) : 0;
       const beh30 = min ? wt / min : 0;
 
       setStats30({
-        usagePct: Math.round((1 - usage30) * 100), // align with dayScore style
+        usagePct: Math.round((1 - usage30) * 100),
         behPct: Math.round(beh30 * 100),
       });
     });
@@ -218,7 +214,6 @@ export default function ProfilePage() {
           <span>vs. previous 30 days</span>
         </div>
 
-        {/* ========== USAGE ========== */}
         <div className="stat-wrap">
           <button
             className="stat-pill"
@@ -245,7 +240,6 @@ export default function ProfilePage() {
           )}
         </div>
 
-        {/* ========== BEHAVIOR ========== */}
         <div className="stat-wrap">
           <button
             className="stat-pill"

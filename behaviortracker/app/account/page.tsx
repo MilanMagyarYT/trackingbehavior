@@ -9,8 +9,6 @@ import {
   query,
   where,
   collection,
-  serverTimestamp,
-  setDoc,
   Timestamp,
 } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient";

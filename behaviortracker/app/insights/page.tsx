@@ -45,7 +45,6 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(true);
   const [dayOffset, setDayOffset] = useState(0);
 
-  // fetch sessions for the selected day
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
@@ -65,8 +64,8 @@ export default function InsightsPage() {
 
     const unsub = onSnapshot(q, (snap) => {
       const arr: Session[] = [];
-      snap.forEach((d) => {
-        const data = d.data() as any;
+      snap.forEach((doc) => {
+        const data = doc.data() as Session;
         arr.push({
           durMin: data.durMin,
           sessionScore: data.sessionScore,
@@ -77,15 +76,14 @@ export default function InsightsPage() {
       setSessions(arr);
       setLoading(false);
     });
+
     return () => unsub();
   }, [uid, dayOffset]);
 
-  // redirect if unauthenticated
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
 
-  // total and overall productivity
   const totalMin = sessions.reduce((sum, s) => sum + s.durMin, 0);
   const weightedSum = sessions.reduce(
     (sum, s) => sum + s.durMin * s.sessionScore,
@@ -109,10 +107,9 @@ export default function InsightsPage() {
         totalMin,
         pct: Math.round((weightedSum / totalMin) * 100),
       }))
-      .sort((a, b) => b.totalMin - a.totalMin); // longest-used apps first
+      .sort((a, b) => b.totalMin - a.totalMin);
   }, [sessions]);
 
-  // bucket into 4 periods
   const periodData = useMemo(() => {
     const buckets: Record<
       PeriodKey,

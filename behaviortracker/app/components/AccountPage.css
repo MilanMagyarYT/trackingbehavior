@@ -1,12 +1,10 @@
-/* overall page under navbar/footer */
 .acc-page {
-    padding-top: 72px;      /* height of BTNavbar */
-    padding-bottom: 60px;   /* height of BTBottomNav */
+    padding-top: 72px;      
+    padding-bottom: 60px;  
     background: #0D1623;
     min-height: 100vh;
   }
   
-  /* loader while fetching */
   .acc-loader {
     display: flex;
     align-items: center;
@@ -15,7 +13,6 @@
     background: #0D1623;
   }
   
-  /* you can replace .acc-spinner with your own spinner */
   .acc-spinner {
     width: 40px;
     height: 40px;
@@ -28,14 +25,12 @@
     to { transform: rotate(360deg); }
   }
   
-  /* container holding cards */
   .acc-container {
     max-width: 440px;
     margin: 0 auto;
     padding: 1.5rem 1rem 3rem;
   }
   
-  /* header with avatar + name/email */
   .acc-header {
     display: flex;
     align-items: center;
@@ -69,7 +64,6 @@
     color: #C4C2BC;
   }
   
-  /* shared card styles */
   .acc-card {
     background: #1B2538;
     border: 1.5px solid #2A3D60;
@@ -81,8 +75,8 @@
   .acc-card-header {
     display: flex;
     flex-direction: column;
-    align-items: center;    /* horizontal centering */
-    text-align: center;     /* center the subtitle text */
+    align-items: center;   
+    text-align: center;  
   }
 
   .acc-section-title {
@@ -137,8 +131,6 @@
     flex: 1;
   }
   
-  
-  /* save button in baseline card */
   .acc-save-btn {
     width: 100%;
     margin-top: 1rem;

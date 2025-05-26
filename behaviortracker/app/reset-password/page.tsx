@@ -1,6 +1,5 @@
-// app/reset-password/page.tsx
 "use client";
-
+import { FirebaseError } from "firebase/app";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -26,7 +25,7 @@ export default function ResetPasswordPage() {
     }
   }, [oobCode]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirm) {
       setError("Passwords do not match.");
@@ -37,8 +36,13 @@ export default function ResetPasswordPage() {
     try {
       await confirmPasswordReset(auth, oobCode, password);
       setStep("success");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof FirebaseError) {
+        setError(err.message);
+      } else {
+        console.error(err);
+        setError("Something went wrong. Please try again.");
+      }
       setStep("error");
     } finally {
       setLoading(false);

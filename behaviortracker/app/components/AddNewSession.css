@@ -13,7 +13,6 @@
   box-sizing:border-box;
   color:#f3ede0;
 }
-/* loader while fetching */
 .acc-loader {
   display: flex;
   align-items: center;
@@ -22,7 +21,6 @@
   background: #0D1623;
 }
 
-/* you can replace .acc-spinner with your own spinner */
 .acc-spinner {
   width: 40px;
   height: 40px;
@@ -73,7 +71,6 @@
 .sn-btn-row>button{flex:1 1 0}
 
 .sn-loader{height:100dvh;background:#0d1623;display:flex;align-items:center;justify-content:center}
-/* form labels / inputs */
 .sn-label {
   display: block;
   font-size: 14px;
@@ -83,7 +80,6 @@
   letter-spacing: -0.04em;
 }
 
-/* badge is pinned to the top‑centre */
 .sn-done-icon {
   position: absolute;
   top: 2rem;

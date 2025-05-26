@@ -1,19 +1,17 @@
 .navbarwith {
   padding-top: 72px;
 }
-/* ───────── layout wrapper ───────── */
 .su-bg {
   min-height: 100dvh;
   background: #0d1623;
   display: flex;
   justify-content: center;
-  align-items: flex-start;            /* top‑anchor under navbar */
-  padding: 1.5rem 1rem 3rem;          /* top 1.5rem gap */
+  align-items: flex-start;       
+  padding: 1.5rem 1rem 3rem;       
   box-sizing: border-box;
   color: #f3ede0;
 }
 
-/* ───────── card ───────── */
 .su-card {
   width: 100%;
   max-width: 440px;
@@ -23,14 +21,13 @@
   padding: 2rem 1.75rem 2rem;
 }
 
-/* step badge */
 .su-step-badge {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 66px;
   height: 28px;
-  margin: 0 auto 0.5rem;             /* centred badge */
+  margin: 0 auto 0.5rem;     
   font-size: 14px;
   font-weight: 600;
   background: #0d1623;
@@ -39,7 +36,6 @@
   letter-spacing: -0.04em;
 }
 
-/* headings & copy */
 .su-title {
   margin: 0 0 0.6rem;
   font-size: 36px;
@@ -58,7 +54,6 @@
   color: #c4c2bc;
 }
 
-/* progress */
 .su-progress {
   height: 6px;
   background: #0d1623;
@@ -72,7 +67,6 @@
   transition: width 0.3s ease;
 }
 
-/* form labels / inputs */
 .su-label {
   display: block;
   font-size: 14px;
@@ -97,7 +91,6 @@
   border-color: #3d54a3;
 }
 
-/* primary / outline buttons */
 .su-btn-primary,
 .su-btn-outline {
   padding: 0.75rem 1rem;
@@ -131,7 +124,6 @@
   margin-top: 0rem;
 }
 
-/* review list */
 .su-review       { 
   margin-top: 2rem;
  }
@@ -148,12 +140,10 @@
   word-break: break-word;
 }
 
-/* card becomes positioning context */
 .su-card {
   position: relative;
 }
 
-/* badge is pinned to the top‑centre */
 .su-done-icon {
   position: absolute;
   top: 2rem;
@@ -190,10 +180,6 @@
   color: #c4c2bc;
 }
 
-
-/* ───────── PRIME‑REACT  MultiSelect overrides ───────── */
-
-/* root pill */
 .su-multi.p-multiselect {
   width: 100%;
   background: #0d1623;
@@ -206,12 +192,10 @@
   border-color: #3d54a3;
 }
 
-/* label area */
 .su-multi.p-multiselect .p-multiselect-label {
   padding: 0.5rem 1rem;
 }
 
-/* chips inside pill */
 .su-multi .p-multiselect-token {
   background: #2A3D60;
   color: #f3ede0;
@@ -221,10 +205,9 @@
 
 .su-multi .p-multiselect-token .p-multiselect-token-icon {
   color: #c4c2bc;
-  margin-left: 5px;              /* “×” icon */
+  margin-left: 5px;         
 }
 
-/* dropdown panel */
 .p-multiselect-panel {
   background: #0d1623 !important;
   border: 1.5px solid #2a3d60 !important;
@@ -239,15 +222,13 @@
   background: #112233 !important;
 }
 
-/* hide native checkbox squares */
 .p-multiselect-item .p-checkbox,
 .p-multiselect-item .p-checkbox-box {
   display: none !important;
 }
 
-/* ───────── SimpleSelect (custom combobox) ───────── */
 
-.su-select {                       /* wrapper */
+.su-select {  
   position: relative;
   width: 100%;
   margin-bottom: 1.25rem;
@@ -257,7 +238,7 @@
   border-color: #3d54a3;
 }
 
-.su-select-display {               /* closed state */
+.su-select-display {   
   width: 100%;
   padding: 0.75rem 1rem;
   background: #0d1623;
@@ -266,12 +247,12 @@
   font-size: 15px;
   color: #f3ede0;
   margin-bottom: 1.25rem;
-  letter-spacing: -0.04em;                /* (tailwind users) – if no Tailwind, copy su‑input values */
+  letter-spacing: -0.04em;  
   cursor: pointer;
   user-select: none;
   position: relative;
 }
-.su-select-display::after {        /* arrow glyph */
+.su-select-display::after { 
   content: "▾";
   position: absolute;
   right: 1rem;
@@ -281,7 +262,7 @@
   pointer-events: none;
 }
 
-.su-select-list {                  /* dropdown menu */
+.su-select-list { 
   position: absolute;
   z-index: 30;
   top: calc(100% + 0.3rem);
@@ -305,34 +286,28 @@
   background: #112233;
 }
 
-/* 1 · Remove the big “select all” header row ------------------------- */
 .p-multiselect-header {
   display: none !important;
 }
 
-/* 2 · Chip spacing & size ------------------------------------------- */
 .su-multi .p-multiselect-token {
-  margin: 0 0.4rem 0.4rem 0;      /* right + bottom gap               */
-  padding: 0.25rem 0.55rem;       /* slimmer pill                     */
+  margin: 0 0.4rem 0.4rem 0;      
+  padding: 0.25rem 0.55rem;     
   font-size: 13px;
 }
 
-/* 3 · Icon / padding alignment -------------------------------------- */
-/* reserve room on the right so chips/text don’t collide with icons */
 .su-multi.p-multiselect .p-multiselect-label-container {
-  padding-right: 2.7rem;          /* arrow + close icon width         */
+  padding-right: 2.7rem;     
 }
 
-/* chevron (dropdown arrow) */
 .su-multi.p-multiselect .p-multiselect-trigger {
-  right: 0.9rem;                  /* snug but not hugging border      */
+  right: 0.9rem;                 
 }
 
-/* clear‑all “×” icon */
 .su-multi .p-multiselect-close {
-  right: 2.1rem;                  /* sits just left of chevron        */
+  right: 2.1rem;         
 }
 
 .su-btn-row > button {
-  flex: 1 1 0;      /* grow + shrink equally, base 0 */
+  flex: 1 1 0; 
 }

@@ -20,10 +20,6 @@ import {
   IoChevronForwardCircleOutline,
 } from "react-icons/io5";
 
-/* ------------------------------------------------------------------
-   1. helpers (kept inside the same file to match your coding style)
-------------------------------------------------------------------- */
-
 type TimeBucket = "morning" | "afternoon" | "evening" | "night";
 
 interface SessionDoc {
@@ -72,7 +68,6 @@ function buildAggregates(rows: SessionDoc[]): Aggregates {
   const unprodMinutes = totalMin - prodMinutes;
   const prodScore = totalMin ? prodMinutes / totalMin : 0;
 
-  /* mood-boost winner */
   const moodMap: Record<string, number[]> = {};
   rows.forEach((r) =>
     r.contentMajor.forEach((c) => {
@@ -102,7 +97,6 @@ function buildAggregates(rows: SessionDoc[]): Aggregates {
 function pickAdvice(a: Aggregates): AdviceCard[] {
   const cards: AdviceCard[] = [];
 
-  /* R1 — Night-owl */
   if (a.lateNightMin > 0.2 * a.totalMin && a.prodScore < 0.4) {
     cards.push({
       id: "R1",
@@ -112,7 +106,6 @@ function pickAdvice(a: Aggregates): AdviceCard[] {
     });
   }
 
-  /* R2 — Notification loop */
   if (a.notifPct > 0.35 && a.prodScore < 0.5) {
     cards.push({
       id: "R2",
@@ -124,7 +117,6 @@ function pickAdvice(a: Aggregates): AdviceCard[] {
     });
   }
 
-  /* R3 — Long scroll */
   if (a.maxSessionMin >= 30 && a.prodScore < 0.6) {
     cards.push({
       id: "R3",
@@ -134,7 +126,6 @@ function pickAdvice(a: Aggregates): AdviceCard[] {
     });
   }
 
-  /* R5 — Mood booster */
   if (a.moodBoostContent) {
     cards.push({
       id: "R5",
@@ -145,7 +136,6 @@ function pickAdvice(a: Aggregates): AdviceCard[] {
     });
   }
 
-  /* rank: top-2 fixes + one keeper if present */
   const fixes = cards
     .filter((c) => c.type === "fix")
     .sort((x, y) => (y.impactMin ?? 0) - (x.impactMin ?? 0))
@@ -154,23 +144,18 @@ function pickAdvice(a: Aggregates): AdviceCard[] {
   return keep ? [...fixes, keep] : fixes;
 }
 
-/* ------------------------------------------------------------------
-   2. component
-------------------------------------------------------------------- */
 export default function AdvicePage() {
   const router = useRouter();
   const { uid, status } = useAppSelector((s) => s.auth);
 
   const [sessions, setSessions] = useState<SessionDoc[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dayOffset, setDayOffset] = useState(0); // 0 = today, 1 = yesterday …
+  const [dayOffset, setDayOffset] = useState(0);
 
-  /* Redirect if unauthenticated */
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
 
-  /* Live Firestore query for the selected day */
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
@@ -194,7 +179,6 @@ export default function AdvicePage() {
     });
   }, [uid, dayOffset]);
 
-  /* aggregates + advice recomputed whenever `sessions` changes */
   const adviceCards = useMemo(() => {
     const agg = buildAggregates(sessions);
     return pickAdvice(agg);
@@ -209,7 +193,6 @@ export default function AdvicePage() {
     }
   );
 
-  /* --------------- UI --------------- */
   if (status === "loading" || loading) {
     return (
       <div className="acc-loader">
@@ -223,7 +206,6 @@ export default function AdvicePage() {
     <div className="advice-page">
       <BTNavbar />
 
-      {/* date navigator (same look as insights) */}
       <div className="advice-date-nav">
         <button
           type="button"
