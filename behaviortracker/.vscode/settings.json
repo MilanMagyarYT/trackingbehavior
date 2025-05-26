@@ -1,0 +1,20 @@
+{
+  // Lint TS, TSX, JS, JSX on the fly
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // Show problems as you type (default true, but explicit here)
+  "eslint.run": "onType",
+
+  // Auto-fix everything ESLint can fix every time you save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "true"
+  },
+
+  // Optional: don’t block “Save” on lint errors — just mark them
+  "eslint.alwaysShowStatus": true
+}

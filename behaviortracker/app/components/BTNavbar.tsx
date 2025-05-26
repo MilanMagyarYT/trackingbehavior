@@ -13,9 +13,6 @@ import { MdLogout } from "react-icons/md";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebaseClient";
 import { MdOutlineManageAccounts } from "react-icons/md";
-import { IoMdAddCircleOutline } from "react-icons/io";
-import { IoCalendar } from "react-icons/io5";
-import { IoNotifications } from "react-icons/io5";
 
 function getInitials(name: string | null | undefined) {
   if (!name) return "";
