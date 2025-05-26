@@ -19,7 +19,6 @@ import { useAppSelector } from "@/app/store";
 
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 import { clamp, lerpColor } from "@/lib/utils";
 import "./Profile.css";
