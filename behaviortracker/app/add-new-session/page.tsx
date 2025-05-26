@@ -552,7 +552,7 @@ export default function AddNewSession() {
 }
 
 const CenteredSpinner = () => (
-  <div className="sn-loader">
-    <LoadingSpinner />
+  <div className="acc-loader">
+    <div className="acc-spinner" />
   </div>
 );

@@ -1,11 +1,9 @@
-// app/view-sessions/page.tsx
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
 import {
   onSnapshot,
   collection,
@@ -95,6 +93,25 @@ export default function InsightsPage() {
   );
   const prodPct = totalMin ? Math.round((weightedSum / totalMin) * 100) : 0;
 
+  const appData = useMemo(() => {
+    const bucket: Record<string, { totalMin: number; weightedSum: number }> =
+      {};
+
+    sessions.forEach((s) => {
+      if (!bucket[s.appId]) bucket[s.appId] = { totalMin: 0, weightedSum: 0 };
+      bucket[s.appId].totalMin += s.durMin;
+      bucket[s.appId].weightedSum += s.durMin * s.sessionScore;
+    });
+
+    return Object.entries(bucket)
+      .map(([appId, { totalMin, weightedSum }]) => ({
+        appId,
+        totalMin,
+        pct: Math.round((weightedSum / totalMin) * 100),
+      }))
+      .sort((a, b) => b.totalMin - a.totalMin); // longest-used apps first
+  }, [sessions]);
+
   // bucket into 4 periods
   const periodData = useMemo(() => {
     const buckets: Record<
@@ -135,8 +152,8 @@ export default function InsightsPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="insights-loader">
-        <LoadingSpinner />
+      <div className="acc-loader">
+        <div className="acc-spinner" />
       </div>
     );
   }
@@ -197,17 +214,14 @@ export default function InsightsPage() {
 
       <h3 className="insights-section-title">applications used today</h3>
       <ul className="insights-app-list">
-        {sessions.length ? (
-          sessions.map((s) => (
-            <li key={s.createdAt.toMillis()} className="insights-app-item">
-              {/* adapt this if you want per-app instead */}
-              <span className="app-name">{s.appId}</span>
+        {appData.length ? (
+          appData.map(({ appId, totalMin, pct }) => (
+            <li key={appId} className="insights-app-item">
+              <span className="app-name">{appId}</span>
               <span className="app-duration">
-                {Math.floor(s.durMin / 60)}h {s.durMin % 60}m
+                {Math.floor(totalMin / 60)}h {totalMin % 60}m
               </span>
-              <span className="app-pct">
-                {Math.round(s.sessionScore * 100)}%
-              </span>
+              <span className="app-pct">{pct}%</span>
             </li>
           ))
         ) : (

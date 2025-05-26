@@ -118,35 +118,15 @@ export default function BTNavbar() {
         {status === "authenticated" ? (
           <div>
             <ul className="mobileMenu__list">
-              <li onClick={() => navTo("/start-setup")}>
+              <li onClick={() => navTo("/account")}>
                 <MdOutlineManageAccounts className="mobileMenu__icon" />
-                Set‑Up Account
-              </li>
-              <li onClick={() => navTo("/add-new-session")}>
-                <IoMdAddCircleOutline className="mobileMenu__icon" />
-                Add New Session
-              </li>
-              <li onClick={() => navTo("/view-sessions")}>
-                <IoCalendar className="mobileMenu__icon" />
-                Today&apos;s Sessions
-              </li>
-              <li onClick={() => navTo("/view-recommendations")}>
-                <IoNotifications className="mobileMenu__icon" />
-                Recommendations
+                Account
               </li>
             </ul>
 
             <div className="mobileMenu__sectionDivider" />
 
             <ul className="mobileMenu__list">
-              <li onClick={() => navTo("/how-it-works")}>
-                <FaHouse className="mobileMenu__icon" />
-                How it works
-              </li>
-              <li onClick={() => navTo("/help")}>
-                <IoMdHelpCircleOutline className="mobileMenu__icon" />
-                Help
-              </li>
               <li onClick={handleLogout}>
                 <MdLogout className="mobileMenu__icon" />
                 Log out

@@ -91,12 +91,13 @@ export default function ProfilePage() {
     return () => unsub();
   }, [uid]);
 
-  if (status === "loading" || loading)
+  if (status === "loading" || loading) {
     return (
-      <div className="h-screen bg-[#0d1623] flex items-center justify-center">
-        <LoadingSpinner />
+      <div className="acc-loader">
+        <div className="acc-spinner" />
       </div>
     );
+  }
 
   if (status === "unauthenticated") {
     router.replace("/login");
