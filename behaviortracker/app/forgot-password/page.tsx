@@ -9,6 +9,10 @@ import LoadingSpinner from "@/app/components/LoadingSpinner";
 import { useRouter } from "next/navigation";
 
 import "@/app/components/ForgotPasswordPage.css";
+const getOrigin = () =>
+  typeof window !== "undefined"
+    ? window.location.origin
+    : process.env.NEXT_PUBLIC_SITE_URL || "https://trackingbehavior.com";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -18,7 +22,7 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null);
 
   const actionCodeSettings: ActionCodeSettings = {
-    url: `${window.location.origin}/forgot-password`,
+    url: `${getOrigin()}/forgot-password`,
     handleCodeInApp: false,
   };
 
