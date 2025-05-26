@@ -30,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <AuthListener />
-          {children}
-        </Providers>
+        <div className="scale-wrapper">
+          <Providers>
+            <AuthListener />
+            {children}
+          </Providers>
+        </div>
       </body>
     </html>
   );
