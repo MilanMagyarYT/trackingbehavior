@@ -12,7 +12,6 @@ import {
 import { db } from "@/lib/firebaseClient";
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
 import SimpleSelect from "@/app/components/SimpleSelect";
 import { MultiSelect } from "primereact/multiselect";
 import { useAppSelector } from "@/app/store";
@@ -84,6 +83,20 @@ const contentList = [
   "professional",
   "shopping",
 ] as const;
+type MoodRating = 1 | 2 | 3 | 4 | 5;
+type LocCat = "home" | "work" | "commute" | "outside" | "bed" | "other";
+type MultiCat = "tv" | "eating" | "working" | "none" | "other";
+
+interface ProdRules {
+  goals: Record<GoalCat, boolean>;
+  acts: Record<ActivityCat, boolean>;
+  content: Record<ContentCat, boolean>;
+}
+
+interface UserBaseline {
+  prodRules: ProdRules;
+  negMoodIsUnprod: boolean;
+}
 
 type TriggerCat = (typeof triggerList)[number];
 type GoalCat = (typeof goalList)[number];
@@ -138,11 +151,11 @@ export default function AddNewSession() {
     "tv" | "eating" | "working" | "none" | "other" | ""
   >("");
 
-  const [baseline, setBase] = useState<any>(null);
+  const [baseline, setBase] = useState<UserBaseline | null>(null);
   useEffect(() => {
     if (!uid) return;
     getDoc(doc(db, "users", uid)).then((s) => {
-      if (s.exists()) setBase(s.data());
+      if (s.exists()) setBase(s.data() as UserBaseline);
     });
   }, [uid]);
 
@@ -186,7 +199,7 @@ export default function AddNewSession() {
     const moodDelta = (moodPost as number) - (moodPre as number);
     const rules = baseline!.prodRules;
 
-    const goalProd = rules.goals[goal];
+    const goalProd = goal ? rules.goals[goal as GoalCat] : false;
     const actProd = Object.entries(acts).some(
       ([k, v]) => v && rules.acts[k as ActivityCat]
     );
@@ -347,7 +360,7 @@ export default function AddNewSession() {
                 </label>
                 <SimpleSelect
                   value={moodPre.toString()}
-                  onChange={(v) => setPre(Number(v) as any)}
+                  onChange={(v) => setPre(Number(v) as MoodRating)}
                   placeholder="select value"
                   options={[1, 2, 3, 4, 5].map((n) => ({
                     label: n.toString(),
@@ -360,7 +373,7 @@ export default function AddNewSession() {
                 </label>
                 <SimpleSelect
                   value={moodPost.toString()}
-                  onChange={(v) => setPost(Number(v) as any)}
+                  onChange={(v) => setPost(Number(v) as MoodRating)}
                   placeholder="select value"
                   options={[1, 2, 3, 4, 5].map((n) => ({
                     label: n.toString(),
@@ -373,7 +386,7 @@ export default function AddNewSession() {
                 </label>
                 <SimpleSelect
                   value={prodSelf.toString()}
-                  onChange={(v) => setProd(Number(v) as any)}
+                  onChange={(v) => setProd(Number(v) as MoodRating)}
                   placeholder="select value"
                   options={[1, 2, 3, 4, 5].map((n) => ({
                     label: n.toString(),
@@ -406,7 +419,7 @@ export default function AddNewSession() {
                 </label>
                 <SimpleSelect
                   value={loc}
-                  onChange={setLoc as any}
+                  onChange={(v) => setLoc(v as LocCat)}
                   placeholder="select location"
                   options={[
                     { label: "home", value: "home" },
@@ -423,7 +436,7 @@ export default function AddNewSession() {
                 </label>
                 <SimpleSelect
                   value={multi}
-                  onChange={setMulti as any}
+                  onChange={(v) => setMulti(v as MultiCat)}
                   placeholder="select"
                   options={[
                     { label: "watching TV", value: "tv" },

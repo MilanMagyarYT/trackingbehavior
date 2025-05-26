@@ -30,8 +30,6 @@ export default function AccountPage() {
   const [avgProd, setAvgProd] = useState("");
   const [baselineUsage, setBaselineUsage] = useState("");
   const [baselineProd, setBaselineProd] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
 
   const [loading, setLoading] = useState(true);
 
@@ -55,8 +53,6 @@ export default function AccountPage() {
       // set part-2 (baseline) and names
       setBaselineUsage(data.goalPhoneMin?.toString() || "");
       setBaselineProd(data.unprodGoalPct?.toString() || "");
-      setFirstName(data.firstName || "");
-      setLastName(data.lastName || "");
 
       // 2️⃣ compute “since joining” metrics
       if (data.baselineCompletedAt) {
@@ -92,26 +88,6 @@ export default function AccountPage() {
       setLoading(false);
     })();
   }, [uid, status, router]);
-
-  const handleSave = async () => {
-    if (!uid) return;
-    const userRef = doc(db, "users", uid);
-    await setDoc(
-      userRef,
-      {
-        // update both “since joining” and “baseline” if you like,
-        averagePhoneUsageSinceJoin: Number(avgUsage),
-        averageProdPctSinceJoin: Number(avgProd),
-        goalPhoneMin: Number(baselineUsage),
-        unprodGoalPct: Number(baselineProd),
-        firstName,
-        lastName,
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
-    alert("Saved!");
-  };
 
   if (status === "loading" || loading) {
     return (
@@ -172,29 +148,13 @@ export default function AccountPage() {
           <div className="acc-row two-cols">
             <div>
               <label>social-media usage (avg.)</label>
-              <input
-                type="number"
-                value={baselineUsage}
-                onChange={(e) => setBaselineUsage(e.target.value)}
-              />
+              <input type="number" value={baselineUsage} readOnly />
             </div>
             <div>
               <label>productivity % (avg.)</label>
-              <input
-                type="number"
-                value={baselineProd}
-                onChange={(e) => setBaselineProd(e.target.value)}
-              />
+              <input type="number" value={baselineProd} readOnly />
             </div>
           </div>
-
-          <button
-            className="acc-save-btn"
-            disabled={loading}
-            onClick={handleSave}
-          >
-            save changes
-          </button>
         </section>
       </main>
 
