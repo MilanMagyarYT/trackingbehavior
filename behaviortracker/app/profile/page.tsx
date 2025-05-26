@@ -51,6 +51,15 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   const [baselineDone, setBaselineDone] = useState<boolean | null>(null);
+  /* top of component, after your other useState calls */
+  const [showUsageCard, setShowUsageCard] = useState(false);
+  const [showBehCard, setShowBehCard] = useState(false);
+
+  /* holds the 30-day aggregates */
+  const [stats30, setStats30] = useState<{
+    usagePct: number;
+    behPct: number;
+  } | null>(null);
 
   useEffect(() => {
     if (!uid) return;
@@ -90,6 +99,41 @@ export default function ProfilePage() {
 
     return () => unsub();
   }, [uid]);
+
+  /* fetch last 30 days once on mount */
+  useEffect(() => {
+    if (!uid) return;
+
+    const start = new Date();
+    start.setDate(start.getDate() - 30);
+    start.setHours(0, 0, 0, 0);
+
+    const q = query(
+      collection(db, "users", uid, "sessions"),
+      where("createdAt", ">=", Timestamp.fromDate(start))
+    );
+
+    const unsub = onSnapshot(q, (snap) => {
+      let min = 0,
+        wt = 0;
+      snap.forEach((d) => {
+        const s = d.data() as SessionDoc;
+        min += s.durMin;
+        wt += s.durMin * s.sessionScore;
+      });
+
+      /* reuse goalMin for usage pct; behaviour uses productivity score */
+      const usage30 = goalMin ? clamp(1 / (min / goalMin), 0, 1) : 0;
+      const beh30 = min ? wt / min : 0;
+
+      setStats30({
+        usagePct: Math.round((1 - usage30) * 100), // align with dayScore style
+        behPct: Math.round(beh30 * 100),
+      });
+    });
+
+    return () => unsub();
+  }, [uid, goalMin]);
 
   if (status === "loading" || loading) {
     return (
@@ -175,24 +219,62 @@ export default function ProfilePage() {
           <span>vs. previous 30 days</span>
         </div>
 
-        <button
-          className="stat-pill"
-          onClick={() => router.push("/stats/usage")}
-        >
-          <PiHandPalmDuotone className="stat-icon" />
-          USAGE
-        </button>
+        {/* ========== USAGE ========== */}
+        <div className="stat-wrap">
+          <button
+            className="stat-pill"
+            onClick={() => {
+              setShowUsageCard((v) => !v);
+              setShowBehCard(false);
+            }}
+          >
+            <PiHandPalmDuotone className="stat-icon" />
+            USAGE
+          </button>
 
-        <button
-          className="stat-pill"
-          onClick={() => router.push("/stats/behaviour")}
-        >
-          <GiBrain className="stat-icon" />
-          BEHAVIOR
-        </button>
+          {showUsageCard && stats30 && (
+            <div className="stat-dropdown">
+              <div className="stat-row">
+                <span>today</span>
+                <span>{Math.round((1 - (usageScore ?? 0)) * 100)}%</span>
+              </div>
+              <div className="stat-row">
+                <span>last 30 days</span>
+                <span>{stats30.usagePct}%</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ========== BEHAVIOR ========== */}
+        <div className="stat-wrap">
+          <button
+            className="stat-pill"
+            onClick={() => {
+              setShowBehCard((v) => !v);
+              setShowUsageCard(false);
+            }}
+          >
+            <GiBrain className="stat-icon" />
+            BEHAVIOR
+          </button>
+
+          {showBehCard && stats30 && (
+            <div className="stat-dropdown">
+              <div className="stat-row">
+                <span>today</span>
+                <span>{Math.round((prodScore ?? 0) * 100)}%</span>
+              </div>
+              <div className="stat-row">
+                <span>last 30 days</span>
+                <span>{stats30.behPct}%</span>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div style={{ height: "2rem" }} />
       </main>
-
       <BTBottomNav />
     </div>
   );
