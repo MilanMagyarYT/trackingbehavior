@@ -1,69 +1,68 @@
-
 .double-bubble {
-    display: flex;
-    justify-content: center;  
-    gap: 30px;
-  }
-  
-  .bubble1 {
-    background: #2A3D60;      
-    color: #c4c2bc;           
-    width: 150px;
-    padding: 1rem;
-    border-radius: 20px;
-  }
+  --scale: .85;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
 
-  .bubble2 {
-    background: #2A3D60; 
-    color: #c4c2bc;  
-    width: 200px;
-    padding: 0.5rem;
-    border-radius: 20px;
-  }
-  
-  .profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-  }
-  
-  .name {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: #F3EDE0;
-  }
-  
-  .role {
-    margin-top: 0.25rem;
-    font-size: 12px;
-    color: #C4C2BC;
-  }
-  
-  .blurb p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-  
-  .blurb strong {
-    color: #ffffff;        
-    font-weight: 700;
-  }
-  
-  .blurb hr {
-    border: none;
-    height: 1px;
-    background: #455063;
-    margin: 0.9rem 0;
-  }
-  
+.bubble1,
+.bubble2 {
+  background: #2A3D60;
+  color: #C4C2BC;
+  border-radius: 20px;
+  padding: calc(1rem * var(--scale));
+}
+
+.bubble1 {
+  width: calc(150px * var(--scale));
+}
+
+.bubble2 {
+  width: calc(200px * var(--scale));
+  padding: calc(.5rem * var(--scale));
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.avatar {
+  width: calc(100px * var(--scale));
+  height: calc(100px * var(--scale));
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: calc(1rem * var(--scale));
+}
+
+.name {
+  margin: 0;
+  font-size: calc(14px * var(--scale));
+  font-weight: 600;
+  color: #F3EDE0;
+}
+
+.role {
+  margin-top: calc(.25rem * var(--scale));
+  font-size: calc(12px * var(--scale));
+}
+
+.blurb p {
+  margin: 0;
+  font-size: calc(14px * var(--scale));
+  line-height: 1.4;
+}
+
+.blurb strong {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.blurb hr {
+  border: none;
+  height: 1px;
+  background: #455063;
+  margin: calc(.9rem * var(--scale)) 0;
+}

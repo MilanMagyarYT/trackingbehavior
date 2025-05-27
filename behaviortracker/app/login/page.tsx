@@ -11,7 +11,7 @@ import { auth } from "@/lib/firebaseClient";
 import Image from "next/image";
 import { FaGoogle } from "react-icons/fa";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import "@/app/components/LoginPage.css";
+import "@/app/components/LoginPage2.css";
 
 export default function LoginPage() {
   const router = useRouter();

@@ -51,44 +51,56 @@ export default function Home() {
           step={1}
           img="/Card1.png"
           title="set-up your account"
-          description="From defining your average versus target screen time to selecting productive triggers, goals, activities, and content types, personalize your settings so the app can deliver tailored daily recommendations and targets."
+          description="from defining your average versus target screen time to selecting productive triggers, goals, activities, and content types, personalize your settings so the app can deliver tailored daily recommendations and targets"
         />
         <BTCard
           step={2}
           img="/Card2.png"
           title="track each social-media session"
-          description="Easily log each social‑media session with one tap: capture app, duration, time, triggers, activities, and mood shifts; the system instantly computes your session score and aggregates them into daily history."
+          description="easily log each social‑media session with one tap: capture app, duration, time, triggers, activities, and mood shifts; the system instantly computes your session score and aggregates them into daily history"
         />
         <BTCard
           step={3}
           img="/Card3.png"
           title="analyze daily insights"
-          description="Review your personalized daily metrics summary each morning: view your final score, period breakdowns, and tailored recommendations—empowering you to adjust habits, limit unproductive time, and effectively optimize your social‑media use."
+          description="review your personalized daily metrics summary each morning: view your final score, period breakdowns, and tailored recommendation, empowering you to adjust habits, limit unproductive time, and effectively optimize your social‑media use"
         />
         <BTTestimonial
-          quote="This tool helped me see the reality behind my screen‑ time numbers."
-          caption="Edina Muresan (Student)"
+          quote="This tool helped me see the reality behind my screen‑time numbers."
+          caption="from Edina Muresan (student)"
         />
       </section>
       <section id="features">
         <BTTextBubble text="tool demo" />
-        <BTTextTitle text="custom-built features" />
+        <BTTextTitle text="custom features" />
         <BTTextSubTitle>
           make improving your social-media
           <br />
           habits a little bit easier.
         </BTTextSubTitle>
         <BTImagePairBox>
-          <Image src="/Card1.png" alt="" width={140} height={140} priority />
-          <Image src="/Card2.png" alt="" width={140} height={140} priority />
+          <Image
+            src="/sidebysideimage1.png"
+            alt=""
+            width={140}
+            height={140}
+            priority
+          />
+          <Image
+            src="/sidebysideimage2.png"
+            alt=""
+            width={151}
+            height={140}
+            priority
+          />
         </BTImagePairBox>
       </section>
       <section id="start-behavior-tracking">
-        <BTTextTitle2 text="ready to start behavior tracking" />
+        <BTTextTitle2 text="ready to start" />
         <BTTextSubTitle>
           make improving your social-media
           <br />
-          habits a little bit easier.
+          habits easier.
         </BTTextSubTitle>
         <BTButtonCTA2
           text="start behavior tracking"

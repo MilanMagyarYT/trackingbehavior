@@ -27,7 +27,7 @@ export default function BTFooter() {
               <Link href="#features">features</Link>
             </li>
             <li>
-              <Link href="#contact">start-behavior-tracking</Link>
+              <Link href="#contact">ready to start</Link>
             </li>
           </ul>
         </nav>

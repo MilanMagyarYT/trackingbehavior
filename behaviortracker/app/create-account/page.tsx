@@ -17,7 +17,7 @@ import { store } from "@/app/store";
 import { setUser } from "@/app/store/authSlice";
 import { FaGoogle } from "react-icons/fa";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
-import "@/app/components/CreateAccountPage.css";
+import "@/app/components/CreateAccountPage3.css";
 
 export default function CreateAccountPage() {
   const router = useRouter();
@@ -126,7 +126,7 @@ export default function CreateAccountPage() {
             <Image
               src="/trackingbehaviorlogo2.png"
               alt="Tracking Behavior"
-              width={140}
+              width={110}
               height={50}
             />
 

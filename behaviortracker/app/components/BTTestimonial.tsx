@@ -17,7 +17,7 @@ export default function BTTestimonial({ quote, caption }: BTTestimonialProps) {
         <FaStar />
       </div>
       <blockquote className="bt-quote">“{quote}”</blockquote>
-      <figcaption className="bt-caption">- {caption}</figcaption>
+      <figcaption className="bt-caption">{caption}</figcaption>
     </figure>
   );
 }
