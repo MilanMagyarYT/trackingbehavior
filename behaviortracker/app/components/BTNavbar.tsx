@@ -43,11 +43,17 @@ export default function BTNavbar() {
 
   return (
     <nav className="navbar">
-      <div className="navbar__logo" onClick={() => navTo("/")}>
+      <div
+        className="navbar__logo"
+        onClick={() => {
+          if (status === "authenticated") navTo("/profile");
+          else navTo("/");
+        }}
+      >
         <Image
           src="/trackingbehaviorlogo2.png"
           alt="Tracking Behavior"
-          width={125}
+          width={115}
           height={50}
         />
       </div>

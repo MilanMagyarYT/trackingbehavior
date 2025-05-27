@@ -21,7 +21,7 @@ import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
 
 import { clamp, lerpColor } from "@/lib/utils";
-import "./Profile.css";
+import "./Profile3.css";
 import BTSetupBanner from "../components/BTSetupBanner";
 
 interface SessionDoc {
@@ -167,7 +167,7 @@ export default function ProfilePage() {
         </p>
 
         <div className="donut-wrap">
-          <svg width="320" height="320" viewBox="0 0 320 320">
+          <svg width="310" height="310" viewBox="0 0 320 320">
             <circle
               cx="160"
               cy="160"
@@ -211,7 +211,7 @@ export default function ProfilePage() {
         </section>
         <div className="stat-head">
           <span>productivity statistics</span>
-          <span>vs. previous 30 days</span>
+          <span>vs. previous 7 days</span>
         </div>
 
         <div className="stat-wrap">
