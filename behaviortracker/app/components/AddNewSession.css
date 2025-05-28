@@ -6,7 +6,7 @@
 .sn-bg{
   min-height:100dvh;
   background:#0d1623;
-  padding:1.5rem 1rem 3rem;
+  padding:1rem 1rem 1rem;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -34,27 +34,32 @@
 }
 
 .sn-session{
-  width:100%; max-width:440px;
-  margin-bottom:1rem;
+  width:100%; 
+  max-width:440px;
+  margin-bottom:0.75rem;
   background:#1b2538;
   border:1.5px solid #2a3d60;
   border-radius:20px;
-  padding:1.25rem 1rem;
+  padding:0.5rem 1rem;
   text-align:center;
 }
-.sn-session h3{margin:0;font-size:36px;font-weight:600;letter-spacing:-.04em}
-.sn-session span{font-size:18px;color:#c4c2bc;letter-spacing:-.04em}
+.sn-session h3{
+  margin:0;
+  font-size:28px;
+  font-weight:600;
+  letter-spacing:-.04em
+}
+.sn-session span{font-size:16px;color:#c4c2bc;letter-spacing:-.04em}
 
 .sn-title {
-  margin: 0 0 0.6rem;
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 600;
   text-align: center;
   letter-spacing: -0.04em;
 }
 
 .sn-progress {
-  height: 6px;
+  height: 5px;
   background: #0d1623;
   border-radius: 25px;
   overflow: hidden;

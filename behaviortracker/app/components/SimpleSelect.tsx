@@ -18,8 +18,9 @@ export default function SimpleSelect({
   placeholder?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<number>(0);
+  const [active, setActive] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     const h = (e: MouseEvent) =>
@@ -60,7 +61,7 @@ export default function SimpleSelect({
       </div>
 
       {open && (
-        <ul className="su-select-list">
+        <ul ref={listRef} className={`su-select-list drop-up`}>
           {options.map((o, i) => (
             <li
               key={o.value}

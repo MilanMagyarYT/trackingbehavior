@@ -246,7 +246,7 @@ export default function AddNewSession() {
       {step < 6 && (
         <main className="sn-bg">
           <header className="sn-session">
-            <h3>session {nowStr()}</h3>
+            <h3>session at {nowStr()}</h3>
             <span>{todayStr()}</span>
           </header>
           <section className="su-card sn-card">
@@ -460,7 +460,7 @@ export default function AddNewSession() {
                     disabled={!stepValid}
                     onClick={saveSession}
                   >
-                    submit session
+                    submit
                   </button>
                 </div>
 

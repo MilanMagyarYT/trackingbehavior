@@ -95,7 +95,9 @@ export default function BTNavbar() {
           <div className="mobileMenu__user">
             <div className="mobileMenu__avatar">{initials}</div>
             <div className="mobileMenu__userInfo">
-              <div className="mobileMenu__userName">{displayName}</div>
+              <div className="mobileMenu__userName">
+                {displayName?.toLowerCase()}
+              </div>
               <div className="mobileMenu__userEmail">{email}</div>
             </div>
           </div>
@@ -123,7 +125,7 @@ export default function BTNavbar() {
             <ul className="mobileMenu__list">
               <li onClick={() => navTo("/account")}>
                 <MdOutlineManageAccounts className="mobileMenu__icon" />
-                Account
+                account
               </li>
             </ul>
 
@@ -132,7 +134,7 @@ export default function BTNavbar() {
             <ul className="mobileMenu__list">
               <li onClick={handleLogout}>
                 <MdLogout className="mobileMenu__icon" />
-                Log out
+                log out
               </li>
             </ul>
           </div>

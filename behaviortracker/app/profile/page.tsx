@@ -101,7 +101,7 @@ export default function ProfilePage() {
     if (!uid) return;
 
     const start = new Date();
-    start.setDate(start.getDate() - 30);
+    start.setDate(start.getDate() - 7);
     start.setHours(0, 0, 0, 0);
 
     const q = query(
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                 <span>{Math.round((1 - (usageScore ?? 0)) * 100)}%</span>
               </div>
               <div className="stat-row">
-                <span>last 30 days</span>
+                <span>last 7 days</span>
                 <span>{stats30.usagePct}%</span>
               </div>
             </div>
@@ -259,7 +259,7 @@ export default function ProfilePage() {
                 <span>{Math.round((prodScore ?? 0) * 100)}%</span>
               </div>
               <div className="stat-row">
-                <span>last 30 days</span>
+                <span>last 7 days</span>
                 <span>{stats30.behPct}%</span>
               </div>
             </div>
