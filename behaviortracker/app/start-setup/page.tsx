@@ -13,32 +13,44 @@ import { MultiSelect } from "primereact/multiselect";
 
 const triggerList = [
   "boredom",
-  "notification",
+  "received notification",
   "habit",
-  "check_updates",
-  "search",
-  "work",
-  "post_planned",
+  "procrastination",
+  "received message",
+  "study requirement",
+  "work task",
 ] as const;
 
 const goalList = [
   "entertainment",
-  "work",
-  "academic",
-  "social",
-  "creation",
-  "news",
+  "academic / learning",
+  "work / professional task",
+  "social connection",
+  "staying informed (news)",
+  "creative expression / posting content",
 ] as const;
 
-const actList = ["scroll", "post", "comment", "react", "dm", "search"] as const;
+const actList = [
+  "scrolling/swipping",
+  "watching",
+  "reading",
+  "messaging",
+  "searching",
+  "posting",
+] as const;
 
 const contentList = [
   "educational",
+  "news",
   "entertainment",
-  "personal_updates",
-  "political",
+  "personal updates",
   "professional",
+  "political",
   "shopping",
+  "sports",
+  "podcasts",
+  "music",
+  "inspirational/motivational",
 ] as const;
 
 type TriggerCat = (typeof triggerList)[number];
@@ -158,8 +170,8 @@ export default function StartSetup() {
           {step < 3 && (
             <p className="su-sub">
               {step === 1
-                ? "add your numerical values regarding phone usage, needed to understand your past behavior"
-                : "add your reason and thoughts for the usage metrics, needed to evaluate why you make certain decisions"}
+                ? "add your numerical values regarding the amount and quality of time you spend on your phone daily"
+                : "clearly label what is your definition of productivity when using social media apps"}
             </p>
           )}
           {step === 3 && (
@@ -181,45 +193,47 @@ export default function StartSetup() {
           {step === 1 && (
             <>
               <label className="su-label">
-                average daily phone usage in last 30 days in minutes
+                what is your daily phone usage in the last 30 days? (minutes)
               </label>
               <input
                 className="su-input"
                 type="number"
-                placeholder="360 minutes"
+                placeholder="ex: 360"
                 value={avgLastWeek}
                 onChange={(e) => setAvgLastWeek(e.target.value)}
               />
 
               <label className="su-label">
-                wanted daily phone usage in minutes
+                what is your daily phone usage goal? (minutes)
               </label>
               <input
                 className="su-input"
                 type="number"
-                placeholder="90 minutes"
+                placeholder="ex: 120"
                 value={goalPhone}
                 onChange={(e) => setGoalPhone(e.target.value)}
               />
 
               <label className="su-label">
-                average daily unproductive phone usage percentage
+                how productive do you think is your daily phone usage?
+                (percentage %)
               </label>
               <input
                 className="su-input"
                 type="number"
-                placeholder="60%"
+                placeholder="ex: 33"
                 value={unprodPct}
                 onChange={(e) => setUnprodPct(e.target.value)}
               />
 
               <label className="su-label">
-                wanted daily unproductive phone usage percentage
+                how productive do you want to be daily when using your phone?
+                (percentage %)
               </label>
               <input
                 className="su-input"
                 type="number"
-                placeholder="10%"
+                placeholder="ex: 75"
                 value={optUnprodPct}
                 onChange={(e) => setOptUnprodPct(e.target.value)}
               />
@@ -231,13 +245,19 @@ export default function StartSetup() {
               >
                 next step
               </button>
+
+              <label className="su-explanation">
+                Explanation: for a 33% productivity, one out of three session on
+                your phone is productive, while the rest unproductive.
+              </label>
             </>
           )}
 
           {step === 2 && (
             <>
               <label className="su-label">
-                which reasons do you consider productive behavior?
+                which reasons to open social media apps do you consider
+                productive?
               </label>
               <MultiSelect
                 value={listFromRecord(prodTriggers)}
@@ -256,7 +276,8 @@ export default function StartSetup() {
               />
 
               <label className="su-label">
-                which goals do you consider productive behavior?
+                which goals to open social media apps do you consider
+                productive?
               </label>
               <MultiSelect
                 value={listFromRecord(prodGoals)}
@@ -270,7 +291,8 @@ export default function StartSetup() {
               />
 
               <label className="su-label">
-                which activities do you consider productive behavior?
+                which activities that you do on social media apps do you
+                consider productive?
               </label>
               <MultiSelect
                 value={listFromRecord(prodActs)}
@@ -286,7 +308,8 @@ export default function StartSetup() {
               />
 
               <label className="su-label">
-                do you consider a negative mood drop unproductive?
+                do you consider a negative drop in your overall mood as
+                unproductive?
               </label>
               <SimpleSelect
                 options={[
@@ -331,6 +354,11 @@ export default function StartSetup() {
                   next step
                 </button>
               </div>
+
+              <label className="su-explanation">
+                Explanation: pay attention and look over all of the options in
+                the questions above to accuratelly define productivity.
+              </label>
             </>
           )}
 
@@ -344,7 +372,7 @@ export default function StartSetup() {
                   className="su-btn-primary"
                   onClick={handleSubmitAnswers}
                 >
-                  submit answers
+                  submit
                 </button>
               </div>
               <div className="su-review">

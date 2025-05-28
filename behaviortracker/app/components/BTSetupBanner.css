@@ -7,7 +7,7 @@
     color: #F3EDE0;
     border: 1.5px solid #fa4617;   
     border-radius: 20px;
-    padding: 0.5rem 1.75rem;
+    padding: 0.5rem 2.5rem;
     cursor: pointer;
     transition: background .25s;
   }
@@ -18,7 +18,7 @@
   
   .setup-icon {
     padding-left: 0.25rem;
-    font-size: 36px;
+    font-size: 32px;
     flex-shrink: 0;
   }
   
@@ -29,13 +29,13 @@
   
   .setup-title {
     display: block;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 600;
     letter-spacing: -0.04em;
   }
   
   .setup-sub {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: -0.04em;
   }
   

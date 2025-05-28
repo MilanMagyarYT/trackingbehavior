@@ -2,12 +2,12 @@
   padding-top: 72px;
 }
 .su-bg {
-  min-height: 100dvh;
+  min-height: 90dvh;
   background: #0d1623;
   display: flex;
   justify-content: center;
   align-items: flex-start;       
-  padding: 1.5rem 1rem 3rem;       
+  padding: 1rem 1rem 1rem;       
   box-sizing: border-box;
   color: #f3ede0;
 }
@@ -18,17 +18,17 @@
   background: #1b2538;
   border: 1.5px solid #2a3d60;
   border-radius: 20px;
-  padding: 2rem 1.75rem 2rem;
+  padding: 1rem 1.75rem 1.25rem;
 }
 
 .su-step-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 66px;
+  width: 60px;
   height: 28px;
-  margin: 0 auto 0.5rem;     
-  font-size: 14px;
+  margin: 0 auto 0rem;     
+  font-size: 12px;
   font-weight: 600;
   background: #0d1623;
   border: 1.5px solid #2a3d60;
@@ -37,16 +37,16 @@
 }
 
 .su-title {
-  margin: 0 0 0.6rem;
-  font-size: 36px;
+  margin: 0 0 0.25rem;
+  font-size: 32px;
   font-weight: 600;
   text-align: center;
   letter-spacing: -0.04em;
 }
 
 .su-sub {
-  margin: 0 0 1.5rem;
-  font-size: 16px;
+  margin: 0 0 1rem;
+  font-size: 14px;
   font-weight: 500;
   text-align: center;
   line-height: 1.4;
@@ -55,11 +55,11 @@
 }
 
 .su-progress {
-  height: 6px;
+  height: 5px;
   background: #0d1623;
   border-radius: 25px;
   overflow: hidden;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 .su-progress-bar {
   height: 100%;
@@ -69,21 +69,31 @@
 
 .su-label {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   margin-bottom: 0.4rem;
   color: #f3ede0;
   letter-spacing: -0.04em;
 }
+
+.su-explanation {
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: -0.04em;
+  color: #c4c2bc;
+}
+
 .su-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   background: #0d1623;
   border: 1.5px solid #2a3d60;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: #f3ede0;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   letter-spacing: -0.04em;
 }
 .su-input:focus {
@@ -93,7 +103,7 @@
 
 .su-btn-primary,
 .su-btn-outline {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   font-size: 14x;
   font-weight: 600;
   border-radius: 10px;
@@ -104,11 +114,15 @@
   background: #fa4617;
   color: #f3ede0;
   border: none;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 .su-btn-outline {
   background: transparent;
   color: #f3ede0;
   border: 1.5px solid #f3ede0;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 .su-btn-primary:disabled {
   opacity: 0.5;
@@ -125,17 +139,17 @@
 }
 
 .su-review       { 
-  margin-top: 2rem;
+  margin-top: 0.5rem;
  }
 .su-review-label { 
-  font-size: 14px; color: #c4c2bc; margin: 0.9rem 0 0.35rem; 
+  font-size: 13px; color: #c4c2bc; margin: 0.5rem 0 0.4rem; 
 }
 .su-review-value {
-  padding: 0.7rem 1rem;
+  padding: 0.5rem 1rem;
   background: #0d1623;
   border: 1.5px solid #2a3d60;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 13px;
   color: #f3ede0;
   word-break: break-word;
 }
@@ -186,7 +200,8 @@
   border: 1.5px solid #2a3d60;
   border-radius: 10px;
   color: #f3ede0;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 13px;
 }
 .su-multi.p-multiselect:not(.p-disabled):hover {
   border-color: #3d54a3;
@@ -199,7 +214,7 @@
 .su-multi .p-multiselect-token {
   background: #2A3D60;
   color: #f3ede0;
-  font-size: 12px;
+  font-size: 15px;
   border-radius: 10px;
 }
 
@@ -213,13 +228,14 @@
   border: 1.5px solid #2a3d60 !important;
   color: #f3ede0 !important;
   border-radius: 10px;
+  font-size: 13px;
 }
 .p-multiselect-item {
-  padding: 0.65rem 1rem !important;
+  padding: 0.6rem 1rem !important;
 }
 .p-multiselect-item.p-highlight,
 .p-multiselect-item:hover {
-  background: #112233 !important;
+  background: #2A3D60 !important;
 }
 
 .p-multiselect-item .p-checkbox,
@@ -227,11 +243,10 @@
   display: none !important;
 }
 
-
 .su-select {  
   position: relative;
   width: 100%;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   outline: none;
 }
 .su-select:focus-visible .su-select-display {
@@ -240,13 +255,13 @@
 
 .su-select-display {   
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   background: #0d1623;
   border: 1.5px solid #2a3d60;
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 13px;
   color: #f3ede0;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
   letter-spacing: -0.04em;  
   cursor: pointer;
   user-select: none;
@@ -255,11 +270,12 @@
 .su-select-display::after { 
   content: "▾";
   position: absolute;
-  right: 1rem;
+  right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
   color: #c4c2bc;
   pointer-events: none;
+  font-size:24px;
 }
 
 .su-select-list { 
@@ -276,8 +292,8 @@
 }
 
 .su-select-item {
-  padding: 0.65rem 1rem;
-  font-size: 14px;
+  padding: 0.5rem 1rem;
+  font-size: 13px;
   cursor: pointer;
   color: #f3ede0;
 }
@@ -291,9 +307,9 @@
 }
 
 .su-multi .p-multiselect-token {
-  margin: 0 0.4rem 0.4rem 0;      
+  margin: 0 0.4rem 0rem 0;      
   padding: 0.25rem 0.55rem;     
-  font-size: 13px;
+  font-size: 10px;
 }
 
 .su-multi.p-multiselect .p-multiselect-label-container {
@@ -301,7 +317,7 @@
 }
 
 .su-multi.p-multiselect .p-multiselect-trigger {
-  right: 0.9rem;                 
+  right: 2rem;                 
 }
 
 .su-multi .p-multiselect-close {
