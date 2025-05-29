@@ -59,33 +59,62 @@ const durationBuckets = [
 
 const triggerList = [
   "boredom",
-  "notification",
+  "received notification",
   "habit",
-  "check_updates",
-  "search",
-  "work",
-  "post_planned",
+  "procrastination",
+  "received message",
+  "study requirement",
+  "work task",
 ] as const;
 const goalList = [
   "entertainment",
-  "work",
-  "academic",
-  "social",
-  "creation",
-  "news",
+  "academic / learning",
+  "work / professional task",
+  "social connection",
+  "staying informed (news)",
+  "creative expression / posting content",
 ] as const;
-const actList = ["scroll", "post", "comment", "react", "dm", "search"] as const;
+const actList = [
+  "scrolling/swipping",
+  "watching",
+  "reading",
+  "messaging",
+  "searching",
+  "posting",
+] as const;
 const contentList = [
   "educational",
+  "news",
   "entertainment",
-  "personal_updates",
-  "political",
+  "personal updates",
   "professional",
+  "political",
   "shopping",
+  "sports",
+  "podcasts",
+  "music",
+  "inspirational/motivational",
 ] as const;
 type MoodRating = 1 | 2 | 3 | 4 | 5;
-type LocCat = "home" | "work" | "commute" | "outside" | "bed" | "other";
-type MultiCat = "tv" | "eating" | "working" | "none" | "other";
+type LocCat =
+  | "commuting – car, bus, train or subway"
+  | "home – living room / couch"
+  | "toilet"
+  | "home – in bed"
+  | "home office / desk"
+  | "gym"
+  | "workplace – at your desk"
+  | "classroom / meeting room"
+  | "cafe / restaurant";
+type MultiCat =
+  | "none"
+  | "eating"
+  | "working / studying"
+  | "listening to music or podcasts"
+  | "exercising"
+  | "cooking"
+  | "commuting"
+  | "audio/video call";
 
 interface ProdRules {
   goals: Record<GoalCat, boolean>;
@@ -145,10 +174,27 @@ export default function AddNewSession() {
 
   const [content, setCont] = useState<ContentCat[]>([]);
   const [loc, setLoc] = useState<
-    "home" | "work" | "commute" | "outside" | "bed" | "other" | ""
+    | "commuting – car, bus, train or subway"
+    | "home – living room / couch"
+    | "toilet"
+    | "home – in bed"
+    | "home office / desk"
+    | "gym"
+    | "workplace – at your desk"
+    | "classroom / meeting room"
+    | "cafe / restaurant"
+    | ""
   >("");
   const [multi, setMulti] = useState<
-    "tv" | "eating" | "working" | "none" | "other" | ""
+    | "none"
+    | "eating"
+    | "working / studying"
+    | "listening to music or podcasts"
+    | "exercising"
+    | "cooking"
+    | "commuting"
+    | "audio/video call"
+    | ""
   >("");
 
   const [baseline, setBase] = useState<UserBaseline | null>(null);
@@ -272,7 +318,7 @@ export default function AddNewSession() {
             {step === 1 && (
               <>
                 <label className="sn-label">
-                  which social media app did you just use?
+                  which social media app did you use?
                 </label>
                 <SimpleSelect
                   value={appUsed}
@@ -309,7 +355,8 @@ export default function AddNewSession() {
             {step === 2 && (
               <>
                 <label className="sn-label">
-                  what was the main reason you opened this app?
+                  what were reasons you opened this social media app? (select
+                  all)
                 </label>
                 <MultiSelect
                   className="su-multi"
@@ -324,7 +371,7 @@ export default function AddNewSession() {
                 />
 
                 <label className="sn-label">
-                  what was your primary goal when opening this app?
+                  what was your primary goal when opening this social media app?
                 </label>
                 <SimpleSelect
                   value={goal}
@@ -334,7 +381,8 @@ export default function AddNewSession() {
                 />
 
                 <label className="sn-label">
-                  what did you do during this session? (select all)
+                  what activities did you do during this social media session?
+                  (select all)
                 </label>
                 <MultiSelect
                   className="su-multi"
@@ -356,7 +404,7 @@ export default function AddNewSession() {
             {step === 3 && (
               <>
                 <label className="sn-label">
-                  how was your mood before this session?
+                  what was your overall mood before the social media session?
                 </label>
                 <SimpleSelect
                   value={moodPre.toString()}
@@ -369,7 +417,7 @@ export default function AddNewSession() {
                 />
 
                 <label className="sn-label">
-                  how was your mood after this session?
+                  what was your overall mood after the social media session?
                 </label>
                 <SimpleSelect
                   value={moodPost.toString()}
@@ -382,7 +430,7 @@ export default function AddNewSession() {
                 />
 
                 <label className="sn-label">
-                  how productive do you think this session was?
+                  how productive was your social media session? (neutral is 3)
                 </label>
                 <SimpleSelect
                   value={prodSelf.toString()}
@@ -399,7 +447,8 @@ export default function AddNewSession() {
             {step === 4 && (
               <>
                 <label className="sn-label">
-                  what kind of content did you mostly engage with?
+                  what type of content did you engage with during this social
+                  media session? (select all)
                 </label>
                 <MultiSelect
                   className="su-multi"
@@ -422,12 +471,30 @@ export default function AddNewSession() {
                   onChange={(v) => setLoc(v as LocCat)}
                   placeholder="select location"
                   options={[
-                    { label: "home", value: "home" },
-                    { label: "work / school", value: "work" },
-                    { label: "commuting", value: "commute" },
-                    { label: "outdoors", value: "outside" },
-                    { label: "in bed", value: "bed" },
-                    { label: "other", value: "other" },
+                    {
+                      label: "commuting – car, bus, train or subway",
+                      value: "commuting – car, bus, train or subway",
+                    },
+                    {
+                      label: "home – living room / couch",
+                      value: "home – living room / couch",
+                    },
+                    { label: "toilet", value: "toilet" },
+                    { label: "home – in bed", value: "home – in bed" },
+                    {
+                      label: "home office / desk",
+                      value: "home office / desk",
+                    },
+                    { label: "gym", value: "gym" },
+                    {
+                      label: "workplace – at your desk",
+                      value: "workplace – at your desk",
+                    },
+                    {
+                      label: "classroom / meeting room",
+                      value: "classroom / meeting room",
+                    },
+                    { label: "cafe / restaurant", value: "cafe / restaurant" },
                   ]}
                 />
 
@@ -439,11 +506,20 @@ export default function AddNewSession() {
                   onChange={(v) => setMulti(v as MultiCat)}
                   placeholder="select"
                   options={[
-                    { label: "watching TV", value: "tv" },
-                    { label: "eating", value: "eating" },
-                    { label: "working / studying", value: "working" },
                     { label: "none", value: "none" },
-                    { label: "other", value: "other" },
+                    { label: "eating", value: "eating" },
+                    {
+                      label: "working / studying",
+                      value: "working / studying",
+                    },
+                    {
+                      label: "listening to music or podcasts",
+                      value: "listening to music or podcasts",
+                    },
+                    { label: "exercising", value: "exercising" },
+                    { label: "cooking", value: "cooking" },
+                    { label: "commuting", value: "commuting" },
+                    { label: "audio/video call", value: "audio/video call" },
                   ]}
                 />
               </>
@@ -516,7 +592,7 @@ export default function AddNewSession() {
               </>
             )}
             <div className="su-btn-row sn-btn-row">
-              {step > 1 && (
+              {step > 1 && step < 5 && (
                 <button
                   className="su-btn-outline sn-btn-outline"
                   onClick={() => setStep((step - 1) as Step)}

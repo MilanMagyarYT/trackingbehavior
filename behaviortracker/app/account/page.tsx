@@ -123,11 +123,11 @@ export default function AccountPage() {
 
           <div className="acc-row two-cols">
             <div>
-              <label>social-media usage (avg.)</label>
+              <label>social-media usage</label>
               <input type="number" value={avgUsage} readOnly />
             </div>
             <div>
-              <label>productivity % (avg.)</label>
+              <label>productivity %</label>
               <input type="number" value={avgProd} readOnly />
             </div>
           </div>
@@ -145,11 +145,11 @@ export default function AccountPage() {
 
           <div className="acc-row two-cols">
             <div>
-              <label>social-media usage (avg.)</label>
+              <label>social-media usage</label>
               <input type="number" value={baselineUsage} readOnly />
             </div>
             <div>
-              <label>productivity % (avg.)</label>
+              <label>productivity %</label>
               <input type="number" value={baselineProd} readOnly />
             </div>
           </div>
