@@ -1,47 +1,52 @@
-.su-select {
+.btcs-select {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.btcs-select-display {
+  display: block;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  color: #c4c2bc;
+  background: #0d1623;
+  border: 1.5px solid #2a3d60;
+  border-radius: 10px;
+  font-size: 13px;
   position: relative;
 }
 
-.su-select-display {
-  cursor: pointer;
-  user-select: none;
+.btcs-select-display::after {
+  content: '▾';
+  position: absolute;
+  right: 0.5rem;
+  font-size: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c4c2bc;
 }
 
-/* default (downward) */
-.su-select-list.drop-down {
-  top: 100%;
-  bottom: auto;
-  margin-top: 0.3rem;
-  margin-bottom: 0;
-}
-
-/* flipped (upward) */
-.su-select-list.drop-up {
-  top: auto;
-  bottom: 100%;
-  margin-top: 0;
-  margin-bottom: 0.3rem;
-}
-
-.su-select-list {
+.btcs-select-list {
   position: absolute;
   z-index: 20;
   left: 0;
   right: 0;
-  background: #0d1623;
-  border: 1.5px solid #2a3d60;
+  background: #1b2538;
+  border: 1px solid #2a3d60;
   border-radius: 10px;
   max-height: 220px;
   overflow-y: auto;
+  margin-top: 0.3rem;
 }
 
-.su-select-item {
+.btcs-select-item {
   padding: 0.65rem 1rem;
-  font-size: 14px;
+  font-size: 13px;
+  color: #f3ede0;
   cursor: pointer;
 }
 
-.su-select-item:hover,
-.su-select-item.is-active {
-  background: #112233;
+.btcs-select-item:hover,
+.btcs-select-item.is-active {
+  background: #2a3d60;
 }

@@ -10,7 +10,7 @@ export default function SimpleSelect({
   options,
   value,
   onChange,
-  placeholder = "select …",
+  placeholder = "select answer",
 }: {
   options: Option[];
   value: string | null;
@@ -23,10 +23,10 @@ export default function SimpleSelect({
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    const h = (e: MouseEvent) =>
+    const handler = (e: MouseEvent) =>
       !ref.current?.contains(e.target as Node) && setOpen(false);
-    if (open) document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
   function handleKey(e: React.KeyboardEvent) {
@@ -34,7 +34,6 @@ export default function SimpleSelect({
       setOpen(true);
       return;
     }
-
     if (open) {
       if (e.key === "ArrowDown") {
         setActive((p) => (p + 1) % options.length);
@@ -52,20 +51,16 @@ export default function SimpleSelect({
   }
 
   return (
-    <div className="su-select" ref={ref} tabIndex={0} onKeyDown={handleKey}>
-      <div
-        className="su-input su-select-display"
-        onClick={() => setOpen((o) => !o)}
-      >
+    <div className="btcs-select" ref={ref} tabIndex={0} onKeyDown={handleKey}>
+      <div className="btcs-select-display" onClick={() => setOpen((o) => !o)}>
         {value ? options.find((o) => o.value === value)?.label : placeholder}
       </div>
-
       {open && (
-        <ul ref={listRef} className={`su-select-list drop-up`}>
+        <ul ref={listRef} className="btcs-select-list">
           {options.map((o, i) => (
             <li
               key={o.value}
-              className={`su-select-item ${i === active ? "is-active" : ""}`}
+              className={`btcs-select-item ${i === active ? "is-active" : ""}`}
               onMouseEnter={() => setActive(i)}
               onClick={() => {
                 onChange(o.value);

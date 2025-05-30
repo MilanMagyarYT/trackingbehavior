@@ -1,0 +1,76 @@
+.btcs-details {
+  border: 1.5px solid #2a3d60;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  background: #1b2538;
+}
+
+.btcs-summary {
+  display: block;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #c4c2bc;          /* lighter placeholder color */
+  background: #0d1623;
+  border-radius: 10px;
+  position: relative;
+  list-style: none;
+  font-size: 13px;
+}
+
+/* Hide default triangle */
+.btcs-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom dropdown arrow on right */
+.btcs-summary::after {
+  content: '▾';
+  position: absolute;
+  right: 0.5rem;
+  font-size: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c4c2bc;
+}
+
+.btcs-list {
+  padding: 0.5rem 1rem;
+}
+
+.btcs-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.btcs-label {
+  flex: 1;
+  font-size: 13px;
+  color: #f3ede0;
+}
+
+.btcs-options {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btcs-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0rem;
+  font-size: 13px;
+  color: #c4c2bc;
+}
+
+.btcs-radio {
+  accent-color: #fa4617;
+  width: 14px;
+  height: 14px;
+}
+
+.btcs-val {
+  display: inline-block;
+  width: 1.25rem;
+  text-align: center;
+}

@@ -29,32 +29,19 @@ const timeOptions: Option[] = [
 ];
 
 const appList = [
+  "YouTube",
   "Facebook",
+  "WhatsApp",
   "Instagram",
   "Twitter",
-  "LinkedIn",
   "TikTok",
   "Snapchat",
-  "YouTube",
-  "Twitch",
+  "LinkedIn",
   "Reddit",
-  "Pinterest",
-  "Tumblr",
-  "WhatsApp",
+  "Twitch",
   "Messenger",
-  "WeChat",
   "Telegram",
   "Discord",
-  "Clubhouse",
-  "VK",
-] as const;
-
-const durationBuckets = [
-  { label: "< 5 min", mid: 3 },
-  { label: "5 ‑ 15 min", mid: 10 },
-  { label: "15 ‑ 30 min", mid: 22 },
-  { label: "30 ‑ 60 min", mid: 45 },
-  { label: "> 60 min", mid: 70 },
 ] as const;
 
 const triggerList = [
@@ -66,14 +53,16 @@ const triggerList = [
   "study requirement",
   "work task",
 ] as const;
+
 const goalList = [
   "entertainment",
   "academic / learning",
   "work / professional task",
   "social connection",
-  "staying informed (news)",
-  "creative expression / posting content",
+  "news",
+  "creating/posting content",
 ] as const;
+
 const actList = [
   "scrolling/swipping",
   "watching",
@@ -82,6 +71,7 @@ const actList = [
   "searching",
   "posting",
 ] as const;
+
 const contentList = [
   "educational",
   "news",
@@ -93,9 +83,10 @@ const contentList = [
   "sports",
   "podcasts",
   "music",
-  "inspirational/motivational",
 ] as const;
-type MoodRating = 1 | 2 | 3 | 4 | 5;
+
+type MoodRating = -2 | -1 | 0 | 1 | 2;
+
 type LocCat =
   | "commuting – car, bus, train or subway"
   | "home – living room / couch"
@@ -106,6 +97,7 @@ type LocCat =
   | "workplace – at your desk"
   | "classroom / meeting room"
   | "cafe / restaurant";
+
 type MultiCat =
   | "none"
   | "eating"
@@ -120,11 +112,13 @@ interface ProdRules {
   goals: Record<GoalCat, boolean>;
   acts: Record<ActivityCat, boolean>;
   content: Record<ContentCat, boolean>;
+  triggers: Record<TriggerCat, boolean>;
 }
 
 interface UserBaseline {
   prodRules: ProdRules;
   negMoodIsUnprod: boolean;
+  goalPhoneMin: number;
 }
 
 type TriggerCat = (typeof triggerList)[number];
@@ -133,15 +127,13 @@ type ActivityCat = (typeof actList)[number];
 type ContentCat = (typeof contentList)[number];
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
-const mkBoolRecord = <K extends string>(keys: readonly K[]) =>
-  Object.fromEntries(keys.map((k) => [k, false])) as Record<K, boolean>;
-
 const todayStr = () =>
   new Date().toLocaleDateString(undefined, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   });
+
 const nowStr = () =>
   new Date().toLocaleTimeString(undefined, {
     hour: "2-digit",
@@ -151,27 +143,18 @@ const nowStr = () =>
 export default function AddNewSession() {
   const { uid, status } = useAppSelector((s) => s.auth);
   const router = useRouter();
-
-  useEffect(() => {
-    if (status === "unauthenticated") router.replace("/login");
-  }, [status, router]);
-
   const [step, setStep] = useState<Step>(1);
-
   const [appUsed, setApp] = useState<string>("");
-  const [durIdx, setDurIdx] = useState<number | null>(null);
   const [dayPart, setDayPart] = useState<TimeBucket | "">("");
-
   const [triggers, setTrig] = useState<TriggerCat[]>([]);
+  const [activities, setActivities] = useState<ActivityCat[]>([]);
   const [goal, setGoal] = useState<GoalCat | "">("");
-  const [acts, setActs] = useState<Record<ActivityCat, boolean>>(() =>
-    mkBoolRecord(actList)
-  );
-
-  const [moodPre, setPre] = useState<1 | 2 | 3 | 4 | 5 | "">("");
-  const [moodPost, setPost] = useState<1 | 2 | 3 | 4 | 5 | "">("");
-  const [prodSelf, setProd] = useState<1 | 2 | 3 | 4 | 5 | "">("");
-
+  const [baseline, setBase] = useState<UserBaseline | null>(null);
+  const [duration, setDuration] = useState<string>("");
+  const [moodDifference, setMoodDifference] = useState<
+    -2 | -1 | 0 | 1 | 2 | ""
+  >("");
+  const [prodSelf, setProd] = useState<-2 | -1 | 0 | 1 | 2 | "">("");
   const [content, setCont] = useState<ContentCat[]>([]);
   const [loc, setLoc] = useState<
     | "commuting – car, bus, train or subway"
@@ -197,7 +180,10 @@ export default function AddNewSession() {
     | ""
   >("");
 
-  const [baseline, setBase] = useState<UserBaseline | null>(null);
+  useEffect(() => {
+    if (status === "unauthenticated") router.replace("/login");
+  }, [status, router]);
+
   useEffect(() => {
     if (!uid) return;
     getDoc(doc(db, "users", uid)).then((s) => {
@@ -208,11 +194,11 @@ export default function AddNewSession() {
   const stepValid = useMemo(() => {
     switch (step) {
       case 1:
-        return appUsed && durIdx !== null && dayPart;
+        return appUsed && duration && dayPart;
       case 2:
-        return triggers.length && goal && Object.values(acts).some(Boolean);
+        return triggers.length && goal && activities;
       case 3:
-        return moodPre && moodPost && prodSelf;
+        return moodDifference && prodSelf;
       case 4:
         return content.length && loc && multi;
       case 5:
@@ -223,13 +209,12 @@ export default function AddNewSession() {
   }, [
     step,
     appUsed,
-    durIdx,
+    duration,
     dayPart,
     triggers,
     goal,
-    acts,
-    moodPre,
-    moodPost,
+    activities,
+    moodDifference,
     prodSelf,
     content,
     loc,
@@ -239,43 +224,68 @@ export default function AddNewSession() {
   if (status === "unauthenticated") return null;
   if (status === "loading" || baseline === null) return <CenteredSpinner />;
 
-  const saveSession = async () => {
-    if (!uid || durIdx === null) return;
-    const durMin = durationBuckets[durIdx].mid;
-    const moodDelta = (moodPost as number) - (moodPre as number);
-    const rules = baseline!.prodRules;
+  const computeRawScore = () => {
+    if (!baseline) return 0;
 
-    const goalProd = goal ? rules.goals[goal as GoalCat] : false;
-    const actProd = Object.entries(acts).some(
-      ([k, v]) => v && rules.acts[k as ActivityCat]
+    const M = Number(moodDifference) / 2;
+    const P = multi === "none" ? 0 : -1;
+
+    const avg = <T extends string>(
+      arr: T[],
+      lookup: Record<T, boolean>
+    ): number =>
+      arr.reduce((sum, key) => sum + (lookup[key] ? 1 : -1), 0) / arr.length;
+
+    const C = avg(content, baseline.prodRules.content);
+    const T = avg(triggers, baseline.prodRules.triggers);
+    const A = avg(activities, baseline.prodRules.acts);
+    const G = baseline.prodRules.goals[goal as GoalCat] ? 1 : -1;
+    const selfP = Number(prodSelf) / 2;
+
+    return (
+      0.23 * M +
+      0.19 * C +
+      0.19 * T +
+      0.15 * P +
+      0.1 * A +
+      0.06 * G +
+      0.08 * selfP
     );
-    const contProd = content.some((c) => rules.content[c]);
-    const moodBad = baseline!.negMoodIsUnprod && moodDelta < 0;
+  };
 
-    const yResearch = goalProd && actProd && contProd && !moodBad ? 1 : 0;
-    const prodNorm = ((prodSelf as number) - 1) / 4;
-    const sessionScore = 0.6 * prodNorm + 0.4 * yResearch;
+  const computeDeltaPoints = (rawScore: number) => {
+    const B = Number(baseline!.goalPhoneMin);
+    const minutes = Number(duration);
+    const rate = 50 / B;
+    const rawPts = rawScore * minutes * rate;
+    const deltaPoints = rawPts > 0 ? Math.ceil(rawPts) : Math.floor(rawPts);
+    return deltaPoints;
+  };
+
+  const saveSession = async () => {
+    if (!uid) return;
+
+    const rawScore = computeRawScore();
+    const deltaPoints = computeDeltaPoints(rawScore);
+    const minutes = Number(duration);
 
     await addDoc(collection(doc(db, "users", uid), "sessions"), {
-      createdAt: serverTimestamp(),
       appId: appUsed,
-      durMin,
+      contentMajor: content,
+      createdAt: serverTimestamp(),
+      duration: minutes,
+      engagement: activities,
+      goalPrimary: goal,
+      location: loc,
+      moodDifference,
+      multitask: multi,
+      prodSelf,
       timeBucket: dayPart,
       triggers,
-      goalPrimary: goal,
-      engagement: acts,
-      moodPre,
-      moodPost,
-      moodDelta,
-      prodSelf,
-      prodNorm,
-      yResearch,
-      sessionScore,
-      contentMajor: content,
-      loc,
-      multitask: multi,
-      activeFlag: actProd,
+      rawScore,
+      deltaPoints,
     });
+
     setStep(6);
   };
 
@@ -318,6 +328,16 @@ export default function AddNewSession() {
             {step === 1 && (
               <>
                 <label className="sn-label">
+                  how long did this session last?
+                </label>
+                <input
+                  className="sn-input"
+                  type="number"
+                  placeholder="add session duration"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                />
+                <label className="sn-label">
                   which social media app did you use?
                 </label>
                 <SimpleSelect
@@ -325,19 +345,6 @@ export default function AddNewSession() {
                   onChange={setApp}
                   placeholder="select app"
                   options={appList.map((a) => ({ label: a, value: a }))}
-                />
-
-                <label className="sn-label">
-                  how long did this session last?
-                </label>
-                <SimpleSelect
-                  value={durIdx === null ? "" : durIdx.toString()}
-                  onChange={(v) => setDurIdx(Number(v))}
-                  placeholder="select duration"
-                  options={durationBuckets.map((b, i) => ({
-                    label: b.label,
-                    value: i.toString(),
-                  }))}
                 />
 
                 <label className="sn-label">
@@ -355,8 +362,8 @@ export default function AddNewSession() {
             {step === 2 && (
               <>
                 <label className="sn-label">
-                  what were reasons you opened this social media app? (select
-                  all)
+                  what were the reasons you opened this social media app?
+                  (select all)
                 </label>
                 <MultiSelect
                   className="su-multi"
@@ -388,15 +395,12 @@ export default function AddNewSession() {
                   className="su-multi"
                   display="chip"
                   placeholder="choose answers"
-                  value={Object.keys(acts).filter(
-                    (k) => acts[k as ActivityCat]
-                  )}
-                  options={actList.map((a) => ({ label: a, value: a }))}
-                  onChange={(e) => {
-                    const sel = e.value as ActivityCat[];
-                    setActs(mkBoolRecord(actList));
-                    sel.forEach((k) => setActs((p) => ({ ...p, [k]: true })));
-                  }}
+                  value={activities}
+                  options={actList.map((t) => ({
+                    label: t.replace(/_/g, " "),
+                    value: t,
+                  }))}
+                  onChange={(e) => setActivities(e.value as ActivityCat[])}
                 />
               </>
             )}
@@ -404,42 +408,66 @@ export default function AddNewSession() {
             {step === 3 && (
               <>
                 <label className="sn-label">
-                  what was your overall mood before the social media session?
+                  did you go through a mood change after the social media
+                  session?
                 </label>
                 <SimpleSelect
-                  value={moodPre.toString()}
-                  onChange={(v) => setPre(Number(v) as MoodRating)}
+                  value={moodDifference.toString()}
+                  onChange={(v) => setMoodDifference(Number(v) as MoodRating)}
                   placeholder="select value"
-                  options={[1, 2, 3, 4, 5].map((n) => ({
-                    label: n.toString(),
-                    value: n.toString(),
-                  }))}
+                  options={[
+                    {
+                      label: "-2 (much worse)",
+                      value: "-2",
+                    },
+                    {
+                      label: "-1 (slightly worse)",
+                      value: "-1",
+                    },
+                    {
+                      label: "0 (no change)",
+                      value: "0",
+                    },
+                    {
+                      label: "1 (slightly better)",
+                      value: "1",
+                    },
+                    {
+                      label: "2 (much better)",
+                      value: "2",
+                    },
+                  ]}
                 />
 
                 <label className="sn-label">
-                  what was your overall mood after the social media session?
-                </label>
-                <SimpleSelect
-                  value={moodPost.toString()}
-                  onChange={(v) => setPost(Number(v) as MoodRating)}
-                  placeholder="select value"
-                  options={[1, 2, 3, 4, 5].map((n) => ({
-                    label: n.toString(),
-                    value: n.toString(),
-                  }))}
-                />
-
-                <label className="sn-label">
-                  how productive was your social media session? (neutral is 3)
+                  how productive was your social media session?
                 </label>
                 <SimpleSelect
                   value={prodSelf.toString()}
                   onChange={(v) => setProd(Number(v) as MoodRating)}
                   placeholder="select value"
-                  options={[1, 2, 3, 4, 5].map((n) => ({
-                    label: n.toString(),
-                    value: n.toString(),
-                  }))}
+                  options={[
+                    {
+                      label: "-2 (very unproductive)",
+                      value: "-2",
+                    },
+                    {
+                      label: "-1 (slightly unproductive)",
+                      value: "-1",
+                    },
+                    {
+                      label: "0 (neutral)",
+                      value: "0",
+                    },
+                    {
+                      label: "1 (slightly productive)",
+                      value: "1",
+                    },
+                    {
+                      label: "2 (very productive)",
+                      value: "2",
+                    },
+                  ]}
                 />
               </>
             )}
@@ -545,10 +573,7 @@ export default function AddNewSession() {
                     l="which social media app did you just use?"
                     v={appUsed}
                   />
-                  <Row
-                    l="how long did this session last?"
-                    v={durationBuckets[durIdx!].label}
-                  />
+                  <Row l="how long did this session last?" v={duration} />
                   <Row l="when did this session take place?" v={dayPart} />
                   <Row
                     l="what was the main reason you opened this app? (select all)"
@@ -560,17 +585,11 @@ export default function AddNewSession() {
                   />
                   <Row
                     l="what did you do during this session? (select all)"
-                    v={Object.keys(acts)
-                      .filter((k) => acts[k as ActivityCat])
-                      .join(", ")}
+                    v={activities.join(", ")}
                   />
                   <Row
-                    l="how was your mood before this session?"
-                    v={moodPre.toString()}
-                  />
-                  <Row
-                    l="how was your mood after this session?"
-                    v={moodPost.toString()}
+                    l="did you go through a mood change after the social media session?"
+                    v={moodDifference.toString()}
                   />
                   <Row
                     l="how productive do you think this session was?"

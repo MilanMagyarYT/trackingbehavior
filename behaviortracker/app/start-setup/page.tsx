@@ -9,7 +9,7 @@ import { useAppSelector } from "@/app/store";
 import LoadingSpinner from "../components/LoadingSpinner";
 import "../components/StartSetup.css";
 import SimpleSelect from "../components/SimpleSelect";
-import { MultiSelect } from "primereact/multiselect";
+import BTCategoryScoring from "@/app/components/BTCategoryScoring";
 
 const triggerList = [
   "boredom",
@@ -26,8 +26,8 @@ const goalList = [
   "academic / learning",
   "work / professional task",
   "social connection",
-  "staying informed (news)",
-  "creative expression / posting content",
+  "news",
+  "creating/posting content",
 ] as const;
 
 const actList = [
@@ -50,7 +50,6 @@ const contentList = [
   "sports",
   "podcasts",
   "music",
-  "inspirational/motivational",
 ] as const;
 
 type TriggerCat = (typeof triggerList)[number];
@@ -60,18 +59,16 @@ type ContentCat = (typeof contentList)[number];
 
 type Step = 1 | 2 | 3 | 4;
 
-function mkRecord<K extends string>(
+type Val = -1 | 0 | 1;
+
+function mkRecordVal<K extends string>(
   keys: readonly K[],
-  defaultVal: boolean,
-  setTrue?: K[]
-): Record<K, boolean> {
-  const base = keys.reduce(
+  defaultVal: Val
+): Record<K, Val> {
+  return keys.reduce(
     (acc, k) => ({ ...acc, [k]: defaultVal }),
-    {} as Record<K, boolean>
+    {} as Record<K, Val>
   );
-  if (!setTrue) return base;
-  setTrue.forEach((k) => (base[k] = true));
-  return base;
 }
 
 export default function StartSetup() {
@@ -79,25 +76,25 @@ export default function StartSetup() {
   const { uid, status } = useAppSelector((s) => s.auth);
 
   const [step, setStep] = useState<Step>(1);
-  const [avgLastWeek, setAvgLastWeek] = useState<string>("");
+  const [avgLastMonth, setAvgLastMonth] = useState<string>("");
   const [goalPhone, setGoalPhone] = useState<string>("");
   const [unprodPct, setUnprodPct] = useState<string>("");
   const [optUnprodPct, setOptUnprodPct] = useState<string>("");
   const [negMoodChoice, setNegMoodChoice] = useState<string>("");
 
-  const [prodTriggers, setProdTriggers] = useState<Record<TriggerCat, boolean>>(
-    () => mkRecord(triggerList, false)
+  const [prodTriggers, setProdTriggers] = useState<Record<TriggerCat, Val>>(
+    () => mkRecordVal(triggerList, 0)
   );
-  const [prodGoals, setProdGoals] = useState<Record<GoalCat, boolean>>(() =>
-    mkRecord(goalList, false)
+  const [prodGoals, setProdGoals] = useState<Record<GoalCat, Val>>(() =>
+    mkRecordVal(goalList, 0)
   );
-  const [prodActs, setProdActs] = useState<Record<ActivityCat, boolean>>(() =>
-    mkRecord(actList, false)
+  const [prodActs, setProdActs] = useState<Record<ActivityCat, Val>>(() =>
+    mkRecordVal(actList, 0)
+  );
+  const [prodContent, setProdContent] = useState<Record<ContentCat, Val>>(() =>
+    mkRecordVal(contentList, 0)
   );
   const [negMoodIsUnprod, setNegMoodIsUnprod] = useState<"yes" | "no">("yes");
-  const [prodContent, setProdContent] = useState<Record<ContentCat, boolean>>(
-    () => mkRecord(contentList, false)
-  );
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -115,7 +112,7 @@ export default function StartSetup() {
 
   const nextDisabled = (): boolean => {
     return step === 1
-      ? !(avgLastWeek && goalPhone && unprodPct && optUnprodPct)
+      ? !(avgLastMonth && goalPhone && unprodPct && optUnprodPct)
       : step === 2
       ? !(
           prodTriggers &&
@@ -133,7 +130,7 @@ export default function StartSetup() {
     await setDoc(
       userRef,
       {
-        baselinePhoneLastWeek: Number(avgLastWeek),
+        baselinePhoneLast30Days: Number(avgLastMonth),
         goalPhoneMin: Number(goalPhone),
         unprodTolerancePct: Number(unprodPct),
         unprodGoalPct: Number(optUnprodPct),
@@ -193,14 +190,15 @@ export default function StartSetup() {
           {step === 1 && (
             <>
               <label className="su-label">
-                what is your daily phone usage in the last 30 days? (minutes)
+                what is your daily social media usage in the last 30 days?
+                (minutes)
               </label>
               <input
                 className="su-input"
                 type="number"
                 placeholder="ex: 360"
-                value={avgLastWeek}
-                onChange={(e) => setAvgLastWeek(e.target.value)}
+                value={avgLastMonth}
+                onChange={(e) => setAvgLastMonth(e.target.value)}
               />
 
               <label className="su-label">
@@ -256,55 +254,55 @@ export default function StartSetup() {
           {step === 2 && (
             <>
               <label className="su-label">
-                which reasons to open social media apps do you consider
-                productive?
+                how do you classify the following triggers when opening social
+                media apps?
               </label>
-              <MultiSelect
-                value={listFromRecord(prodTriggers)}
-                options={triggerList.map((t) => ({
-                  label: t.replace(/_/g, " "),
-                  value: t,
-                }))}
-                onChange={(e) =>
-                  setProdTriggers(
-                    mkRecord(triggerList, false, e.value as TriggerCat[])
-                  )
+              <BTCategoryScoring
+                label="trigger options"
+                options={triggerList}
+                values={prodTriggers}
+                onChange={(key, val) =>
+                  setProdTriggers((prev) => ({ ...prev, [key]: val }))
                 }
-                placeholder="choose you answers"
-                display="chip"
-                className="su-multi"
               />
 
               <label className="su-label">
-                which goals to open social media apps do you consider
-                productive?
+                how do you classify the following goals when opening social
+                media apps?
               </label>
-              <MultiSelect
-                value={listFromRecord(prodGoals)}
-                options={goalList.map((g) => ({ label: g, value: g }))}
-                onChange={(e) =>
-                  setProdGoals(mkRecord(goalList, false, e.value as GoalCat[]))
+              <BTCategoryScoring
+                label="goal options"
+                options={goalList}
+                values={prodGoals}
+                onChange={(key, val) =>
+                  setProdGoals((prev) => ({ ...prev, [key]: val }))
                 }
-                placeholder="choose you answers"
-                display="chip"
-                className="su-multi"
               />
 
               <label className="su-label">
-                which activities that you do on social media apps do you
-                consider productive?
+                how do you classify the following activities when on social
+                media apps?
               </label>
-              <MultiSelect
-                value={listFromRecord(prodActs)}
-                options={actList.map((a) => ({ label: a, value: a }))}
-                onChange={(e) =>
-                  setProdActs(
-                    mkRecord(actList, false, e.value as ActivityCat[])
-                  )
+              <BTCategoryScoring
+                label="activity options"
+                options={actList}
+                values={prodActs}
+                onChange={(key, val) =>
+                  setProdActs((prev) => ({ ...prev, [key]: val }))
                 }
-                placeholder="choose you answers"
-                display="chip"
-                className="su-multi"
+              />
+
+              <label className="su-label">
+                how do you classify the following content types on social media
+                apps?
+              </label>
+              <BTCategoryScoring
+                label="content type options"
+                options={contentList}
+                values={prodContent}
+                onChange={(key, val) =>
+                  setProdContent((prev) => ({ ...prev, [key]: val }))
+                }
               />
 
               <label className="su-label">
@@ -323,25 +321,6 @@ export default function StartSetup() {
                 }}
               />
 
-              <label className="su-label">
-                which content type do you consider productive?
-              </label>
-              <MultiSelect
-                value={listFromRecord(prodContent)}
-                options={contentList.map((c) => ({
-                  label: c.replace(/_/g, " "),
-                  value: c,
-                }))}
-                onChange={(e) =>
-                  setProdContent(
-                    mkRecord(contentList, false, e.value as ContentCat[])
-                  )
-                }
-                placeholder="choose you answers"
-                display="chip"
-                className="su-multi"
-              />
-
               <div className="su-btn-row">
                 <button className="su-btn-outline" onClick={() => setStep(1)}>
                   back
@@ -356,8 +335,9 @@ export default function StartSetup() {
               </div>
 
               <label className="su-explanation">
-                Explanation: pay attention and look over all of the options in
-                the questions above to accuratelly define productivity.
+                Explanation: it is extremely important to understand your
+                opinion on these situations to be able to correctly classify
+                your future sessions.
               </label>
             </>
           )}
@@ -377,8 +357,8 @@ export default function StartSetup() {
               </div>
               <div className="su-review">
                 <ReviewRow
-                  label="average daily phone usage last 30 days"
-                  value={`${avgLastWeek} minutes`}
+                  label="average daily phone usage last 30 days"
+                  value={`${avgLastMonth} minutes`}
                 />
                 <ReviewRow
                   label="wanted daily phone usage"
@@ -392,25 +372,28 @@ export default function StartSetup() {
                   label="optimum daily unproductive phone usage"
                   value={`${optUnprodPct}%`}
                 />
+
+                {/* now each category in one row */}
                 <ReviewRow
-                  label="productive triggers"
-                  value={listFromRecord(prodTriggers).join(", ") || "—"}
+                  label="trigger scores"
+                  value={formatValRecord(prodTriggers)}
                 />
                 <ReviewRow
-                  label="productive goals"
-                  value={listFromRecord(prodGoals).join(", ") || "—"}
+                  label="goal scores"
+                  value={formatValRecord(prodGoals)}
                 />
                 <ReviewRow
-                  label="productive activities"
-                  value={listFromRecord(prodActs).join(", ") || "—"}
+                  label="activity scores"
+                  value={formatValRecord(prodActs)}
                 />
+                <ReviewRow
+                  label="content scores"
+                  value={formatValRecord(prodContent)}
+                />
+
                 <ReviewRow
                   label="negative mood drop unproductive?"
                   value={negMoodIsUnprod === "yes" ? "yes" : "no"}
-                />
-                <ReviewRow
-                  label="productive content types"
-                  value={listFromRecord(prodContent).join(", ") || "—"}
                 />
               </div>
             </>
@@ -441,8 +424,9 @@ export default function StartSetup() {
   );
 }
 
-function listFromRecord<T extends string>(rec: Record<T, boolean>): T[] {
-  return Object.keys(rec).filter((k) => rec[k as T]) as T[];
+// formats a Val‐map into "key value  key value  …"
+function formatValRecord<T extends string>(rec: Record<T, -1 | 0 | 1>): string {
+  return (Object.keys(rec) as T[]).map((k) => `${k} ${rec[k]},`).join("  ");
 }
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
