@@ -16,7 +16,6 @@ export default function BTBottomNav() {
   const tabs = [
     { href: "/profile", label: "home", Icon: AiOutlineHome },
     { href: "/add-new-session", label: "session", Icon: AiOutlinePlusCircle },
-    { href: "/insights", label: "insights", Icon: FiBarChart2 },
     {
       href: "/advice",
       label: "advice",

@@ -1,3 +1,5 @@
+// app/profile/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,46 +15,42 @@ import {
   onSnapshot,
   doc,
   getDoc,
+  Timestamp as FirestoreTimestamp,
 } from "firebase/firestore";
+
 import { db } from "@/lib/firebaseClient";
 import { useAppSelector } from "@/app/store";
 
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
+import BTSetupBanner from "../components/BTSetupBanner";
 
 import { clamp, lerpColor } from "@/lib/utils";
 import "./Profile3.css";
-import BTSetupBanner from "../components/BTSetupBanner";
 
 interface SessionDoc {
-  durMin: number;
-  sessionScore: number;
+  duration: number;
+  rawScore: number;
 }
 
 export default function ProfilePage() {
   const { uid, status } = useAppSelector((s) => s.auth);
   const router = useRouter();
 
-  const [totalMin, setTotalMin] = useState(0);
-  const [prodWeighted, setProdWt] = useState(0);
-  const [prodPossible, setProdPos] = useState(0);
+  const [totalMinutesToday, setTotalMinutesToday] = useState(0);
+  const [prodNumerator, setProdNumerator] = useState(0);
+  const [baselineDone, setBaselineDone] = useState<boolean | null>(null);
 
-  const [goalMin, setGoalMin] = useState<number | null>(null);
-
-  const usageScore = goalMin ? clamp(1 / (totalMin / goalMin), 0, 1) : null;
-  const prodScore = prodPossible ? prodWeighted / prodPossible : null;
-  const dayScore =
-    100 -
-    (usageScore !== null && prodScore !== null
-      ? ((usageScore + prodScore) / 2) * 100
-      : 0);
+  const [baselinePhoneLast30Days, setBaselinePhoneLast30Days] = useState<
+    number | null
+  >(null);
+  const [goalPhoneMin, setGoalPhoneMin] = useState<number | null>(null);
+  const [baselineProdPct, setBaselineProdPct] = useState<number | null>(null);
+  const [goalProdPct, setGoalProdPct] = useState<number | null>(null);
 
   const [loading, setLoading] = useState(true);
-
-  const [baselineDone, setBaselineDone] = useState<boolean | null>(null);
   const [showUsageCard, setShowUsageCard] = useState(false);
   const [showBehCard, setShowBehCard] = useState(false);
-
   const [stats30, setStats30] = useState<{
     usagePct: number;
     behPct: number;
@@ -60,19 +58,36 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!uid) return;
-    getDoc(doc(db, "users", uid)).then((s) => {
-      if (!s.exists()) return;
-      const data = s.data();
-      setGoalMin(data.goalPhoneMin ?? null);
+    getDoc(doc(db, "users", uid)).then((snap) => {
+      if (!snap.exists()) return;
+      const data = snap.data() as {
+        baselinePhoneLast30Days?: number;
+        goalPhoneMin?: number;
+        unprodPct?: number;
+        unprodGoalPct?: number;
+        baselineCompletedAt?: FirestoreTimestamp | null;
+      };
+
+      setBaselinePhoneLast30Days(data.baselinePhoneLast30Days ?? null);
+      setGoalPhoneMin(data.goalPhoneMin ?? null);
+
+      if (typeof data.unprodPct === "number") {
+        setBaselineProdPct(data.unprodPct);
+      }
+      if (typeof data.unprodGoalPct === "number") {
+        setGoalProdPct(data.unprodGoalPct);
+      }
+
       setBaselineDone(!!data.baselineCompletedAt);
     });
   }, [uid]);
 
   useEffect(() => {
     if (!uid) return;
+    if (goalPhoneMin === null) return;
 
     const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
     const q = query(
       collection(db, "users", uid, "sessions"),
@@ -81,24 +96,27 @@ export default function ProfilePage() {
     );
 
     const unsub = onSnapshot(q, (snap) => {
-      let min = 0,
-        wt = 0;
+      let minSum = 0;
+      let numSum = 0;
+
       snap.forEach((doc) => {
-        const d = doc.data() as SessionDoc;
-        min += d.durMin;
-        wt += d.durMin * d.sessionScore;
+        const s = doc.data() as SessionDoc;
+        minSum += s.duration;
+        const sessionPct = 50 + s.rawScore * 50;
+        numSum += sessionPct * s.duration;
       });
-      setTotalMin(min);
-      setProdWt(wt);
-      setProdPos(min);
+
+      setTotalMinutesToday(minSum);
+      setProdNumerator(numSum);
       setLoading(false);
     });
 
     return () => unsub();
-  }, [uid]);
+  }, [uid, goalPhoneMin]);
 
   useEffect(() => {
     if (!uid) return;
+    if (goalPhoneMin === null) return;
 
     const start = new Date();
     start.setDate(start.getDate() - 7);
@@ -110,27 +128,32 @@ export default function ProfilePage() {
     );
 
     const unsub = onSnapshot(q, (snap) => {
-      let min = 0,
-        wt = 0;
-      snap.forEach((d) => {
-        const s = d.data() as SessionDoc;
-        min += s.durMin;
-        wt += s.durMin * s.sessionScore;
+      let minSum = 0;
+      let numSum = 0;
+
+      snap.forEach((doc) => {
+        const s = doc.data() as SessionDoc;
+        minSum += s.duration;
+        const sessionPct = 50 + s.rawScore * 50;
+        numSum += sessionPct * s.duration;
       });
 
-      const usage30 = goalMin ? clamp(1 / (min / goalMin), 0, 1) : 0;
-      const beh30 = min ? wt / min : 0;
+      const totalGoal7 = (goalPhoneMin ?? 1) * 7;
+      const usageFrac = clamp(minSum / totalGoal7, 0, 1);
+      const usagePct = Math.round(usageFrac * 100);
+
+      const behPct = minSum > 0 ? Math.round(numSum / minSum) : 100;
 
       setStats30({
-        usagePct: Math.round((1 - usage30) * 100),
-        behPct: Math.round(beh30 * 100),
+        usagePct,
+        behPct,
       });
     });
 
     return () => unsub();
-  }, [uid, goalMin]);
+  }, [uid, goalPhoneMin]);
 
-  if (status === "loading" || loading) {
+  if (baselineDone === true && (status === "loading" || loading)) {
     return (
       <div className="acc-loader">
         <div className="acc-spinner" />
@@ -143,21 +166,30 @@ export default function ProfilePage() {
     return null;
   }
 
+  const prodPctToday =
+    totalMinutesToday === 0
+      ? 100
+      : clamp(prodNumerator / totalMinutesToday, 0, 100);
+
+  const usageFracToday = clamp(totalMinutesToday / (goalPhoneMin || 1), 0, 1);
+
   const R = 140;
   const C = 2 * Math.PI * R;
-  const pct = dayScore ?? 0;
 
+  const pctTime = usageFracToday * 100;
+  const pctProd = prodPctToday;
+  console.log(baselineDone);
   return (
     <div className="has-footer">
       <BTNavbar />
-      {baselineDone === false && (
+      {baselineDone === null && (
         <div className="notification">
           <BTSetupBanner onClick={() => router.push("/start-setup")} />
         </div>
       )}
 
       <main className="profile-ct">
-        <h1 className="profile-h1">today’s score</h1>
+        <h1 className="profile-h1">today’s overview</h1>
         <p className="profile-date">
           {new Date().toLocaleDateString(undefined, {
             day: "2-digit",
@@ -166,52 +198,123 @@ export default function ProfilePage() {
           })}
         </p>
 
-        <div className="donut-wrap">
-          <svg width="310" height="310" viewBox="0 0 320 320">
-            <circle
-              cx="160"
-              cy="160"
-              r={R}
-              stroke="#132032"
-              strokeWidth="24"
-              fill="#1B2538"
-            />
+        <div className="donut-container">
+          <div className="donut-wrap">
+            <h3 className="donut-title">Usage</h3>
+            <svg width="310" height="310" viewBox="0 0 320 320">
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke="#132032"
+                strokeWidth="24"
+                fill="#1B2538"
+              />
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke="#46547B"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray={C}
+                strokeDashoffset={
+                  C * (1 - (baselinePhoneLast30Days || 0) / 100)
+                }
+                transform="rotate(-90 160 160)"
+              />
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke={lerpColor("#ffae66", "#fa4617", pctTime / 100)}
+                strokeWidth="24"
+                strokeLinecap="round"
+                fill="none"
+                strokeDasharray={C}
+                strokeDashoffset={C * (1 - pctTime / 100)}
+                transform="rotate(-90 160 160)"
+                style={{ transition: "stroke-dashoffset .6s ease" }}
+              />
+            </svg>
+            <div className="donut-centre">
+              <span className="donut-label">minutes</span>
+              <span className="donut-num">{totalMinutesToday}</span>
+            </div>
+          </div>
 
-            <circle
-              cx="160"
-              cy="160"
-              r={R}
-              stroke={lerpColor("#ffae66", "#fa4617", pct / 100)}
-              strokeWidth="24"
-              strokeLinecap="round"
-              fill="none"
-              strokeDasharray={C}
-              strokeDashoffset={C * (1 - pct / 100)}
-              transform="rotate(-90 160 160)"
-              style={{ transition: "stroke-dashoffset .6s ease" }}
-            />
-          </svg>
+          <div className="donut-wrap">
+            <h3 className="donut-title">Productivity</h3>
+            <svg width="310" height="310" viewBox="0 0 320 320">
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke="#132032"
+                strokeWidth="24"
+                fill="#1B2538"
+              />
 
-          <div className="donut-centre">
-            <span className="donut-label">productivity</span>
-            <span className="donut-num">
-              {dayScore !== null ? Math.round(dayScore) : "0"}
-              <span className="donut-pct">%</span>
-            </span>
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke="#46547B"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray={C}
+                strokeDashoffset={C * (1 - (baselineProdPct || 0) / 100)}
+                transform="rotate(-90 160 160)"
+              />
+
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke="#FA4617"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray={C}
+                strokeDashoffset={C * (1 - (goalProdPct || 0) / 100)}
+                transform="rotate(-90 160 160)"
+              />
+
+              <circle
+                cx="160"
+                cy="160"
+                r={R}
+                stroke={lerpColor("#ffae66", "#fa4617", pctProd / 100)}
+                strokeWidth="24"
+                strokeLinecap="round"
+                fill="none"
+                strokeDasharray={C}
+                strokeDashoffset={C * (1 - pctProd / 100)}
+                transform="rotate(-90 160 160)"
+                style={{ transition: "stroke-dashoffset .6s ease" }}
+              />
+            </svg>
+            <div className="donut-centre">
+              <span className="donut-label">percent</span>
+              <span className="donut-num">
+                {Math.round(pctProd)}
+                <span className="donut-pct">%</span>
+              </span>
+            </div>
           </div>
         </div>
 
         <section className="profile-info">
-          <h3>USAGE + BEHAVIOR % BASELINE</h3>
+          <h3>USAGE & BEHAVIOR % BASELINE</h3>
           <p>
-            tracking behavior calculates how productive your social‑media usage
-            is by assessing your daily recorded sessions by comparing it to your
-            baseline metrics and behavior.
+            tracking behavior calculates how productive your social-media usage
+            and behavior is by assessing your daily recorded sessions and
+            comparing them to your baseline metrics and goals.
           </p>
         </section>
+
         <div className="stat-head">
-          <span>productivity statistics</span>
-          <span>vs. previous 7 days</span>
+          <span>usage statistics</span>
+          <span>vs. previous 7 days</span>
         </div>
 
         <div className="stat-wrap">
@@ -223,14 +326,14 @@ export default function ProfilePage() {
             }}
           >
             <PiHandPalmDuotone className="stat-icon" />
-            USAGE
+            TIME
           </button>
 
           {showUsageCard && stats30 && (
             <div className="stat-dropdown">
               <div className="stat-row">
                 <span>today</span>
-                <span>{Math.round((1 - (usageScore ?? 0)) * 100)}%</span>
+                <span>{Math.round(pctTime)}%</span>
               </div>
               <div className="stat-row">
                 <span>last 7 days</span>
@@ -249,14 +352,14 @@ export default function ProfilePage() {
             }}
           >
             <GiBrain className="stat-icon" />
-            BEHAVIOR
+            QUALITY
           </button>
 
           {showBehCard && stats30 && (
             <div className="stat-dropdown">
               <div className="stat-row">
                 <span>today</span>
-                <span>{Math.round((prodScore ?? 0) * 100)}%</span>
+                <span>{Math.round(pctProd)}%</span>
               </div>
               <div className="stat-row">
                 <span>last 7 days</span>
@@ -268,6 +371,7 @@ export default function ProfilePage() {
 
         <div style={{ height: "2rem" }} />
       </main>
+
       <BTBottomNav />
     </div>
   );

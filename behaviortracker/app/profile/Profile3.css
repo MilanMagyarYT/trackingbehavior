@@ -185,3 +185,37 @@
 .stat-row:not(:last-child) {
   border-bottom: 1px solid #2A3D60;
 }
+
+.donut-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.donut-wrap {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.donut-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #c4c2bc;
+  margin-bottom: 0.5rem;
+}
+
+.donut-container::-webkit-scrollbar {
+  display: none;
+}
+.donut-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+}
+
+.donut-wrap svg {
+  margin-bottom: 0.5rem;
+}

@@ -1,18 +1,21 @@
-.navbarwithmilan{
-  padding-top:72px;        
-  padding-bottom:60px;     
+/* Existing AddNewSession / sn- / navbarwithmilan styles */
+
+.navbarwithmilan {
+  padding-top: 72px;
+  padding-bottom: 60px;
 }
 
-.sn-bg{
-  min-height:100dvh;
-  background:#0d1623;
-  padding:1rem 1rem 1rem;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  box-sizing:border-box;
-  color:#f3ede0;
+.sn-bg {
+  min-height: 100dvh;
+  background: #0d1623;
+  padding: 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  color: #f3ede0;
 }
+
 .acc-loader {
   display: flex;
   align-items: center;
@@ -30,18 +33,79 @@
   animation: spin 1s linear infinite;
 }
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.sn-session{
-  width:100%; 
-  max-width:440px;
-  margin-bottom:0.75rem;
-  background:#1b2538;
-  border:1.5px solid #2a3d60;
-  border-radius:20px;
-  padding:0.5rem 1rem;
-  text-align:center;
+.sn-session {
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 0.75rem;
+  background: #1b2538;
+  border: 1.5px solid #2a3d60;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.sn-session h3 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+.sn-session span {
+  font-size: 16px;
+  color: #c4c2bc;
+  letter-spacing: -0.04em;
+}
+
+.sn-title {
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -0.04em;
+}
+
+.sn-progress {
+  height: 5px;
+  background: #0d1623;
+  border-radius: 25px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.sn-progress-bar {
+  height: 100%;
+  background: #f3ede0;
+  transition: width 0.3s ease;
+}
+
+.sn-btn-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+.sn-btn-row > button {
+  flex: 1 1 0;
+}
+
+.sn-loader {
+  height: 100dvh;
+  background: #0d1623;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sn-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #f3ede0;
+  letter-spacing: -0.04em;
 }
 
 .sn-input {
@@ -58,48 +122,6 @@
 .sn-input:focus {
   outline: none;
   border-color: #3d54a3;
-}
-
-.sn-session h3{
-  margin:0;
-  font-size:28px;
-  font-weight:600;
-  letter-spacing:-.04em
-}
-.sn-session span{font-size:16px;color:#c4c2bc;letter-spacing:-.04em}
-
-.sn-title {
-  font-size: 32px;
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: -0.04em;
-}
-
-.sn-progress {
-  height: 5px;
-  background: #0d1623;
-  border-radius: 25px;
-  overflow: hidden;
-  margin-bottom: 1.25rem;
-} 
-
-.sn-progress-bar {
-  height: 100%;
-  background: #f3ede0;
-  transition: width 0.3s ease;
-}
-
-.sn-btn-row{display:flex;gap:1rem;margin-top:1.75rem}
-.sn-btn-row>button{flex:1 1 0}
-
-.sn-loader{height:100dvh;background:#0d1623;display:flex;align-items:center;justify-content:center}
-.sn-label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: #f3ede0;
-  letter-spacing: -0.04em;
 }
 
 .sn-done-icon {
@@ -136,4 +158,114 @@
   line-height: 1.4;
   letter-spacing: -0.04em;
   color: #c4c2bc;
+}
+
+/* Existing MultiSelect styles (from StartSetup) */
+.su-multi.p-multiselect {
+  width: 100%;
+  background: #0d1623;
+  border: 1.5px solid #2a3d60;
+  border-radius: 10px;
+  color: #f3ede0;
+  margin-bottom: 0.75rem;
+  font-size: 13px;
+}
+.su-multi.p-multiselect:not(.p-disabled):hover {
+  border-color: #3d54a3;
+}
+
+.su-multi.p-multiselect .p-multiselect-label {
+  padding: 0.5rem 1rem;
+}
+
+.su-multi .p-multiselect-token {
+  background: #2A3D60;
+  color: #f3ede0;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.su-multi .p-multiselect-token .p-multiselect-token-icon {
+  color: #c4c2bc;
+  margin-left: 5px;
+}
+
+.p-multiselect-panel {
+  background: #0d1623 !important;
+  border: 1.5px solid #2a3d60 !important;
+  color: #f3ede0 !important;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.p-multiselect-item {
+  padding: 0.6rem 1rem !important;
+}
+.p-multiselect-item.p-highlight,
+.p-multiselect-item:hover {
+  background: #2A3D60 !important;
+}
+
+.p-multiselect-item .p-checkbox,
+.p-multiselect-item .p-checkbox-box {
+  display: none !important;
+}
+
+.p-multiselect-header {
+  display: none !important;
+}
+
+.su-multi .p-multiselect-token {
+  margin: 0 0.4rem 0rem 0;
+  padding: 0.25rem 0.55rem;
+  font-size: 10px;
+}
+
+.su-multi.p-multiselect .p-multiselect-label-container {
+  padding-right: 2.7rem;
+}
+
+.su-multi.p-multiselect .p-multiselect-trigger {
+  right: 2rem;
+}
+
+.su-multi .p-multiselect-close {
+  right: 2.1rem;
+}
+
+/* New “Choose Mode” and “Preset” screen styles */
+
+.su-center-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+}
+
+.su-center-mode h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.su-center-mode button {
+  width: 100%;
+}
+
+.preset-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem;
+  border-bottom: 1.5px solid #2a3d60;
+  margin-bottom: 1rem;
+}
+
+.preset-name {
+  color: #f3ede0;
+  font-size: 16px;
+}
+
+.small {
+  padding: 0.3rem 0.6rem;
+  font-size: 12px;
 }
