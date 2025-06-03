@@ -18,9 +18,11 @@ import BTTextTitle2 from "./components/BTTextTitle2";
 import BTButtonCTA2 from "./components/BTButtonCTA2";
 import BTText2 from "./components/BTText2";
 import BTFooter from "./components/BTFooter";
+import { useAppSelector } from "./store";
 
 export default function Home() {
   const router = useRouter();
+  const { status } = useAppSelector((s) => s.auth);
 
   return (
     <div className="landingpage">
@@ -34,7 +36,10 @@ export default function Home() {
       </BTTextSubTitle>
       <BTButtonCTA
         text="start behavior tracking"
-        onChange={() => router.replace("/create-account")}
+        onChange={() => {
+          if (status === "unauthenticated") router.replace("/create-account");
+          else if (status === "authenticated") router.replace("/profile");
+        }}
       />
       <BTDoubleBubble />
       <BTText text="my personal background" />
@@ -104,7 +109,10 @@ export default function Home() {
         </BTTextSubTitle>
         <BTButtonCTA2
           text="start behavior tracking"
-          onChange={() => router.replace("/create-account")}
+          onChange={() => {
+            if (status === "unauthenticated") router.replace("/create-account");
+            else if (status === "authenticated") router.replace("/profile");
+          }}
         />
         <BTText2 text="a tool built by a student for students" />
       </section>

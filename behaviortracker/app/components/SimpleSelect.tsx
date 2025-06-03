@@ -56,7 +56,7 @@ export default function SimpleSelect({
         {value ? options.find((o) => o.value === value)?.label : placeholder}
       </div>
       {open && (
-        <ul ref={listRef} className="btcs-select-list">
+        <ul ref={listRef} className="btcs-select-list drop-up">
           {options.map((o, i) => (
             <li
               key={o.value}

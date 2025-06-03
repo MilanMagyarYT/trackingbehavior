@@ -198,7 +198,7 @@ export default function AddNewSession() {
       case 2:
         return triggers.length && goal && activities;
       case 3:
-        return moodDifference && prodSelf;
+        return moodDifference !== "" && prodSelf !== "";
       case 4:
         return content.length && loc && multi;
       case 5:
