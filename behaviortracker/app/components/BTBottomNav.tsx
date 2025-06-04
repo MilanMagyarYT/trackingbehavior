@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { AiOutlineHome } from "react-icons/ai";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { HiOutlineLightBulb } from "react-icons/hi";
-import { FiBarChart2 } from "react-icons/fi";
 
 import "./BTBottomNav3.css";
 
