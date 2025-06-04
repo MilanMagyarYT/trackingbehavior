@@ -210,7 +210,6 @@ export default function AddNewSession() {
 
   // ---- STATE FOR PRESETS ----
   const [presets, setPresets] = useState<{ id: string; data: Preset }[]>([]);
-  const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
   const [presetName, setPresetName] = useState<string>("");
 
   // ---- VALIDATION FOR NEW-SESSION STEPS ----
@@ -352,7 +351,6 @@ export default function AddNewSession() {
 
   // ---- APPLY A PRESET TO THE FORM ----
   const handleUsePreset = (p: Preset) => {
-    setSelectedPreset(p);
     setApp(p.appId);
     setDayPart(p.dayPart);
     setTrig(p.triggers);
