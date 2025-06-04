@@ -94,6 +94,7 @@ export default function StartSetup() {
   const [prodContent, setProdContent] = useState<Record<ContentCat, Val>>(() =>
     mkRecordVal(contentList, 0)
   );
+
   const [negMoodIsUnprod, setNegMoodIsUnprod] = useState<"yes" | "no">("yes");
 
   useEffect(() => {
