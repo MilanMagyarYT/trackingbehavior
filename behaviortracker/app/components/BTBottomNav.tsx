@@ -26,6 +26,7 @@ export default function BTBottomNav() {
     <nav className="bt-nav">
       {tabs.map(({ href, label, Icon }) => {
         const active = pathname === href;
+
         return (
           <Link key={href} href={href} className="bt-nav-item">
             <Icon
