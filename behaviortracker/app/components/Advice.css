@@ -1,37 +1,54 @@
+/* ------------------ StatsAndAdvice.css ------------------ */
+
+/* ------------- General Page Styles ------------- */
+.stats-page,
 .advice-page {
   padding-top: 72px;
-  padding-bottom: 60px;   
+  padding-bottom: 60px;
   background: #0d1623;
   color: #f3ede0;
   min-height: 100vh;
 }
 
+.stats-ct,
 .advice-ct {
   padding: 0 1.5rem 5rem;
 }
 
-.advice-card {
-  background: #1b2538;
-  border: 1px solid #2a3d60;
-  border-radius: 1rem;
-  padding: 1rem 1.25rem;
-  margin-top: 1rem;
-  font-size: 0.95rem;
-  line-height: 1.45;
-  transition: background 0.2s ease;
-}
-.advice-card:hover {
-  background: #233048;
+/* ------------- Stats Sections ------------- */
+.stats-section {
+  margin-bottom: 2rem;
 }
 
+.stats-section h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #f3ede0;
+}
+
+.stats-section p,
+.stats-section ul,
+.stats-section li {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #c4c2bc;
+  margin: 0.25rem 0;
+}
+
+.stats-section ul {
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* ------------- Shared Advice/Date‐Nav Styles ------------- */
 .advice-date-nav {
-  display: flex;  
-  width: fit-content;    
-  margin: 0.75rem auto 0.75rem; 
-  padding: 0.25rem 0.25rem;
-  border: 1.5px solid #2A3D60;
+  display: flex;
+  width: fit-content;
+  margin: 0.75rem auto;
+  padding: 0.25rem;
+  border: 1.5px solid #2a3d60;
   border-radius: 20px;
-  background: #1B2538;
+  background: #1b2538;
   color: #f3ede0;
   font-size: 13px;
   font-weight: 500;
@@ -50,6 +67,7 @@
   justify-content: center;
   cursor: pointer;
   font-size: 1.75rem;
+  color: #f3ede0;
 }
 
 .advice-nav-btn:focus {
@@ -61,6 +79,22 @@
   text-transform: lowercase;
 }
 
+/* ------------- Advice Card Styles ------------- */
+.advice-card {
+  background: #1b2538;
+  border: 1px solid #2a3d60;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  transition: background 0.2s ease;
+}
+.advice-card:hover {
+  background: #233048;
+}
+
+/* ------------- Loading Spinner ------------- */
 .acc-loader {
   display: flex;
   align-items: center;
@@ -68,6 +102,7 @@
   height: 100vh;
   background: #0d1623;
 }
+
 .acc-spinner {
   width: 40px;
   height: 40px;
@@ -76,8 +111,87 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ------------- (If you also need CategoryScoring) ------------- */
+
+.btcs-details {
+  border: 1px solid #2a3d60;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  background: #1b2538;
+}
+
+.btcs-summary {
+  display: block;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #c4c2bc;
+  background: #0d1623;
+  border-radius: 10px;
+  position: relative;
+  list-style: none;
+}
+
+/* Hide default triangle */
+.btcs-summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom dropdown arrow on the right */
+.btcs-summary::after {
+  content: '▾';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #c4c2bc;
+}
+
+.btcs-list {
+  padding: 0.5rem 1rem;
+}
+
+.btcs-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.btcs-label {
+  flex: 1;
+  font-size: 13px;
+  color: #f3ede0;
+}
+
+.btcs-options {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btcs-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 12px;
+  color: #c4c2bc;
+}
+
+.btcs-radio {
+  accent-color: #fa4617;
+  width: 14px;
+  height: 14px;
+}
+
+.btcs-val {
+  display: inline-block;
+  width: 1.25rem;
+  text-align: center;
 }

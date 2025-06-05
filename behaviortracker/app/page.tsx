@@ -19,14 +19,17 @@ import BTButtonCTA2 from "./components/BTButtonCTA2";
 import BTText2 from "./components/BTText2";
 import BTFooter from "./components/BTFooter";
 import { useAppSelector } from "./store";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   const { status } = useAppSelector((s) => s.auth);
 
-  if (status === "authenticated") {
-    router.replace("/profile");
-  }
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/login");
+    }
+  }, [status, router]);
 
   return (
     <div className="landingpage">
