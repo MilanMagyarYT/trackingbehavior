@@ -24,6 +24,10 @@ export default function Home() {
   const router = useRouter();
   const { status } = useAppSelector((s) => s.auth);
 
+  if (status === "authenticated") {
+    router.replace("/profile");
+  }
+
   return (
     <div className="landingpage">
       <BTNavbar />
@@ -37,8 +41,7 @@ export default function Home() {
       <BTButtonCTA
         text="start behavior tracking"
         onChange={() => {
-          if (status === "unauthenticated") router.replace("/create-account");
-          else if (status === "authenticated") router.replace("/profile");
+          router.replace("/create-account");
         }}
       />
       <BTDoubleBubble />
@@ -110,8 +113,7 @@ export default function Home() {
         <BTButtonCTA2
           text="start behavior tracking"
           onChange={() => {
-            if (status === "unauthenticated") router.replace("/create-account");
-            else if (status === "authenticated") router.replace("/profile");
+            router.replace("/create-account");
           }}
         />
         <BTText2 text="a tool built by a student for students" />

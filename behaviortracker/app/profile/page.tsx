@@ -138,9 +138,7 @@ export default function ProfilePage() {
         numSum += sessionPct * s.duration;
       });
 
-      const totalGoal7 = (goalPhoneMin ?? 1) * 7;
-      const usageFrac = clamp(minSum / totalGoal7, 0, 1);
-      const usagePct = Math.round(usageFrac * 100);
+      const usagePct = Math.round(minSum / 7);
 
       const behPct = minSum > 0 ? Math.round(numSum / minSum) : 100;
 
@@ -159,11 +157,6 @@ export default function ProfilePage() {
         <div className="acc-spinner" />
       </div>
     );
-  }
-
-  if (status === "unauthenticated") {
-    router.replace("/login");
-    return null;
   }
 
   const prodPctToday =
@@ -333,11 +326,11 @@ export default function ProfilePage() {
             <div className="stat-dropdown">
               <div className="stat-row">
                 <span>today</span>
-                <span>{Math.round(pctTime)}%</span>
+                <span>{totalMinutesToday}min</span>
               </div>
               <div className="stat-row">
                 <span>last 7 days</span>
-                <span>{stats30.usagePct}%</span>
+                <span>{stats30.usagePct}min</span>
               </div>
             </div>
           )}

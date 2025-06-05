@@ -34,7 +34,9 @@ export default function CategoryScoring<K extends string>({
                     onChange={() => onChange(opt, val)}
                     className="btcs-radio"
                   />
-                  <span className="btcs-val">{val}</span>
+                  <span className="btcs-val">
+                    {val === -1 ? "Unprod" : val === 0 ? "Neutral" : "Prod"}
+                  </span>
                 </label>
               ))}
             </div>

@@ -1,3 +1,5 @@
+// app/advice/page.tsx
+
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
@@ -97,45 +99,61 @@ function buildAggregates(rows: SessionDoc[]): Aggregates {
 function pickAdvice(a: Aggregates): AdviceCard[] {
   const cards: AdviceCard[] = [];
 
+  // 1) Late-night scrolling → recommend staying off phone during those hours
   if (a.lateNightMin > 0.2 * a.totalMin && a.prodScore < 0.4) {
     cards.push({
       id: "R1",
       type: "fix",
-      text: `Night-scrolling cost you ~${a.lateNightMin} min. Try Bedtime Mode after 22 h.`,
+      text: `You spent about ${a.lateNightMin} min late at night. For a more productive day, stay off your phone entirely during those late-night hours.`,
       impactMin: a.lateNightMin,
     });
   }
 
+  // 2) Notifications leading to unproductive sessions → recommend staying off phone when notified
   if (a.notifPct > 0.35 && a.prodScore < 0.5) {
     cards.push({
       id: "R2",
       type: "fix",
       text: `Notifications triggered ${Math.round(
         a.notifPct * 100
-      )}% of today’s sessions and felt unproductive. Silence non-essential alerts.`,
+      )}% of yesterday’s sessions and felt unproductive. Instead of checking right away, stay off your phone when a notification arrives.`,
       impactMin: Math.round(a.notifPct * a.unprodMinutes),
     });
   }
 
+  // 3) One very long unproductive session → recommend staying off phone next time
   if (a.maxSessionMin >= 30 && a.prodScore < 0.6) {
     cards.push({
       id: "R3",
       type: "fix",
-      text: `Your longest session was ${a.maxSessionMin} min and rated low productivity. Set a 15-min timer next time.`,
+      text: `Your longest session was ${a.maxSessionMin} min with low productivity. Next time, simply stay off your phone for at least ${a.maxSessionMin} min to break the habit.`,
       impactMin: a.maxSessionMin,
     });
   }
 
+  // 4) Mood-boosting content → keep doing it, but suggest staying off phone longer if already good
   if (a.moodBoostContent) {
     cards.push({
       id: "R5",
       type: "keep",
       text: `${
         a.moodBoostContent[0].toUpperCase() + a.moodBoostContent.slice(1)
-      } content boosted your mood 🙂. Schedule a short session tomorrow.`,
+      } content boosted your mood 😊. To improve even more tomorrow, try staying off your phone for an extra 10 min before opening any app.`,
     });
   }
 
+  // 5) If overall productivity was already strong → recommend shaving off extra minutes
+  if (a.prodScore >= 0.8) {
+    cards.push({
+      id: "R6",
+      type: "keep",
+      text: `Great job—your productive minutes were ${Math.round(
+        a.prodScore * 100
+      )}%. To shave even more off your total, stay off your phone for a 15 min block during your usual heaviest hour.`,
+    });
+  }
+
+  // Take top two “fix” cards by impactMin, plus one “keep” card if any
   const fixes = cards
     .filter((c) => c.type === "fix")
     .sort((x, y) => (y.impactMin ?? 0) - (x.impactMin ?? 0))
@@ -150,7 +168,7 @@ export default function AdvicePage() {
 
   const [sessions, setSessions] = useState<SessionDoc[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dayOffset, setDayOffset] = useState(0);
+  const [dayOffset, setDayOffset] = useState(1); // always show yesterday by default
 
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
@@ -218,7 +236,7 @@ export default function AdvicePage() {
         <button
           type="button"
           className="advice-nav-btn"
-          onClick={() => setDayOffset((d) => Math.max(0, d - 1))}
+          onClick={() => setDayOffset((d) => Math.max(1, d - 1))}
         >
           <IoChevronForwardCircleOutline />
         </button>

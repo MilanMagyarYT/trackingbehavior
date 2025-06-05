@@ -16,7 +16,6 @@ import { db } from "@/lib/firebaseClient";
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
 import SimpleSelect from "@/app/components/SimpleSelect";
-import { MultiSelect } from "primereact/multiselect";
 import { useAppSelector } from "@/app/store";
 import "../components/AddNewSession.css";
 import "../components/StartSetup.css";
@@ -135,13 +134,13 @@ interface Preset {
   name: string;
   appId: string;
   dayPart: TimeBucket;
-  triggers: TriggerCat[];
-  activities: ActivityCat[];
+  trigger: TriggerCat;
+  activity: ActivityCat;
   goal: GoalCat;
   duration: number;
   moodDifference: MoodRating;
   prodSelf: MoodRating;
-  content: ContentCat[];
+  content: ContentCat;
   loc: LocCat;
   multi: MultiCat;
 }
@@ -150,13 +149,13 @@ interface Preset {
 interface SessionDoc {
   appId: string;
   timeBucket: TimeBucket;
-  triggers: TriggerCat[];
-  engagement: ActivityCat[];
+  trigger: TriggerCat;
+  engagement: ActivityCat;
   goalPrimary: GoalCat;
   duration: number;
   moodDifference: MoodRating;
   prodSelf: MoodRating;
-  contentMajor: ContentCat[];
+  contentMajor: ContentCat;
   location: LocCat;
   multitask: MultiCat;
   rawScore: number;
@@ -198,13 +197,13 @@ export default function AddNewSession() {
   const [step, setStep] = useState<Step>(1);
   const [appUsed, setApp] = useState<string>("");
   const [dayPart, setDayPart] = useState<TimeBucket | "">("");
-  const [triggers, setTrig] = useState<TriggerCat[]>([]);
-  const [activities, setActivities] = useState<ActivityCat[]>([]);
+  const [trigger, setTrigger] = useState<TriggerCat | "">("");
+  const [activity, setActivity] = useState<ActivityCat | "">("");
   const [goal, setGoal] = useState<GoalCat | "">("");
   const [duration, setDuration] = useState<string>("");
   const [moodDifference, setMoodDifference] = useState<MoodRating | "">("");
   const [prodSelf, setProd] = useState<MoodRating | "">("");
-  const [content, setCont] = useState<ContentCat[]>([]);
+  const [content, setCont] = useState<ContentCat | "">("");
   const [loc, setLoc] = useState<LocCat | "">("");
   const [multi, setMulti] = useState<MultiCat | "">("");
 
@@ -218,11 +217,11 @@ export default function AddNewSession() {
       case 1:
         return !!appUsed && !!duration && !!dayPart;
       case 2:
-        return triggers.length > 0 && !!goal && activities.length > 0;
+        return !!trigger && !!goal && !!activity;
       case 3:
         return moodDifference !== "" && prodSelf !== "";
       case 4:
-        return content.length > 0 && !!loc && !!multi;
+        return !!content && !!loc && !!multi;
       case 5:
         return true;
       default:
@@ -233,9 +232,9 @@ export default function AddNewSession() {
     appUsed,
     duration,
     dayPart,
-    triggers,
+    trigger,
     goal,
-    activities,
+    activity,
     moodDifference,
     prodSelf,
     content,
@@ -243,21 +242,16 @@ export default function AddNewSession() {
     multi,
   ]);
 
-  // ---- HELPER: AVERAGE VAL-LOOKUP MAP → [–1…+1] ----
-  const avg = <T extends string>(arr: T[], lookup: Record<T, boolean>) => {
-    if (arr.length === 0) return 0;
-    return arr.reduce((s, key) => s + (lookup[key] ? 1 : -1), 0) / arr.length;
-  };
-
   // ---- COMPUTE rawScore & deltaPoints ----
   const computeRawScore = () => {
     const M = Number(moodDifference) / 2; // –2..+2 → –1..+1
     const P = multi === "none" ? 0 : -1;
     const selfP = Number(prodSelf) / 2; // –2..+2 → –1..+1
 
-    const C = avg(content, baseline!.prodRules.content);
-    const T = avg(triggers, baseline!.prodRules.triggers);
-    const A = avg(activities, baseline!.prodRules.acts);
+    // Single‐choice lookups → either 1 (productive) or –1 (unproductive)
+    const C = baseline!.prodRules.content[content as ContentCat] ? 1 : -1;
+    const T = baseline!.prodRules.triggers[trigger as TriggerCat] ? 1 : -1;
+    const A = baseline!.prodRules.acts[activity as ActivityCat] ? 1 : -1;
     const G = baseline!.prodRules.goals[goal as GoalCat] ? 1 : -1;
 
     return (
@@ -289,13 +283,13 @@ export default function AddNewSession() {
     const sessionDoc: SessionDoc = {
       appId: appUsed,
       timeBucket: dayPart as TimeBucket,
-      triggers,
-      engagement: activities,
+      trigger: trigger as TriggerCat,
+      engagement: activity as ActivityCat,
       goalPrimary: goal as GoalCat,
       duration: minutes,
       moodDifference: moodDifference as MoodRating,
       prodSelf: prodSelf as MoodRating,
-      contentMajor: content,
+      contentMajor: content as ContentCat,
       location: loc as LocCat,
       multitask: multi as MultiCat,
       rawScore,
@@ -314,13 +308,13 @@ export default function AddNewSession() {
       name: presetName.trim(),
       appId: appUsed,
       dayPart: dayPart as TimeBucket,
-      triggers,
-      activities,
+      trigger: trigger as TriggerCat,
+      activity: activity as ActivityCat,
       goal: goal as GoalCat,
       duration: Number(duration),
       moodDifference: moodDifference as MoodRating,
       prodSelf: prodSelf as MoodRating,
-      content,
+      content: content as ContentCat,
       loc: loc as LocCat,
       multi: multi as MultiCat,
     };
@@ -329,32 +323,12 @@ export default function AddNewSession() {
     setMode("preset");
   };
 
-  // ---- AUTH/LOADING GUARDS ----
-  useEffect(() => {
-    if (status === "unauthenticated") router.replace("/login");
-  }, [status, router]);
-
-  // ---- LOAD PRESETS FOR “Use a Preset” MODE ----
-  useEffect(() => {
-    if (!uid) return;
-    const q = query(
-      collection(db, "users", uid, "presets"),
-      orderBy("name", "asc")
-    );
-    const unsub = onSnapshot(q, (snap) => {
-      const arr: { id: string; data: Preset }[] = [];
-      snap.forEach((d) => arr.push({ id: d.id, data: d.data() as Preset }));
-      setPresets(arr);
-    });
-    return () => unsub();
-  }, [uid]);
-
   // ---- APPLY A PRESET TO THE FORM ----
   const handleUsePreset = (p: Preset) => {
     setApp(p.appId);
     setDayPart(p.dayPart);
-    setTrig(p.triggers);
-    setActivities(p.activities);
+    setTrigger(p.trigger);
+    setActivity(p.activity);
     setGoal(p.goal);
     setDuration(String(p.duration));
     setMoodDifference(p.moodDifference);
@@ -373,12 +347,12 @@ export default function AddNewSession() {
       !!appUsed &&
       !!duration &&
       !!dayPart &&
-      triggers.length > 0 &&
+      !!trigger &&
       !!goal &&
-      activities.length > 0 &&
+      !!activity &&
       moodDifference !== "" &&
       prodSelf !== "" &&
-      content.length > 0 &&
+      !!content &&
       !!loc &&
       !!multi
     );
@@ -387,9 +361,9 @@ export default function AddNewSession() {
     appUsed,
     duration,
     dayPart,
-    triggers,
+    trigger,
     goal,
-    activities,
+    activity,
     moodDifference,
     prodSelf,
     content,
@@ -397,8 +371,27 @@ export default function AddNewSession() {
     multi,
   ]);
 
+  // ---- LOAD PRESETS FOR “Use a Preset” MODE ----
+  useEffect(() => {
+    if (!uid) return;
+    const q = query(
+      collection(db, "users", uid, "presets"),
+      orderBy("name", "asc")
+    );
+    const unsub = onSnapshot(q, (snap) => {
+      const arr: { id: string; data: Preset }[] = [];
+      snap.forEach((d) => arr.push({ id: d.id, data: d.data() as Preset }));
+      setPresets(arr);
+    });
+    return () => unsub();
+  }, [uid]);
+
+  // ---- AUTH/LOADING GUARDS ----
+  useEffect(() => {
+    if (status === "unauthenticated") router.replace("/login");
+  }, [status, router]);
   if (status === "unauthenticated") return null;
-  if (status === "loading") {
+  if (status === "loading" || baseline === null) {
     return (
       <div className="acc-loader">
         <div className="acc-spinner" />
@@ -490,7 +483,6 @@ export default function AddNewSession() {
             <h2 className="su-title">new preset</h2>
             <p className="su-sub">add a new preset</p>
             <label className="su-label">preset name</label>
-
             <input
               className="su-input"
               type="text"
@@ -500,7 +492,6 @@ export default function AddNewSession() {
             />
 
             <label className="su-label">
-              {" "}
               which social media app did you use?
             </label>
             <SimpleSelect
@@ -509,6 +500,7 @@ export default function AddNewSession() {
               onChange={setApp}
               placeholder="select app"
             />
+
             <label className="su-label">how long did this session last?</label>
             <input
               className="su-input"
@@ -516,6 +508,7 @@ export default function AddNewSession() {
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
             />
+
             <label className="su-label">
               when did this session take place?
             </label>
@@ -526,26 +519,20 @@ export default function AddNewSession() {
               placeholder="select time"
             />
 
-            {/* STEP 2: triggers/goals/activities */}
             <label className="su-label">
-              what were the reasons you opened this social media app? (select
-              all)
+              what was the main reason you opened this app?
             </label>
-            <MultiSelect
-              value={triggers}
+            <SimpleSelect
               options={triggerList.map((t) => ({
                 label: t.replace(/_/g, " "),
                 value: t,
               }))}
-              onChange={(e) => setTrig(e.value as TriggerCat[])}
-              display="chip"
-              className="su-multi"
-              placeholder="choose triggers"
+              value={trigger}
+              onChange={(v) => setTrigger(v as TriggerCat)}
+              placeholder="select trigger"
             />
 
-            <label className="su-label">
-              what was your primary goal when opening this social media app?
-            </label>
+            <label className="su-label">what was your primary goal?</label>
             <SimpleSelect
               options={goalList.map((g) => ({ label: g, value: g }))}
               value={goal}
@@ -553,25 +540,19 @@ export default function AddNewSession() {
               placeholder="select goal"
             />
 
-            <label className="su-label">
-              what activities did you do during this social media session?
-              (select all)
-            </label>
-            <MultiSelect
-              value={activities}
+            <label className="su-label">what activity did you do?</label>
+            <SimpleSelect
               options={actList.map((a) => ({
                 label: a.replace(/_/g, " "),
                 value: a,
               }))}
-              onChange={(e) => setActivities(e.value as ActivityCat[])}
-              display="chip"
-              className="su-multi"
-              placeholder="choose activities"
+              value={activity}
+              onChange={(v) => setActivity(v as ActivityCat)}
+              placeholder="select activity"
             />
 
-            {/* STEP 3: mood & self */}
             <label className="su-label">
-              did you go through a mood change after the social media session?
+              did you go through a mood change?
             </label>
             <SimpleSelect
               options={[
@@ -586,9 +567,7 @@ export default function AddNewSession() {
               placeholder="select mood"
             />
 
-            <label className="su-label">
-              how productive was your social media session?
-            </label>
+            <label className="su-label">how productive was the session?</label>
             <SimpleSelect
               options={[
                 { label: "-2 (very unproductive)", value: "-2" },
@@ -602,26 +581,20 @@ export default function AddNewSession() {
               placeholder="select rating"
             />
 
-            {/* STEP 4: content, location, multitask */}
             <label className="su-label">
-              what type of content did you engage with during this social media
-              session? (select all)
+              what type of content did you engage with?
             </label>
-            <MultiSelect
-              value={content}
+            <SimpleSelect
               options={contentList.map((c) => ({
                 label: c.replace(/_/g, " "),
                 value: c,
               }))}
-              onChange={(e) => setCont(e.value as ContentCat[])}
-              display="chip"
-              className="su-multi"
-              placeholder="choose content"
+              value={content}
+              onChange={(v) => setCont(v as ContentCat)}
+              placeholder="select content"
             />
 
-            <label className="su-label">
-              where were you while using social media this session?
-            </label>
+            <label className="su-label">where were you?</label>
             <SimpleSelect
               options={[
                 {
@@ -651,9 +624,7 @@ export default function AddNewSession() {
               placeholder="select location"
             />
 
-            <label className="su-label">
-              were you doing anything else while using social media?
-            </label>
+            <label className="su-label">were you doing anything else?</label>
             <SimpleSelect
               options={[
                 { label: "none", value: "none" },
@@ -695,6 +666,7 @@ export default function AddNewSession() {
     );
   }
 
+  // ---- “Add New Session” FLOW (mode="new") ----
   return (
     <div className="navbarwithmilan">
       <BTNavbar />
@@ -767,18 +739,15 @@ export default function AddNewSession() {
               <>
                 <label className="sn-label">
                   what were the reasons you opened this social media app?
-                  (select all)
                 </label>
-                <MultiSelect
-                  className="su-multi"
-                  display="chip"
-                  placeholder="choose answers"
-                  value={triggers}
+                <SimpleSelect
                   options={triggerList.map((t) => ({
                     label: t.replace(/_/g, " "),
                     value: t,
                   }))}
-                  onChange={(e) => setTrig(e.value as TriggerCat[])}
+                  value={trigger}
+                  onChange={(v) => setTrigger(v as TriggerCat)}
+                  placeholder="select trigger"
                 />
 
                 <label className="sn-label">
@@ -787,24 +756,21 @@ export default function AddNewSession() {
                 <SimpleSelect
                   value={goal}
                   onChange={(v) => setGoal(v as GoalCat)}
-                  placeholder="choose goal"
+                  placeholder="select goal"
                   options={goalList.map((g) => ({ label: g, value: g }))}
                 />
 
                 <label className="sn-label">
-                  what activities did you do during this social media session?
-                  (select all)
+                  what activity did you do during this social media session?
                 </label>
-                <MultiSelect
-                  className="su-multi"
-                  display="chip"
-                  placeholder="choose answers"
-                  value={activities}
+                <SimpleSelect
                   options={actList.map((a) => ({
                     label: a.replace(/_/g, " "),
                     value: a,
                   }))}
-                  onChange={(e) => setActivities(e.value as ActivityCat[])}
+                  value={activity}
+                  onChange={(v) => setActivity(v as ActivityCat)}
+                  placeholder="select activity"
                 />
               </>
             )}
@@ -819,7 +785,7 @@ export default function AddNewSession() {
                 <SimpleSelect
                   value={moodDifference.toString()}
                   onChange={(v) => setMoodDifference(Number(v) as MoodRating)}
-                  placeholder="select value"
+                  placeholder="select mood"
                   options={[
                     { label: "-2 (much worse)", value: "-2" },
                     { label: "-1 (slightly worse)", value: "-1" },
@@ -835,7 +801,7 @@ export default function AddNewSession() {
                 <SimpleSelect
                   value={prodSelf.toString()}
                   onChange={(v) => setProd(Number(v) as MoodRating)}
-                  placeholder="select value"
+                  placeholder="select rating"
                   options={[
                     { label: "-2 (very unproductive)", value: "-2" },
                     { label: "-1 (slightly unproductive)", value: "-1" },
@@ -852,27 +818,22 @@ export default function AddNewSession() {
               <>
                 <label className="sn-label">
                   what type of content did you engage with during this social
-                  media session? (select all)
+                  media session?
                 </label>
-                <MultiSelect
-                  className="su-multi"
-                  display="chip"
-                  placeholder="choose content"
-                  value={content}
+                <SimpleSelect
                   options={contentList.map((c) => ({
                     label: c.replace(/_/g, " "),
                     value: c,
                   }))}
-                  onChange={(e) => setCont(e.value as ContentCat[])}
+                  value={content}
+                  onChange={(v) => setCont(v as ContentCat)}
+                  placeholder="select content"
                 />
 
                 <label className="sn-label">
                   where were you while using social media this session?
                 </label>
                 <SimpleSelect
-                  value={loc}
-                  onChange={(v) => setLoc(v as LocCat)}
-                  placeholder="select location"
                   options={[
                     {
                       label: "commuting – car, bus, train or subway",
@@ -899,15 +860,15 @@ export default function AddNewSession() {
                     },
                     { label: "cafe / restaurant", value: "cafe / restaurant" },
                   ]}
+                  value={loc}
+                  onChange={(v) => setLoc(v as LocCat)}
+                  placeholder="select location"
                 />
 
                 <label className="sn-label">
                   were you doing anything else while using social media?
                 </label>
                 <SimpleSelect
-                  value={multi}
-                  onChange={(v) => setMulti(v as MultiCat)}
-                  placeholder="select"
                   options={[
                     { label: "none", value: "none" },
                     { label: "eating", value: "eating" },
@@ -924,6 +885,9 @@ export default function AddNewSession() {
                     { label: "commuting", value: "commuting" },
                     { label: "audio/video call", value: "audio/video call" },
                   ]}
+                  value={multi}
+                  onChange={(v) => setMulti(v as MultiCat)}
+                  placeholder="select multitask"
                 />
               </>
             )}
@@ -948,12 +912,12 @@ export default function AddNewSession() {
                   <Row l="social media app" v={appUsed} />
                   <Row l="session duration" v={`${duration} min`} />
                   <Row l="time of day" v={dayPart} />
-                  <Row l="triggers" v={triggers.join(", ")} />
+                  <Row l="trigger" v={trigger} />
                   <Row l="primary goal" v={goal} />
-                  <Row l="activities" v={activities.join(", ")} />
+                  <Row l="activity" v={activity} />
                   <Row l="mood change" v={moodDifference.toString()} />
                   <Row l="self-rating" v={prodSelf.toString()} />
-                  <Row l="content types" v={content.join(", ")} />
+                  <Row l="content type" v={content} />
                   <Row l="location" v={loc} />
                   <Row l="multitasking" v={multi} />
                 </div>
