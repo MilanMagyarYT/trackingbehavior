@@ -1,0 +1,73 @@
+/* —— CARD CONTAINER —— */
+.acc-card {
+  background: #1B2538;
+  border: 1.5px solid #2A3D60;
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
+}
+
+/* —— CARD HEADER —— */
+.acc-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.acc-section-title {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  background: #0D1623;
+  border: 1.5px solid #2A3D60;
+  border-radius: 25px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #F3EDE0;
+  margin-bottom: 0.5rem;
+}
+
+.acc-card-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #F3EDE0;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+.acc-card-sub {
+  margin: 0 0 1rem;
+  font-size: 14px;
+  color: #C4C2BC;
+  letter-spacing: -0.04em;
+}
+
+/* —— ROW WITH TWO COLUMNS —— */
+.acc-row.two-cols {
+  display: flex;
+  gap: 1rem;
+}
+
+.acc-row.two-cols > div {
+  flex: 1;
+}
+
+.acc-row label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #F3EDE0;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.04em;
+}
+
+.acc-row input {
+  width: 100%;
+  padding: 0.75rem 0.75rem;
+  font-size: 14px;
+  color: #C4C2BC;
+  background: #0D1623;
+  border: 1.5px solid #2A3D60;
+  border-radius: 10px;
+  box-sizing: border-box;
+}

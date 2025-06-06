@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
 import {
@@ -46,6 +45,8 @@ interface Distribution {
   between5and15: number;
   between15and45: number;
   over45: number;
+  leastprod: string;
+  mostsessions: string;
 }
 
 interface ByBucket {
@@ -204,6 +205,8 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
         between5and15: 0,
         between15and45: 0,
         over45: 0,
+        leastprod: "",
+        mostsessions: "",
       },
       mostBucket: "",
       mostBucketMin: 0,
@@ -274,6 +277,8 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
         between5and15: 0,
         between15and45: 0,
         over45: 0,
+        leastprod: "",
+        mostsessions: "",
       },
       mostBucket: "",
       mostBucketMin: 0,
@@ -340,19 +345,67 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
       leastProdApp = appId;
     }
   });
-
+  let under5raw = 0,
+    between5and15raw = 0,
+    between15and45raw = 0,
+    over45raw = 0,
+    leastprodraw = 1000,
+    mostsessionsnumb = -1;
   // 5) Session-length distribution (count)
   const distribution: Distribution = {
     under5: 0,
     between5and15: 0,
     between15and45: 0,
     over45: 0,
+    leastprod: "",
+    mostsessions: "",
   };
   filtered.forEach((r) => {
-    if (r.duration < 5) distribution.under5 += 1;
-    else if (r.duration < 15) distribution.between5and15 += 1;
-    else if (r.duration < 45) distribution.between15and45 += 1;
-    else distribution.over45 += 1;
+    if (r.duration < 5) {
+      distribution.under5 += 1;
+      under5raw += r.rawScore;
+      if (under5raw < leastprodraw) {
+        leastprodraw = under5raw;
+        distribution.leastprod = "<5 min";
+      }
+      if (distribution.under5 > mostsessionsnumb) {
+        mostsessionsnumb = distribution.under5;
+        distribution.mostsessions = "<5 min";
+      }
+    } else if (r.duration < 15) {
+      distribution.between5and15 += 1;
+      between5and15raw += r.rawScore;
+      if (between5and15raw < leastprodraw) {
+        leastprodraw = between5and15raw;
+        distribution.leastprod = "5-15 min";
+      }
+      if (distribution.between5and15 > mostsessionsnumb) {
+        mostsessionsnumb = distribution.between5and15;
+        distribution.mostsessions = "5-15 min";
+      }
+    } else if (r.duration < 45) {
+      distribution.between15and45 += 1;
+      between15and45raw += r.rawScore;
+      if (between15and45raw < leastprodraw) {
+        leastprodraw = between15and45raw;
+        distribution.leastprod = "15-45 min";
+      }
+      if (distribution.between15and45 > mostsessionsnumb) {
+        mostsessionsnumb = distribution.between15and45;
+        distribution.mostsessions = "15-45 min";
+      }
+    } else {
+      distribution.over45 += 1;
+      over45raw += r.rawScore;
+      if (over45raw < leastprodraw) {
+        leastprodraw = over45raw;
+        distribution.leastprod = ">45 min";
+      }
+      if (distribution.over45 > mostsessionsnumb) {
+        mostsessionsnumb = distribution.over45;
+        distribution.mostsessions = ">45 min";
+      }
+    }
   });
 
   // 6) By-timeBucket
@@ -624,19 +677,11 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
 }
 
 export default function StatsPage() {
-  const router = useRouter();
   const { uid, status } = useAppSelector((s) => s.auth);
 
   const [sessions, setSessions] = useState<SessionDoc[]>([]);
   const [loading, setLoading] = useState(true);
   const [dayOffset, setDayOffset] = useState(1);
-
-  // Redirect if unauthenticated
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.replace("/login");
-    }
-  }, [status, router]);
 
   // Subscribe to all sessions
   useEffect(() => {
@@ -685,16 +730,6 @@ export default function StatsPage() {
     topLocMin,
     worstLoc,
     worstLocScore,
-    multitaskMin,
-    avgMultiScore,
-    noMultiMin,
-    avgNoMultiScore,
-    avgPerceivedDiff,
-    negMoodMin,
-    avgNegMoodScore,
-    posMoodMin,
-    avgPosMoodScore,
-    moodScoreDiff,
     dayAdvice,
     dayLabel,
   } = metrics;
@@ -719,7 +754,6 @@ export default function StatsPage() {
         onNext={() => setDayOffset((d) => Math.max(1, d - 1))}
       />
 
-      {/* All the sections */}
       <StatsDetails
         mostUsedApp={mostUsedApp}
         mostUsedMin={mostUsedMin}
@@ -750,16 +784,6 @@ export default function StatsPage() {
         topLocMin={topLocMin}
         worstLoc={worstLoc}
         worstLocScore={worstLocScore}
-        multitaskMin={multitaskMin}
-        avgMultiScore={avgMultiScore}
-        noMultiMin={noMultiMin}
-        avgNoMultiScore={avgNoMultiScore}
-        avgPerceivedDiff={avgPerceivedDiff}
-        negMoodMin={negMoodMin}
-        avgNegMoodScore={avgNegMoodScore}
-        posMoodMin={posMoodMin}
-        avgPosMoodScore={avgPosMoodScore}
-        moodScoreDiff={moodScoreDiff}
         dayAdvice={dayAdvice}
       />
 

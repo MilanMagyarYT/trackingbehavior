@@ -64,12 +64,12 @@ export default function AccountPage() {
         let totalMin = 0;
         let weighted = 0;
         sessSnap.forEach((d) => {
-          const { durMin, sessionScore } = d.data() as {
-            durMin: number;
-            sessionScore: number;
+          const { duration, rawScore } = d.data() as {
+            duration: number;
+            rawScore: number;
           };
-          totalMin += durMin;
-          weighted += durMin * sessionScore;
+          totalMin += duration;
+          weighted += duration * rawScore;
         });
 
         const daysSinceJoin = Math.max(
