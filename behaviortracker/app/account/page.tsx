@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-  collection,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient";
 import { useAppSelector } from "@/app/store";
 
@@ -24,9 +16,6 @@ export default function AccountPage() {
   const router = useRouter();
   const { uid, status, displayName, email } = useAppSelector((s) => s.auth);
 
-  // form state
-  const [avgUsage, setAvgUsage] = useState("");
-  const [avgProd, setAvgProd] = useState("");
   const [baselineUsage, setBaselineUsage] = useState("");
   const [baselineProd, setBaselineProd] = useState("");
 
@@ -52,37 +41,6 @@ export default function AccountPage() {
       // set part-2 (baseline) and names
       setBaselineUsage(data.goalPhoneMin?.toString() || "");
       setBaselineProd(data.unprodGoalPct?.toString() || "");
-
-      // 2️⃣ compute “since joining” metrics
-      if (data.baselineCompletedAt) {
-        const joinTs = (data.baselineCompletedAt as Timestamp).toDate();
-        const sessQ = query(
-          collection(db, "users", uid, "sessions"),
-          where("createdAt", ">=", Timestamp.fromDate(joinTs))
-        );
-        const sessSnap = await getDocs(sessQ);
-
-        let totalMin = 0;
-        let weighted = 0;
-        sessSnap.forEach((d) => {
-          const { duration, rawScore } = d.data() as {
-            duration: number;
-            rawScore: number;
-          };
-          totalMin += duration;
-          weighted += duration * rawScore;
-        });
-
-        const daysSinceJoin = Math.max(
-          1,
-          (Date.now() - joinTs.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const avgUse = Math.round(totalMin / daysSinceJoin);
-        const avgP = totalMin ? Math.round((weighted / totalMin) * 100) : 0;
-
-        setAvgUsage(avgUse.toString());
-        setAvgProd(avgP.toString());
-      }
 
       setLoading(false);
     })();
