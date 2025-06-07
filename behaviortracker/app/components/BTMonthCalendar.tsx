@@ -29,8 +29,12 @@ const MONTHS = [
   "December",
 ];
 
-const dateKey = (d: Date) => d.toLocaleDateString("sv-SE", { timeZone: "UTC" });
-
+/* ---------- helper: local YYYY-MM-DD key ---------- */
+function dateKey(d: Date): string {
+  const tz =
+    Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Amsterdam";
+  return d.toLocaleDateString("sv-SE", { timeZone: tz }); // "2025-06-07"
+}
 type DayAgg = { minutes: number; numSum: number };
 
 export default function BTMonthCalendar() {
@@ -77,9 +81,13 @@ export default function BTMonthCalendar() {
         goalPhoneMin?: number;
         unprodGoalPct?: number;
       };
-      setBaselineAt(
-        d.baselineCompletedAt ? d.baselineCompletedAt.toDate() : null
-      );
+      if (d.baselineCompletedAt) {
+        const b = d.baselineCompletedAt.toDate(); // original Date
+        const midnight = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+        setBaselineAt(midnight); // 00:00 of that day
+      } else {
+        setBaselineAt(null);
+      }
       setGoalPhoneMin(d.goalPhoneMin ?? null);
       setGoalProdPct(d.unprodGoalPct ?? null);
     })();
@@ -137,11 +145,11 @@ export default function BTMonthCalendar() {
     if (!agg) return "yellow";
 
     const minutes = agg.minutes;
-    const prodPct = minutes ? agg.numSum / minutes : 100;
+    const prodPct = Math.round(minutes ? agg.numSum / minutes : 100);
     const usageOk = minutes <= goalPhoneMin;
     const prodOk = prodPct >= goalProdPct;
     const lowUsage = minutes < 0.25 * goalPhoneMin;
-
+    console.log(goalPhoneMin, prodPct, usageOk, prodOk, lowUsage);
     if (lowUsage) return "yellow";
     if (usageOk && prodOk) return "green";
     return "red";

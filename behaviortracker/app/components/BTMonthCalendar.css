@@ -77,8 +77,8 @@
 .bt-day-info h4 {
   margin: 0 0 .25rem 0;
   font-size: .9rem;
-  font-weight: 600;
-  color: #ffd700; /* accent */
+  font-weight: 600; 
+  color: #FA4617; /* accent */
 }
 
 .bt-day-info p {
