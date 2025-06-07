@@ -1,0 +1,87 @@
+/* wrapper */
+.bt-cal-wrap {
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
+  font-family: var(--sans, system-ui);
+}
+
+/* header with month navigation */
+.bt-cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .5rem;
+  font-weight: 600;
+  color: #e4e9f4;
+}
+
+.bt-cal-header button {
+  background: none;
+  border: none;
+  color: #e4e9f4;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* grid */
+.bt-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .2rem;
+}
+
+/* weekday labels */
+.bt-cal-head {
+  text-align: center;
+  font-size: .7rem;
+  font-weight: 600;
+  color: #8ca2c3;
+  padding-block: .15rem;
+}
+
+/* day cells – buttons for accessibility */
+.bt-cal-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: .8rem;
+  border-radius: .35rem;
+  background: #1b2538;
+  color: #e4e9f4;
+  border: none;
+  cursor: pointer;
+}
+
+/* coloured states */
+.green  { background: #3cb371; }
+.red    { background: #fa4617; }
+.yellow { background: #ffd700; color: #1b2538; }
+
+/* empty padding cells */
+.empty { background: transparent; cursor: default; }
+
+/* info card */
+.bt-day-info {
+  margin-top: .75rem;
+  padding: .75rem 1rem;
+  border-radius: .5rem;
+  background: #1b2538;
+  color: #e4e9f4;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  text-align: center;
+}
+
+.bt-day-info h4 {
+  margin: 0 0 .25rem 0;
+  font-size: .9rem;
+  font-weight: 600;
+  color: #ffd700; /* accent */
+}
+
+.bt-day-info p {
+  margin: .1rem 0;
+  font-size: .8rem;
+}

@@ -18,6 +18,7 @@ import BTNavbar from "@/app/components/BTNavbar";
 import BTBottomNav from "@/app/components/BTBottomNav";
 
 import "../components/AccountPage.css";
+import BTMonthCalendar from "@/app/components/BTMonthCalendar";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -98,7 +99,6 @@ export default function AccountPage() {
   return (
     <div className="acc-page">
       <BTNavbar />
-
       <main className="acc-container">
         {/* header */}
         <div className="acc-header">
@@ -110,11 +110,22 @@ export default function AccountPage() {
             <p className="acc-email">{email}</p>
           </div>
         </div>
-
-        {/* part 1: since joining */}
-        <section className="acc-card">
+        <div className="acc-card">
           <div className="acc-card-header">
             <div className="acc-section-title">part 1</div>
+            <h3 className="acc-card-title">my calendar</h3>
+            <p className="acc-card-sub">
+              metrics &amp; usage behavior (since joining)
+            </p>
+          </div>
+          <section className="profile-calendar">
+            <BTMonthCalendar />
+          </section>
+        </div>
+        {/* part 1: since joining */}
+        {/*<section className="acc-card">
+          <div className="acc-card-header">
+            <div className="acc-section-title">part 2</div>
             <h3 className="acc-card-title">my account</h3>
             <p className="acc-card-sub">
               metrics &amp; usage behavior (since joining)
@@ -131,15 +142,15 @@ export default function AccountPage() {
               <input type="number" value={avgProd} readOnly />
             </div>
           </div>
-        </section>
+        </section>*/}
 
         {/* part 2: baseline */}
         <section className="acc-card">
           <div className="acc-card-header">
             <div className="acc-section-title">part 2</div>
-            <h3 className="acc-card-title">my baselines</h3>
+            <h3 className="acc-card-title">my goals</h3>
             <p className="acc-card-sub">
-              metrics &amp; usage behavior (when joined)
+              usage time &amp; productivity percentage behavior
             </p>
           </div>
 
@@ -155,7 +166,6 @@ export default function AccountPage() {
           </div>
         </section>
       </main>
-
       <BTBottomNav />
     </div>
   );
