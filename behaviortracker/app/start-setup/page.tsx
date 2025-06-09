@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import BTNavbar from "@/app/components/BTNavbar";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebaseClient";
+import { getAuth } from "firebase/auth";
 import { useAppSelector } from "@/app/store";
 import LoadingSpinner from "../components/LoadingSpinner";
 import "../components/StartSetup.css";
@@ -56,9 +57,7 @@ type TriggerCat = (typeof triggerList)[number];
 type GoalCat = (typeof goalList)[number];
 type ActivityCat = (typeof actList)[number];
 type ContentCat = (typeof contentList)[number];
-
 type Step = 1 | 2 | 3 | 4;
-
 type Val = -1 | 0 | 1;
 
 function mkRecordVal<K extends string>(
@@ -73,7 +72,8 @@ function mkRecordVal<K extends string>(
 
 export default function StartSetup() {
   const router = useRouter();
-  const { uid, status } = useAppSelector((s) => s.auth);
+  const { uid, status, email: storedEmail } = useAppSelector((s) => s.auth);
+  const authEmail = storedEmail ?? getAuth().currentUser?.email ?? "";
 
   const [step, setStep] = useState<Step>(1);
   const [avgLastMonth, setAvgLastMonth] = useState<string>("");
@@ -131,6 +131,7 @@ export default function StartSetup() {
     await setDoc(
       userRef,
       {
+        email: authEmail,
         baselinePhoneLast30Days: Number(avgLastMonth),
         goalPhoneMin: Number(goalPhone),
         unprodTolerancePct: Number(unprodPct),
@@ -373,8 +374,6 @@ export default function StartSetup() {
                   label="optimum daily unproductive phone usage"
                   value={`${optUnprodPct}%`}
                 />
-
-                {/* now each category in one row */}
                 <ReviewRow
                   label="trigger scores"
                   value={formatValRecord(prodTriggers)}
@@ -391,7 +390,6 @@ export default function StartSetup() {
                   label="content scores"
                   value={formatValRecord(prodContent)}
                 />
-
                 <ReviewRow
                   label="negative mood drop unproductive?"
                   value={negMoodIsUnprod === "yes" ? "yes" : "no"}
@@ -403,14 +401,11 @@ export default function StartSetup() {
           {step === 4 && (
             <>
               <span className="su-done-icon">✓</span>
-
               <h2 className="su-title2">answers submitted</h2>
-
               <p className="su-sub2">
                 by finalizing your account, you now have access to your personal
                 behavior tracking portal
               </p>
-
               <button
                 className="su-btn-primary su-btn-full"
                 onClick={() => router.push("/profile")}
@@ -425,7 +420,6 @@ export default function StartSetup() {
   );
 }
 
-// formats a Val‐map into "key value  key value  …"
 function formatValRecord<T extends string>(rec: Record<T, -1 | 0 | 1>): string {
   return (Object.keys(rec) as T[]).map((k) => `${k} ${rec[k]},`).join("  ");
 }
