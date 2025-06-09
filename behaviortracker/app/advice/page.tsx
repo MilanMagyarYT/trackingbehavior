@@ -318,7 +318,6 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
       dayLabel,
     };
   }
-  console.log(sessions);
   // 4) “By-app” metrics
   const byApp: Record<string, PerAppMetrics> = {};
   filtered.forEach((r) => {
@@ -333,7 +332,6 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
   let mostUsedMin = -1;
   let leastProdApp = "";
   let leastProdValue = Infinity;
-  console.log(byApp);
   Object.entries(byApp).forEach(([appId, data]) => {
     if (data.totalMin > mostUsedMin) {
       mostUsedMin = data.totalMin;
