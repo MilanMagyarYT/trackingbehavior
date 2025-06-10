@@ -149,6 +149,7 @@ export default function BTMonthCalendar() {
     const usageOk = minutes <= goalPhoneMin;
     const prodOk = prodPct >= goalProdPct;
     const lowUsage = minutes < 0.25 * goalPhoneMin;
+    console.log(goalPhoneMin, prodPct, usageOk, prodOk, lowUsage);
     if (lowUsage) return "yellow";
     if (usageOk && prodOk) return "green";
     return "red";
