@@ -129,7 +129,6 @@ type ActivityCat = (typeof actList)[number];
 type ContentCat = (typeof contentList)[number];
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 
-// A preset’s shape (in Firestore under users/{uid}/presets):
 interface Preset {
   name: string;
   appId: string;
@@ -145,7 +144,6 @@ interface Preset {
   multi: MultiCat;
 }
 
-// A session doc’s shape (in Firestore under users/{uid}/sessions):
 interface SessionDoc {
   appId: string;
   timeBucket: TimeBucket;
@@ -180,11 +178,9 @@ export default function AddNewSession() {
   const { uid, status } = useAppSelector((s) => s.auth);
   const router = useRouter();
 
-  // ---- MODE SELECTION ----
   type Mode = "choose" | "new" | "preset" | "savePreset";
   const [mode, setMode] = useState<Mode>("choose");
 
-  // ---- LOAD BASELINE ----
   const [baseline, setBase] = useState<UserBaseline | null>(null);
   useEffect(() => {
     if (!uid) return;
@@ -193,7 +189,6 @@ export default function AddNewSession() {
     });
   }, [uid]);
 
-  // ---- STATE FOR NEW SESSION STEPS ----
   const [step, setStep] = useState<Step>(1);
   const [appUsed, setApp] = useState<string>("");
   const [dayPart, setDayPart] = useState<TimeBucket | "">("");
@@ -207,11 +202,9 @@ export default function AddNewSession() {
   const [loc, setLoc] = useState<LocCat | "">("");
   const [multi, setMulti] = useState<MultiCat | "">("");
 
-  // ---- STATE FOR PRESETS ----
   const [presets, setPresets] = useState<{ id: string; data: Preset }[]>([]);
   const [presetName, setPresetName] = useState<string>("");
 
-  // ---- VALIDATION FOR NEW-SESSION STEPS ----
   const stepValid = useMemo(() => {
     switch (step) {
       case 1:
@@ -242,13 +235,11 @@ export default function AddNewSession() {
     multi,
   ]);
 
-  // ---- COMPUTE rawScore & deltaPoints ----
   const computeRawScore = () => {
-    const M = Number(moodDifference) / 2; // –2..+2 → –1..+1
+    const M = Number(moodDifference) / 2;
     const P = multi === "none" ? 0 : -1;
-    const selfP = Number(prodSelf) / 2; // –2..+2 → –1..+1
+    const selfP = Number(prodSelf) / 2;
 
-    // Single‐choice lookups → either 1 (productive) or –1 (unproductive)
     const C = baseline!.prodRules.content[content as ContentCat] ? 1 : -1;
     const T = baseline!.prodRules.triggers[trigger as TriggerCat] ? 1 : -1;
     const A = baseline!.prodRules.acts[activity as ActivityCat] ? 1 : -1;
@@ -273,7 +264,6 @@ export default function AddNewSession() {
     return rawPts > 0 ? Math.ceil(rawPts) : Math.floor(rawPts);
   };
 
-  // ---- SAVE SESSION TO Firestore ----
   const saveSession = async () => {
     if (!uid) return;
     const rawScore = computeRawScore();
@@ -301,7 +291,6 @@ export default function AddNewSession() {
     setStep(6);
   };
 
-  // ---- SAVE NEW PRESET TO Firestore ----
   const savePreset = async () => {
     if (!uid || presetName.trim() === "") return;
     const preset: Preset = {
@@ -323,7 +312,6 @@ export default function AddNewSession() {
     setMode("preset");
   };
 
-  // ---- APPLY A PRESET TO THE FORM ----
   const handleUsePreset = (p: Preset) => {
     setApp(p.appId);
     setDayPart(p.dayPart);
@@ -340,7 +328,6 @@ export default function AddNewSession() {
     setMode("new");
   };
 
-  // ---- VALIDATION FOR “Save Preset” ----
   const canSavePreset = useMemo(() => {
     return (
       presetName.trim() !== "" &&
@@ -371,7 +358,6 @@ export default function AddNewSession() {
     multi,
   ]);
 
-  // ---- LOAD PRESETS FOR “Use a Preset” MODE ----
   useEffect(() => {
     if (!uid) return;
     const q = query(
@@ -386,7 +372,6 @@ export default function AddNewSession() {
     return () => unsub();
   }, [uid]);
 
-  // ---- AUTH/LOADING GUARDS ----
   useEffect(() => {
     if (status === "unauthenticated") router.replace("/login");
   }, [status, router]);
@@ -399,7 +384,6 @@ export default function AddNewSession() {
     );
   }
 
-  // ---- RENDER “Choose Mode” ----
   if (mode === "choose") {
     return (
       <div className="navbarwithmilan">
@@ -430,7 +414,6 @@ export default function AddNewSession() {
     );
   }
 
-  // ---- RENDER “Use a Preset” ----
   if (mode === "preset") {
     return (
       <div className="navbarwithmilan">
@@ -473,7 +456,6 @@ export default function AddNewSession() {
     );
   }
 
-  // ---- RENDER “Save Preset” ----
   if (mode === "savePreset") {
     return (
       <div className="navbarwithmilan">
@@ -666,7 +648,6 @@ export default function AddNewSession() {
     );
   }
 
-  // ---- “Add New Session” FLOW (mode="new") ----
   return (
     <div className="navbarwithmilan">
       <BTNavbar />

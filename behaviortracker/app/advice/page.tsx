@@ -21,16 +21,16 @@ type TimeBucket = "morning" | "afternoon" | "evening" | "night";
 interface SessionDoc {
   appId: string;
   duration: number;
-  rawScore: number; // actual productivity 0–1
-  prodSelf: number; // user’s self-rating -2..2
+  rawScore: number;
+  prodSelf: number;
   timeBucket: TimeBucket;
   trigger: string;
   engagement: string;
   goalPrimary: string;
   contentMajor: string;
   location: string;
-  multitask: string; // "none" or other
-  moodDifference: number; // -2..2
+  multitask: string;
+  moodDifference: number;
   createdAt: Timestamp;
 }
 
@@ -71,19 +71,16 @@ interface AdviceCard {
   impactMin?: number;
 }
 
-// Custom hook to compute “per-day” metrics + advice
 function useDailyMetrics(
   sessions: SessionDoc[],
   dayOffset: number
 ): ReturnType<typeof computeMetrics> {
-  // computeMetrics is defined just below
   return useMemo(
     () => computeMetrics(sessions, dayOffset),
     [sessions, dayOffset]
   );
 }
 
-// -- helper functions outside component --
 function buildAggregates(rows: SessionDoc[]): Aggregates {
   const totalMin = rows.reduce((sum, r) => sum + r.duration, 0);
   const lateNightMin = rows
@@ -318,7 +315,6 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
       dayLabel,
     };
   }
-  console.log(sessions);
   // 4) “By-app” metrics
   const byApp: Record<string, PerAppMetrics> = {};
   filtered.forEach((r) => {
@@ -333,7 +329,6 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
   let mostUsedMin = -1;
   let leastProdApp = "";
   let leastProdValue = Infinity;
-  console.log(byApp);
   Object.entries(byApp).forEach(([appId, data]) => {
     if (data.totalMin > mostUsedMin) {
       mostUsedMin = data.totalMin;
@@ -594,7 +589,7 @@ function computeMetrics(sessions: SessionDoc[], dayOffset: number) {
   // 13) Perceived vs Actual difference
   let diffSum = 0;
   filtered.forEach((r) => {
-    const perceived = (r.prodSelf + 2) / 4; // map –2..2 → 0..1
+    const perceived = (r.prodSelf + 2) / 4;
     diffSum += perceived - r.rawScore;
   });
   const avgPerceivedDiff = filtered.length ? diffSum / filtered.length : 0;

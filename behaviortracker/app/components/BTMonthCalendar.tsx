@@ -29,32 +29,26 @@ const MONTHS = [
   "December",
 ];
 
-/* ---------- helper: local YYYY-MM-DD key ---------- */
 function dateKey(d: Date): string {
   const tz =
     Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Amsterdam";
-  return d.toLocaleDateString("sv-SE", { timeZone: tz }); // "2025-06-07"
+  return d.toLocaleDateString("sv-SE", { timeZone: tz });
 }
 type DayAgg = { minutes: number; numSum: number };
 
 export default function BTMonthCalendar() {
-  /* ---------- auth ---------- */
   const { uid } = useAppSelector((s) => s.auth);
 
-  /* ---------- view-month ---------- */
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(today.getMonth()); // 0–11
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
 
-  /* ---------- baseline & goals ---------- */
   const [baselineAt, setBaselineAt] = useState<Date | null>(null);
   const [goalPhoneMin, setGoalPhoneMin] = useState<number | null>(null);
   const [goalProdPct, setGoalProdPct] = useState<number | null>(null);
 
-  /* ---------- per-day aggregates ---------- */
   const [dayMap, setDayMap] = useState<Record<string, DayAgg>>({});
 
-  /* ---------- selected-day ---------- */
   const [selected, setSelected] = useState<{
     date: Date;
     minutes: number;
@@ -63,14 +57,12 @@ export default function BTMonthCalendar() {
 
   useEffect(() => setSelected(null), [viewMonth, viewYear]);
 
-  /* ---------- month boundaries ---------- */
   const { first, last, daysInMonth } = useMemo(() => {
     const firstDay = new Date(viewYear, viewMonth, 1);
     const lastDay = new Date(viewYear, viewMonth + 1, 0);
     return { first: firstDay, last: lastDay, daysInMonth: lastDay.getDate() };
   }, [viewYear, viewMonth]);
 
-  /* ---------- fetch baseline ---------- */
   useEffect(() => {
     if (!uid) return;
     (async () => {
@@ -82,9 +74,9 @@ export default function BTMonthCalendar() {
         unprodGoalPct?: number;
       };
       if (d.baselineCompletedAt) {
-        const b = d.baselineCompletedAt.toDate(); // original Date
+        const b = d.baselineCompletedAt.toDate();
         const midnight = new Date(b.getFullYear(), b.getMonth(), b.getDate());
-        setBaselineAt(midnight); // 00:00 of that day
+        setBaselineAt(midnight);
       } else {
         setBaselineAt(null);
       }
@@ -93,7 +85,6 @@ export default function BTMonthCalendar() {
     })();
   }, [uid]);
 
-  /* ---------- fetch sessions for view month ---------- */
   useEffect(() => {
     if (!uid) return;
     const start = new Date(first);
@@ -127,7 +118,6 @@ export default function BTMonthCalendar() {
     });
   }, [uid, first, last]);
 
-  /* ---------- colour logic ---------- */
   const colourForDay = (day: number): "green" | "yellow" | "red" | "none" => {
     if (goalPhoneMin == null || goalProdPct == null || baselineAt == null)
       return "none";
@@ -136,7 +126,6 @@ export default function BTMonthCalendar() {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
 
-    /* NEW: today is undecided → no colour */
     if (d >= todayMidnight) return "none";
 
     if (d < baselineAt) return "none";
@@ -149,13 +138,11 @@ export default function BTMonthCalendar() {
     const usageOk = minutes <= goalPhoneMin;
     const prodOk = prodPct >= goalProdPct;
     const lowUsage = minutes < 0.25 * goalPhoneMin;
-    console.log(goalPhoneMin, prodPct, usageOk, prodOk, lowUsage);
     if (lowUsage) return "yellow";
     if (usageOk && prodOk) return "green";
     return "red";
   };
 
-  /* ---------- helpers ---------- */
   const firstWeekday = first.getDay();
   const cells: (number | null)[] = [
     ...Array(firstWeekday).fill(null),
@@ -182,7 +169,7 @@ export default function BTMonthCalendar() {
       selected.date.getMonth() === d.getMonth() &&
       selected.date.getDate() === d.getDate()
     ) {
-      setSelected(null); // toggle off
+      setSelected(null);
       return;
     }
 

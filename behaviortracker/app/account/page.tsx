@@ -29,7 +29,6 @@ export default function AccountPage() {
     if (!uid) return;
 
     (async () => {
-      // 1️⃣ load user doc
       const userRef = doc(db, "users", uid);
       const userSnap = await getDoc(userRef);
       if (!userSnap.exists()) {
@@ -38,7 +37,6 @@ export default function AccountPage() {
       }
       const data = userSnap.data();
 
-      // set part-2 (baseline) and names
       setBaselineUsage(data.goalPhoneMin?.toString() || "");
       setBaselineProd(data.unprodGoalPct?.toString() || "");
 
